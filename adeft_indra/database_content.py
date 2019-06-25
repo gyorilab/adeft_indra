@@ -53,24 +53,40 @@ def fill_content_cache(agent_texts=None):
     else:
         agent_stmts = [(agent_text, get_agent_stmts(agent_text))
                        for agent_text in agent_texts]
+    ref_cache = SqliteDict(filename=CACHE_PATH, tablename='refs')
     content_cache = SqliteDict(filename=CACHE_PATH, tablename='content')
     for agent_text, stmts in agent_stmts:
         ref_dict, text_dict = cs.get_text_content_from_stmt_ids(stmts)
-        content_cache[agent_text] = {'ref_dict': ref_dict,
-                                     'text_dict': text_dict}
-    content_cache.commit()
+        for stmt_id, ref in ref_dict.items():
+            ref_cache[stmt_id] = ref
+            ref_cache.commit()
+            if ref is not None and text_dict[ref]:
+                try:
+                    content_cache[ref] = text_dict[ref]
+                    content_cache.commit()
+                except Exception:
+                    print('***')
+                    print(ref)
+                    print(stmt_id)
+                    print(text_dict[ref][0:100])
+                    return
 
 
 @ensure_adeft_indra_folder
 def get_texts_for_agent_texts(agent_texts):
-    content_cache = SqliteDict(filename=CACHE_PATH, table_name='content')
-    texts = set()
+    ref_cache = SqliteDict(filename=CACHE_PATH, tablename='refs')
+    content_cache = SqliteDict(filename=CACHE_PATH, tablename='content')
+    texts = []
     for agent_text in agent_texts:
-        try:
-            _, text_dict = content_cache[agent_text]
-        except KeyError:
-            fill_content_cache([agent_text])
-            _, text_dict = content_cache[agent_text]
-        texts.update(text_dict.values())
-    texts = [universal_extract_text(text) for text in texts]
+        stmt_ids = get_agent_stmts(agent_text)
+        for stmt_id in stmt_ids:
+            try:
+                ref = ref_cache[stmt_id]
+            except KeyError:
+                fill_content_cache([agent_text])
+                ref = ref_cache[stmt_id]
+            if ref is not None:
+                content = content_cache.get(ref)
+                if content:
+                    texts.append(universal_extract_text(content))
     return [text for text in texts if text]
