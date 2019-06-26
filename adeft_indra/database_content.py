@@ -95,3 +95,4 @@ def universal_extract_text_cached(content, contains):
         text = universal_extract_text(content, contains)
         text_cache[key] = text
         text_cache.commit()
+    return text
