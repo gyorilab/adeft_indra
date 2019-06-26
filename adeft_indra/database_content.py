@@ -81,7 +81,8 @@ def get_texts_for_agent_texts(agent_texts):
             if ref is not None:
                 content = content_cache.get(ref)
                 if content:
-                    texts.append(universal_extract_text(content, agent_texts))
+                    texts.append(universal_extract_text_cached(content,
+                                                               agent_texts))
     return [text for text in texts if text]
 
 
