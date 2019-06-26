@@ -61,15 +61,8 @@ def fill_content_cache(agent_texts=None):
             ref_cache[stmt_id] = ref
             ref_cache.commit()
             if ref is not None and text_dict[ref]:
-                try:
-                    content_cache[ref] = text_dict[ref]
-                    content_cache.commit()
-                except Exception:
-                    print('***')
-                    print(ref)
-                    print(stmt_id)
-                    print(text_dict[ref][0:100])
-                    return
+                content_cache[ref] = text_dict[ref]
+                content_cache.commit()
 
 
 @ensure_adeft_indra_folder
