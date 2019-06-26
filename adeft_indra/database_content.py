@@ -90,3 +90,12 @@ def get_texts_for_agent_texts(agent_texts):
                 if content:
                     texts.append(universal_extract_text(content))
     return [text for text in texts if text]
+def universal_extract_text_cached(content, contains):
+    text_cache = SqliteDict(filename=CACHE_PATH, tablename='text_cache')
+    key = (content, frozenset(contains))
+    try:
+        text = text_cache[key]
+    except KeyError:
+        text = universal_extract_text(content, contains)
+        text_cache[key] = text
+        text_cache.commit()
