@@ -24,6 +24,8 @@ def ensure_adeft_indra_folder(func):
         ensure_adeft_folder()
         if not os.path.exists(ADEFT_INDRA_PATH):
             os.mkdir(ADEFT_INDRA_PATH)
+        if not os.path.exists(os.path.join(ADEFT_INDRA_PATH, 'models')):
+            os.mkdir(os.path.join(ADEFT_INDRA_PATH, 'models'))
         return func(*args, **kwargs)
     return inner
 
