@@ -88,7 +88,7 @@ def get_texts_for_agent_texts(agent_texts):
 
 def universal_extract_text_cached(content, contains):
     text_cache = SqliteDict(filename=CACHE_PATH, tablename='text_cache')
-    key = (content, frozenset(contains))
+    key = hash((content, frozenset(contains)))
     try:
         text = text_cache[key]
     except KeyError:
