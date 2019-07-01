@@ -72,18 +72,33 @@ def get_texts_for_agent_texts(agent_texts):
     texts = []
     for agent_text in agent_texts:
         stmt_ids = get_agent_stmts(agent_text)
+    texts_cache = SqliteDict(filename=CACHE_PATH, tablename='texts')
+    key = ':'.join(sorted(agent_texts))
+    try:
+        texts = texts_cache[key]
+    except KeyError:
+        ref_cache = SqliteDict(filename=CACHE_PATH, tablename='refs')
+        content_cache = SqliteDict(filename=CACHE_PATH, tablename='content')
+
+        stmt_ids = set()
+        for agent_text in agent_texts:
+            stmt_ids.update(get_agent_stmts(agent_text))
+        texts = []
         for stmt_id in stmt_ids:
             try:
                 ref = ref_cache[stmt_id]
             except KeyError:
                 fill_content_cache([agent_text])
-                ref = ref_cache[stmt_id]
+            ref = ref_cache[stmt_id]
             if ref is not None:
                 content = content_cache.get(ref)
                 if content:
                     texts.append(universal_extract_text_cached(content,
                                                                agent_texts))
-    return [text for text in texts if text]
+        texts = [text for text in texts if text]
+        texts_cache[key] = texts
+        texts_cache.commit()
+    return texts
 
 
 def universal_extract_text_cached(content, contains):
