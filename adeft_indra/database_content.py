@@ -47,6 +47,17 @@ def get_agent_stmts(agent_text):
 
 @ensure_adeft_indra_folder
 def fill_content_cache(agent_texts=None):
+    """Fill cache with mappings to get text content from stmt_ids
+
+    Consists of maps from statement ids to text ref ids and tex_ref
+    ids to text content.
+
+    Parameters
+    ----------
+    agent_text : Optional[list]
+        List of agent texts to get text content mappings for.
+        If None, get mappings for every statement in statement cache
+    """
     if agent_texts is None:
         stmts_cache = SqliteDict(filename=CACHE_PATH, tablename='stmts')
         agent_stmts = stmts_cache.items()
@@ -66,12 +77,23 @@ def fill_content_cache(agent_texts=None):
 
 
 @ensure_adeft_indra_folder
-def get_texts_for_agent_texts(agent_texts):
-    ref_cache = SqliteDict(filename=CACHE_PATH, tablename='refs')
-    content_cache = SqliteDict(filename=CACHE_PATH, tablename='content')
-    texts = []
-    for agent_text in agent_texts:
-        stmt_ids = get_agent_stmts(agent_text)
+def get_plaintexts_for_agent_texts(agent_texts):
+    """Get plaintexts for given agent texts
+
+    Gathers all text content with at least one statement with agent text
+    from the input list. Extracts plaintext from xml and filters to only
+    paragraphs containing at least one of the agent texts.
+
+    Parameters
+    ----------
+    agent_texts : list of str
+        List of agent texts
+
+    Returns
+    -------
+    texts : list of str
+        List of plaintexts containing agent texts
+    """
     texts_cache = SqliteDict(filename=CACHE_PATH, tablename='texts')
     key = ':'.join(sorted(agent_texts))
     try:
@@ -102,8 +124,29 @@ def get_texts_for_agent_texts(agent_texts):
 
 
 def universal_extract_text_cached(content, contains):
+    """Returns plaintext for either elsevier or pubmed xml
+
+    Caches results in sqlitedict
+
+    Parameters
+    ----------
+    content : str
+        NLM XML, Elsevier XML, or Plaintext
+
+    contains : list of str
+        Filter to only paragraphs containing one of these strings
+
+    Returns
+    -------
+    text : str
+        Plaintext of input, filtered to only paragraphs containing
+        one of the texts in contains. Returns the parameter `content`
+        if it is not an NLM or Elsevier XML.
+    """
     text_cache = SqliteDict(filename=CACHE_PATH, tablename='text_cache')
-    key = hash((content, frozenset(contains)))
+    if not content:
+        return None
+    key = content
     try:
         text = text_cache[key]
     except KeyError:
