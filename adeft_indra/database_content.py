@@ -1,4 +1,5 @@
 import logging
+import hashlib
 from sqlitedict import SqliteDict
 
 
@@ -146,7 +147,8 @@ def universal_extract_text_cached(content, contains):
     text_cache = SqliteDict(filename=CACHE_PATH, tablename='text_cache')
     if not content:
         return None
-    key = content
+    hash_ = hashlib.md5(content.encode()).hexdigest()
+    key = hash_ + ':' + ':'.join(sorted(contains))
     try:
         text = text_cache[key]
     except KeyError:
