@@ -9,7 +9,8 @@ ADEFT_INDRA_PATH = os.path.join(ADEFT_PATH, 'adeft_indra')
 # Path to cache for text content
 CACHE_PATH = os.path.join(ADEFT_INDRA_PATH, 'cache.sqlite')
 # S3 Bucket for storing models
-S3_MODELS_PATH = os.path.join('adeft', __version__, 'Models')
+S3_BUCKET = 'adeft'
+S3_MODELS_PATH = os.path.join(__version__, 'Models')
 
 
 def ensure_adeft_folder():
