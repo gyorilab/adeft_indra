@@ -17,14 +17,14 @@ from adeft.discover import AdeftMiner, load_adeft_miner, compose
 
 
 class MinerCache(LFUCache):
-    def __init__(self, maxsize, outpath, getsizeof=None):
+    def __init__(self, maxsize, location, getsizeof=None):
         super().__init__(maxsize, getsizeof)
-        self.outpath = outpath
+        self.location = location
         self.filenames = {}
 
     def popitem(self):
         key, value = super().popitem()
-        with open(os.path.join(self.outpath, self.filenames[key]), 'w') as f:
+        with open(os.path.join(self.location, self.filenames[key]), 'w') as f:
             value.dump(f)
         return key, value
 
@@ -33,25 +33,27 @@ class MinerCache(LFUCache):
             miner = AdeftMiner(key)
             filename = uuid.uuid1().hex
             self.filenames[key] = filename
-            with open(os.path.join(self.outpath, filename), 'w') as f:
+            with open(os.path.join(self.location, filename), 'w') as f:
                 miner.dump(f)
         else:
-            path = os.path.join(self.outpath, self.filenames[key])
-            with open(os.path.join(self.outpath,
+            with open(os.path.join(self.location,
                                    self.filenames[key]), 'r') as f:
                 miner = load_adeft_miner(f)
         self[key] = miner
         return miner
 
-    def dump_state(self):
-        with open(os.path.join(self.outpath, 'filenames.json'), 'w') as f:
+    def save_all(self):
+        with open(os.path.join(self.location,
+                               'filenames.json'), 'w') as f:
             json.dump(self.filenames, f)
-        while self:
-            self.popitem()
+        for key, miner in self.items():
+            with open(os.path.join(self.location,
+                                   self.filenames[key]), 'w') as f:
+                miner.dump(f)
 
     def reload(self):
         try:
-            with open(os.path.join(self.outpath, 'filenames.json'), 'r') as f:
+            with open(os.path.join(self.location, 'filenames.json'), 'r') as f:
                 self.filenames = json.load(f)
         except FileNotFoundError:
             pass
@@ -73,7 +75,6 @@ class MiningOperation(object):
         self.miners = MinerCache(cache_size, os.path.join(outpath, name))
         self.trids = trids
         self.batch_size = batch_size
-        self.current_batch = 0
         self.defining_pattern_pattern = re.compile(pattern)
         self.banned_prefixes = ('Figure', 'Table', 'Fig')
         if filter_function is None:
@@ -100,22 +101,27 @@ class MiningOperation(object):
         return shortforms
 
     def stream_raw_texts(self):
-        for i in range(self.current_batch, len(self.trids), self.batch_size):
+        for i in range(0, len(self.trids), self.batch_size):
             trid_batch = self.trids[i:i+self.batch_size]
-            _, content_dict = get_text_content_from_trids(trid_batch)
-            texts = [universal_extract_text(content) for content in
-                     content_dict.values() if content]
-            yield texts
+            ref_dict, content_dict = get_text_content_from_trids(trid_batch)
+            content = [(trid, content_dict[ref_dict[trid]])
+                       for trid in ref_dict]
+            texts = [(trid, universal_extract_text(text)) for
+                     trid, text in content if text]
+            yield (i, texts)
 
     def mine(self):
         texts_stream = self.stream_raw_texts()
-        for texts in texts_stream:
-            for text in texts:
+        for batch_number, texts in texts_stream:
+            for trid, text in texts:
                 try:
                     shortforms = self.find_shortforms(text)
                     for shortform in shortforms:
                         miner = self.miners[shortform]
                         miner.process_texts([text])
                 except Exception:
-                    miner.dump_state()
-                
+                    self.miners.save_all()
+                    self.logger.error(f'Failure in batch {batch_number}'
+                                      f' for text_ref_id {trid} with'
+                                      f' text:\n{text[0:3000]}...')
+            self.miners.save_all()
