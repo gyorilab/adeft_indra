@@ -17,6 +17,31 @@ from adeft.discover import AdeftMiner, load_adeft_miner, compose
 
 
 class MinerCache(LFUCache):
+    def __init__(self, maxsize, outpath, getsizeof=None):
+        super().__init__(maxsize, getsizeof)
+        self.outpath = outpath
+        self.filenames = {}
+
+    def popitem(self):
+        key, value = super().popitem()
+        with open(os.path.join(self.outpath, self.filenames[key]), 'w') as f:
+            value.dump(f)
+        return key, value
+
+    def __missing__(self, key):
+        if key not in self.filenames:
+            miner = AdeftMiner(key)
+            filename = uuid.uuid1().hex
+            self.filenames[key] = filename
+            with open(os.path.join(self.outpath, filename), 'w') as f:
+                miner.dump(f)
+        else:
+            path = os.path.join(self.outpath, self.filenames[key])
+            with open(os.path.join(self.outpath,
+                                   self.filenames[key]), 'r') as f:
+                miner = load_adeft_miner(f)
+        self[key] = miner
+        return miner
 
 
 def _get_all_trids():
