@@ -3,6 +3,7 @@ import re
 import uuid
 import json
 import logging
+from cachetools import LFUCache
 from collections import Counter
 from multiprocessing import Pool
 from sqlalchemy import text as sqltext
@@ -15,6 +16,9 @@ from indra_db.util.content_scripts import get_text_content_from_trids
 from adeft.discover import AdeftMiner, load_adeft_miner, compose
 
 
+class MinerCache(LFUCache):
+
+
 def _get_all_trids():
     db = get_primary_db()
     query = 'SELECT id from text_ref'
@@ -23,24 +27,30 @@ def _get_all_trids():
 
 
 class MiningOperation(object):
-    def __init__(self, outpath, trids, batch_size=1000):
+    def __init__(self, outpath, trids, batch_size=1000,
+                 pattern=r'(?<=\()\s?\w+(?=\s?\))',
+                 shortform_size=(2, 10), filter_function=None):
         self.outpath = outpath
         self.trids = trids
         self.batch_size = batch_size
         self.current_batch = 0
         self.miners = {}
-        pattern = r'(?<=\()\s?\w+(?=\s?\))'
         self.defining_pattern_pattern = re.compile(pattern)
         self.banned_prefixes = ('Figure', 'Table', 'Fig')
+        if filter_function is None:
+            def filter_function(shortform):
+                return True if \
+                    shortform_size[0] <= shortform <= shortform_size[1] \
+                    else False
+        self.filter_function = filter_function
 
-    def find_shortforms(self, texts):
-        shortforms = Counter()
-        for text in texts:
-            matches = re.findall(self.defining_pattern_pattern, text)
-            for match in matches:
-                shortform = match.strip()
-                if 2 <= len(shortform) <= 10:
-                    shortforms[shortform] += 1
+    def find_shortforms(self, text):
+        shortforms = set([])
+        matches = re.findall(self.defining_pattern_pattern, text)
+        for match in matches:
+            shortform = match.strip()
+            if self.filter_function(shortform):
+                shortforms.add(shortform)
         return shortforms
 
     def stream_raw_texts(self):
@@ -73,3 +83,7 @@ class MiningOperation(object):
         texts_stream = self.stream_raw_texts()
         for texts in texts_stream:
             pass
+
+    class MinerCache(LFUCache):
+        def popitem(self):
+            key, value = super().popitem()
