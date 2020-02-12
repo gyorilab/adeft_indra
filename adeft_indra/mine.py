@@ -43,7 +43,7 @@ class MinerCache(LFUCache):
         self[key] = miner
         return miner
 
-    def dump_miners(self):
+    def dump_state(self):
         with open(os.path.join(self.outpath, 'filenames.json'), 'w') as f:
             json.dump(self.filenames, f)
         while self:
@@ -81,6 +81,15 @@ class MiningOperation(object):
                     shortform_size[0] <= shortform <= shortform_size[1] \
                     else False
         self.filter_function = filter_function
+        logger_name = uuid.uuid1().hex
+        logger = logging.getLogger(logger_name)
+        file_handler = logging.fileHandler(os.path.join(outpath, 'mine.log'))
+        log_format = logging.Formatter('%(asctime)s - %(levelname)s - '
+                                       ' %(message)s')
+        file_handler.setFormatter(log_format)
+        logger.addHandler(file_handler)
+        self.logger_name = logger_name
+        self.logger = logger
 
     def find_shortforms(self, text):
         shortforms = set([])
@@ -99,25 +108,15 @@ class MiningOperation(object):
                      content_dict.values() if content]
             yield texts
 
-    def dump_miners(self, current_batch=0):
-        filename_dict = {shortform: value[1]
-                         for shortform, value in self.miners.items()}
-        with open(os.path.join(self.outpath, 'filenames.json'), 'w') as f:
-            json.dump({'filenames': filename_dict,
-                       'current_batch': current_batch}, f)
-        for _, (miner, filename) in self.miners.items():
-            with open(os.path.join(self.outpath, filename), 'w') as f:
-                miner.dump(f)
-
-    def load_miners(self):
-        with open(os.path.join(self.outpath, 'filenames.json'), 'r') as f:
-            filename_dict, current_batch = json.load(f)
-        self.current_batch = current_batch
-        for shortform, filename in filename_dict.items():
-            with open(os.path.join(self.outpath, filename), 'r') as f:
-                self.miners[shortform] = load_adeft_miner(f)
-
     def mine(self):
         texts_stream = self.stream_raw_texts()
         for texts in texts_stream:
-            pass
+            for text in texts:
+                try:
+                    shortforms = self.find_shortforms(text)
+                    for shortform in shortforms:
+                        miner = self.miners[shortform]
+                        miner.process_texts([text])
+                except Exception:
+                    miner.dump_state(
+                
