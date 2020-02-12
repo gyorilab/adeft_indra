@@ -65,11 +65,12 @@ def _get_all_trids():
 
 
 class MiningOperation(object):
-    def __init__(self, outpath, trids, batch_size=1000,
+    def __init__(self, outpath, name, trids, batch_size=1000,
                  pattern=r'(?<=\()\s?\w+(?=\s?\))',
                  shortform_size=(2, 10), filter_function=None,
                  cache_size=1000):
-        self.miners = MinerCache(cache_size, outpath)
+        self.name = name
+        self.miners = MinerCache(cache_size, os.path.join(outpath, name))
         self.trids = trids
         self.batch_size = batch_size
         self.current_batch = 0
@@ -81,14 +82,12 @@ class MiningOperation(object):
                     shortform_size[0] <= shortform <= shortform_size[1] \
                     else False
         self.filter_function = filter_function
-        logger_name = uuid.uuid1().hex
-        logger = logging.getLogger(logger_name)
+        logger = logging.getLogger(name)
         file_handler = logging.fileHandler(os.path.join(outpath, 'mine.log'))
-        log_format = logging.Formatter('%(asctime)s - %(levelname)s - '
-                                       ' %(message)s')
+        log_format = logging.Formatter('%(asctime)s - %(name)s - '
+                                       '%(levelname)s - %(message)s')
         file_handler.setFormatter(log_format)
         logger.addHandler(file_handler)
-        self.logger_name = logger_name
         self.logger = logger
 
     def find_shortforms(self, text):
@@ -118,5 +117,5 @@ class MiningOperation(object):
                         miner = self.miners[shortform]
                         miner.process_texts([text])
                 except Exception:
-                    miner.dump_state(
+                    miner.dump_state()
                 
