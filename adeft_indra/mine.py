@@ -43,6 +43,12 @@ class MinerCache(LFUCache):
         self[key] = miner
         return miner
 
+    def dump_miners(self):
+        with open(os.path.join(self.outpath, 'filenames.json'), 'w') as f:
+            json.dump(self.filenames, f)
+        while self:
+            self.popitem()
+
 
 def _get_all_trids():
     db = get_primary_db()
@@ -54,12 +60,12 @@ def _get_all_trids():
 class MiningOperation(object):
     def __init__(self, outpath, trids, batch_size=1000,
                  pattern=r'(?<=\()\s?\w+(?=\s?\))',
-                 shortform_size=(2, 10), filter_function=None):
-        self.outpath = outpath
+                 shortform_size=(2, 10), filter_function=None,
+                 cache_size=1000):
+        self.miners = MinerCache(cache_size, outpath)
         self.trids = trids
         self.batch_size = batch_size
         self.current_batch = 0
-        self.miners = {}
         self.defining_pattern_pattern = re.compile(pattern)
         self.banned_prefixes = ('Figure', 'Table', 'Fig')
         if filter_function is None:
@@ -108,7 +114,3 @@ class MiningOperation(object):
         texts_stream = self.stream_raw_texts()
         for texts in texts_stream:
             pass
-
-    class MinerCache(LFUCache):
-        def popitem(self):
-            key, value = super().popitem()
