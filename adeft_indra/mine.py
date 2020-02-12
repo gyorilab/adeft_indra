@@ -49,6 +49,13 @@ class MinerCache(LFUCache):
         while self:
             self.popitem()
 
+    def reload(self):
+        try:
+            with open(os.path.join(self.outpath, 'filenames.json'), 'r') as f:
+                self.filenames = json.load(f)
+        except FileNotFoundError:
+            pass
+
 
 def _get_all_trids():
     db = get_primary_db()
