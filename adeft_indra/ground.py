@@ -25,6 +25,7 @@ def gilda_ground(agent_text):
         raise RuntimeError(f'Received response with code'
                            '{response.status_code}')
     result = response.json()
+    return result
     if not result:
         output = (None, None, None)
     else:
