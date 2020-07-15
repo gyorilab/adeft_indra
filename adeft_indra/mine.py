@@ -10,7 +10,7 @@ from pathos.multiprocessing import ProcessingPool as Pool
 
 from indra_db.util import get_primary_db
 from indra.literature.adeft_tools import universal_extract_text
-from indra_db.util.content_scripts import get_text_content_from_trids
+from indra_db.util.content_scripts import get_content_identifiers_from_trids
 
 from adeft.discover import AdeftMiner, load_adeft_miner, compose
 
@@ -60,11 +60,13 @@ class MinerCache(LRUCache):
             pass
 
 
-def _get_all_trids():
+def _get_all_best_content_ids():
     db = get_primary_db()
     query = 'SELECT id from text_ref'
     res = db.session.execute(sqltext(query))
-    return [x[0] for x in res.fetchall()]
+    trids = [x[0] for x in res.fetchall()]
+    ids = get_content_identifiers_from_trids(trids)
+    return set(ids.values())
 
 
 class MiningOperation(object):
