@@ -106,4 +106,7 @@ venv.bak/
 # pickle files
 *.pkl
 
-/notebooks/data/*
+/data/*
+!/data/.gitkeep
+/models/*
+!/models/.gitkeep
