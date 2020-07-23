@@ -106,7 +106,5 @@ venv.bak/
 # pickle files
 *.pkl
 
-/data/*
-!/data/.gitkeep
-/models/*
-!/models/.gitkeep
+/adeft_indra/resources/*
+!/adeft_indra/resources/.gitkeep
