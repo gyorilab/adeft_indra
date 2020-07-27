@@ -1,47 +1,72 @@
-import logging
-import requests
+import csv
+from copy import deepcopy
+from collections import defaultdict
+
+from gilda.resources import GROUNDING_TERMS_PATH
+
+from adeft.util import SearchTrie, get_candidate
+from adeft_indra.ground.util import expand_dashes, greek_aware_stem, \
+    normalize, text_similarity
 
 
-logger = logging.getLogger(__name__)
+def load_default_index2grounding():
+    index2grounding = {}
+    text2index = defaultdict(list)
+    lexicon = []
+    with open(GROUNDING_TERMS_PATH) as f:
+        reader = csv.reader(f, delimiter='\t')
+        for index, row in enumerate(reader):
+            entry = {'grounding': f'{row[2]}:{row[3]}',
+                     'type': row[5],
+                     'raw_text': row[1]}
+            index2grounding[index] = entry
+            text2index[normalize(row[1])].append(index)
+            lexicon.append(row[1])
+    return index2grounding, text2index, lexicon
 
 
-def gilda_ground(agent_text):
-    """Use the grounding service to produce groundings for agent text
+class AdeftGrounder(object):
+    def __init__(self, groundings=None):
+        if groundings is None:
+            index2grounding, text2index, lx = load_default_index2grounding()
+        self.index2grounding = index2grounding
+        self.text2index = text2index
+        self._trie = SearchTrie(lx,
+                                expander=expand_dashes,
+                                token_map=greek_aware_stem)
+        self.type_priority = {'assertion': 0,
+                              'name': 1,
+                              'synonym': 2,
+                              'previous': 3}
 
-    Parameters
-    ----------
-    agent_text : str
-        Text of agent to ground
-
-    Returns
-    -------
-    response : dict
-    """
-    grounding_service_ip = '0.0.0.0:8001'
-    grounding_service_url = f'http://{grounding_service_ip}/ground'
-    response = requests.post(grounding_service_url,
-                             json={'text': agent_text})
-    if response.status_code != 200:
-        raise RuntimeError(f'Received response with code'
-                           '{response.status_code}')
-    result = response.json()
-    return result
-    if not result:
-        output = (None, None, None)
-    else:
-        term = result[0]['term']
-        output = term['db'], term['id'], term['entry_name']
-    return output
-
-
-def make_grounding_map(texts, ground=gilda_ground):
-    groundings = {text: ground(text) for text in texts}
-    grounding_map = {}
-    names = {}
-    for text, (db, id_, name) in groundings.items():
-        if id_ is not None:
-            grounding_map[text] = db + ':' + id_
-            names[db + ':' + id_] = name
-        else:
-            grounding_map[text] = 'ungrounded'
-    return grounding_map, names
+    def ground(self, text):
+        results = []
+        expansions = expand_dashes(text)
+        for expansion in expansions:
+            tokens, longform_map = get_candidate(expansion)
+            processed_tokens = [greek_aware_stem(token) for token in tokens]
+            match, match_text = self._trie.search(processed_tokens)
+            if match is None:
+                continue
+            entity_tokens, _ = get_candidate(match_text)
+            if entity_tokens == processed_tokens[-len(entity_tokens):]:
+                longform_text = longform_map[len(entity_tokens)]
+                grounding_keys = self.text2index[normalize(longform_text)]
+                for grounding_key in grounding_keys:
+                    entry = deepcopy(self.index2grounding[grounding_key])
+                    entry['longform_text'] = longform_text
+                    results.append(entry)
+        result_dict = {}
+        for result in results:
+            raw_text = result['raw_text']
+            grounding = result['grounding']
+            longform_text = result['longform_text']
+            score = (text_similarity(longform_text, raw_text),
+                     3 - self.type_priority[result['type']])
+            if grounding not in result_dict or \
+               score > result_dict[grounding]['score']:
+                result_dict[grounding] = result
+                result_dict[grounding]['score'] = score
+        out = [result for result in result_dict.values()
+               if result['score'][0] > 0]
+        return sorted(out, key=lambda x: (-x['score'][0], -x['score'][1]))
