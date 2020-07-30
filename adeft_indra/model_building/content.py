@@ -37,4 +37,4 @@ def get_agent_texts_for_entity(ns, id_):
     if not pmids:
         return []
     counts = get_agent_texts_for_pmids(pmids)
-    return sorted(counts.items(), key=lambda x: -x[1])
+    return counts

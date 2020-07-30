@@ -1,8 +1,7 @@
 import os
 import json
+from math import asin, sqrt
 from collections import Counter
-from adeft_indra.model_building.content import get_pmids_for_entity
-from indra_db.util.content_scripts import get_agent_texts_for_pmids
 
 
 def get_agent_text_dfs(count_dicts):
@@ -41,12 +40,16 @@ class TfidfAgentTexts(object):
     def dump(self, filepath):
         filepath = os.path.realpath(os.path.expanduser(filepath))
         with open(filepath, 'w') as f:
-            json.dump({'DFs': dict(self.Dfs),
+            json.dump({'DFs': dict(self.DFs),
                        'total_documents': self.total_documents}, f)
 
-
-pmids = get_pmids_for_entity('FPLX', 'Carboxylesterase')
-texts = get_agent_texts_for_pmids(pmids)
-
-tfidf = TfidfAgentTexts()
-tfidf.add(texts.values())
+    def cohen_h(self, tfidf_agent_texts):
+        result = {}
+        n1 = tfidf_agent_texts.total_documents
+        n2 = self.total_documents
+        for text, count in tfidf_agent_texts.DFs.items():
+            p1 = count/n1
+            p2 = self.DFs[text]/n2
+            h = 2*asin(sqrt(p1)) - 2*asin(sqrt(p2))
+            result[text] = h
+        return sorted(result.items(), key=lambda x: -x[1])
