@@ -2,13 +2,13 @@ import logging
 
 import numpy as np
 
+
 from sklearn.svm import OneClassSVM
 from sklearn.pipeline import Pipeline
+from adeft.nlp import english_stopwords
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import KFold, GridSearchCV
 
-
-from adeft.nlp import english_stopwords
 from adeft_indra.tfidf import AdeftTfidfVectorizer
 from .stats import sensitivity_score, specificity_score, youdens_j_score
 
@@ -57,7 +57,7 @@ class AdeftAnomalyDetector(object):
         py:class:`sklearn.model_selection.GridSearchCV` if fit with the
         cv method
     """
-    def __init__(self, tfidf_path, blacklist=None):
+    def __init__(self, tfidf_path=None, blacklist=None):
         self.tfidf_path = tfidf_path
         self.blacklist = [] if blacklist is None else blacklist
         self.estimator = None
@@ -97,7 +97,7 @@ class AdeftAnomalyDetector(object):
         """
         # initialize pipeline
         pipeline = Pipeline([('tfidf',
-                              AdeftTfidfVectorizer(self.tfidf_path,
+                              AdeftTfidfVectorizer(dict_path=self.tfidf_path,
                                                    max_features=max_features,
                                                    stop_words=self.stop)),
                              ('oc_svm',

@@ -5,13 +5,14 @@ from gensim.matutils import corpus2csc
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from adeft_indra.locations import DOCUMENT_FREQUENCIES_PATH
+from adeft_indra.locations import RESOURCES_PATH
 
 
 class AdeftTfidfVectorizer(BaseEstimator, TransformerMixin):
     def __init__(self, dict_path=None, max_features=None, stop_words=None):
         if dict_path is None:
-            dict_path = DOCUMENT_FREQUENCIES_PATH
+            dict_path = os.path.join(RESOURCES_PATH,
+                                     'pubmed_dictionary_filtered.pkl')
         self.dict_path = dict_path
         self.max_features = max_features
         self.tokenize = TfidfVectorizer().build_tokenizer()
