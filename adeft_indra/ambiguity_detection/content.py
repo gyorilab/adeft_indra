@@ -8,8 +8,9 @@ from indra.databases.hgnc_client import get_hgnc_name
 from pyobo.sources.pubchem import logger as pyobo_logger
 from pyobo.sources.pubchem import get_pubchem_id_to_mesh_id
 from indra.databases.chebi_client import get_chebi_id_from_pubchem
-
 from indra.literature.pubmed_client import get_ids_for_gene, get_ids_for_mesh
+
+from adeft_indra.locations import RESOURCES_PATH
 
 pyobo_logger.setLevel('ERROR')
 
@@ -38,6 +39,15 @@ class MeshMapper(object):
             chebi_id = get_chebi_id_from_pubchem(pubchem_id)
             if chebi_id is not None:
                 chebi_equiv[chebi_id].add(mesh_id)
+        # Get HGNC -> MESH supplementary equivalences
+        with open(os.path.join(RESOURCES_PATH, 'hgnc_mesh_mapping.json')) as f:
+            hgnc_mesh_mapping = json.load(f)
+        # Get MESH supplementary -> MESH primary mappings
+        with open(os.path.join(RESOURCES_PATH,
+                               'mesh_gene_supplementary_primary_mapping.json')) as f:
+            gene_supp_primary_mapping = json.load(f)
+        self.gene_supp_primary_mapping = gene_supp_primary_mapping
+        self.hgnc_mesh_mapping = hgnc_mesh_mapping
         self.gilda_equiv = gilda_equiv
         self.fplx_equiv = fplx_equiv
         self.chebi_equiv = chebi_equiv
@@ -55,6 +65,14 @@ class MeshMapper(object):
             equivs = self.chebi_equiv.get(id_)
             if equivs is not None:
                 mesh_ids.update(equivs)
+        elif namespace == 'HGNC':
+            name = get_hgnc_name(id_)
+            mesh_concept = self.hgnc_mesh_mapping.get(name)
+            if mesh_concept is not None:
+                mesh_ids.add(mesh_concept)
+            mesh_primary = self.gene_supp_primary_mapping.get(mesh_concept)
+            if mesh_primary is not None:
+                mesh_ids.add(mesh_primary)                
         equivs = self.gilda_equiv.get(f'{namespace}:{id_}')
         if equivs is not None:
             mesh_ids.update(equivs)
@@ -65,18 +83,22 @@ class MeshMapper(object):
                     mesh_ids.add(mapped_id)
         return list(mesh_ids)
 
-    
+
 _mesh_mapper = MeshMapper()
 
 
-def get_pmids_for_entity(namespace, id_):
+def get_pmids_for_entity(namespace, id_, major_topic=True):
     if namespace == 'MESH':
-        return get_ids_for_mesh(id_, major_topic=True)
+        return get_ids_for_mesh(id_, major_topic=major_topic)
     pmids = set()
-    mesh_ids = _mesh_mapper.map_to_mesh(namespace, id_)
+    mesh_ids = _mesh_mapper.map_to_mesh(namespace, id_,)
     for id_ in mesh_ids:
-        pmids.update(get_ids_for_mesh(id_, major_topic=True))
+        pmids.update(get_ids_for_mesh(id_, major_topic=major_topic))
     if namespace == 'HGNC':
-        pmids.update(get_ids_for_gene(get_hgnc_name(id_)))
+        name = get_hgnc_name(id_)
+        if name is not None:
+            try:
+                pmids.update(get_ids_for_gene(name))
+            except ValueError:
+                pass
     return list(pmids)
-            
