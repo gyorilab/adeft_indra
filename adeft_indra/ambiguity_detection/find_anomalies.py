@@ -15,6 +15,11 @@ from .stats import sensitivity_score, specificity_score, youdens_j_score
 
 logger = logging.getLogger(__file__)
 
+gensim_logger = logging.getLogger('gensim')
+sklearn_logger = logging.getLogger('sklearn')
+gensim_logger.setLevel('WARNING')
+sklearn_logger.setLevel('WARNING')
+
 
 class AdeftAnomalyDetector(object):
     """Trains one class classifier to detect samples unlike training texts
