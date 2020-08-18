@@ -1,3 +1,4 @@
+import os
 import csv
 import json
 import famplex
@@ -19,6 +20,7 @@ class MeshMapper(object):
     def __init__(self):
         # get gilda MESH equivalences (excluding famplex, for which an exhaustive
         # set has been added to the famplex package.
+        print('!!!!!!!!!!!!!!!!')
         gilda_equiv = defaultdict(set)
         with open(MESH_MAPPINGS_PATH, newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter='\t')
@@ -82,23 +84,3 @@ class MeshMapper(object):
                 if mapped_ns == 'MESH':
                     mesh_ids.add(mapped_id)
         return list(mesh_ids)
-
-
-_mesh_mapper = MeshMapper()
-
-
-def get_pmids_for_entity(namespace, id_, major_topic=True):
-    if namespace == 'MESH':
-        return get_ids_for_mesh(id_, major_topic=major_topic)
-    pmids = set()
-    mesh_ids = _mesh_mapper.map_to_mesh(namespace, id_,)
-    for id_ in mesh_ids:
-        pmids.update(get_ids_for_mesh(id_, major_topic=major_topic))
-    if namespace == 'HGNC':
-        name = get_hgnc_name(id_)
-        if name is not None:
-            try:
-                pmids.update(get_ids_for_gene(name))
-            except ValueError:
-                pass
-    return list(pmids)

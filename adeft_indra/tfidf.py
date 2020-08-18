@@ -1,3 +1,4 @@
+import os
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
 from gensim.matutils import corpus2csc

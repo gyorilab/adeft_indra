@@ -8,6 +8,7 @@ from sklearn.pipeline import Pipeline
 from adeft.nlp import english_stopwords
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 from adeft_indra.tfidf import AdeftTfidfVectorizer
 from .stats import sensitivity_score, specificity_score, youdens_j_score
