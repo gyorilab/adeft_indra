@@ -17,6 +17,7 @@ S3_DOCUMENT_FREQUENCIES_PATH = 'entrez_pubmed_dictionary.pkl'
 
 
 RESOURCES_PATH = os.path.join(here, 'resources')
+CACHE_PATH = os.path.join(RESOURCES_PATH, 'cache.db')
 DOCUMENT_FREQUENCIES_PATH = os.path.join(RESOURCES_PATH,
                                          'document_frequencies.pkl')
 GROUNDING_THESAURUS_PATH = os.path.join(RESOURCES_PATH,
