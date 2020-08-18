@@ -54,8 +54,8 @@ class ContentCache(object):
                         stmt_id IN ({','.join(['?']*len(stmt_ids))})
                 """
             with closing(conn.cursor()) as cur:
-                output = list(cur.execute(query, stmt_ids))
-        return output
+                res = cur.execute(query, stmt_ids).fetchall()
+        return [row[0] for row in res]
 
     def _get_text_content_from_pmids_local(self, pmids):
         with closing(sqlite3.connect(CACHE_PATH)) as conn:
@@ -72,8 +72,8 @@ class ContentCache(object):
                         pmid IN ({','.join(['?']*len(pmids))})
                 """
             with closing(conn.cursor()) as cur:
-                output = list(cur.execute(query, pmids))
-        return output
+                res = cur.execute(query, pmids).fetchall()
+        return [row[0] for row in res]
 
     def _insert_content(self, content_rows):
         with closing(sqlite3.connect(CACHE_PATH)) as conn:
