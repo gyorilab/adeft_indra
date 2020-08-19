@@ -144,8 +144,8 @@ class ContentCache(object):
             output = \
                 self._get_text_content_from_stmt_ids_local(list(cached))
         if uncached:
-            identifiers = get_content_identifiers_from_stmt_ids(uncached)
-            text_ref_ids = set(identifier[0] for identifier in identifiers)
+            idf_dict = get_content_identifiers_from_stmt_ids(uncached)
+            text_ref_ids = {idf[0] for idf in idf_dict.values()}
             cached = text_ref_ids & self._load_cached_text_ref_ids()
             uncached = list(set(text_ref_ids) - cached)
             stmt_rows = []
@@ -154,11 +154,11 @@ class ContentCache(object):
                     extend(self.
                            _get_text_content_from_text_ref_ids_local(cached))
                 stmt_rows = [(stmt_id, text_ref_id)
-                             for stmt_id, text_ref_id in identifiers.items()
-                             if text_ref_id in cached]
+                             for stmt_id, text_ref_id in idf_dict.items()
+                             if text_ref_id in cached and text_ref_id]
             if uncached:
-                identifiers = [idf for idf in identifiers
-                               if idf[0] in cached and idf]
+                identifiers = [idf for idf in idf_dict.values()
+                               if idf[0] in uncached and idf]
                 ref_dict, content_dict = _get_text_content(identifiers)
                 content_dict = {ref: xml for ref, xml in content_dict.items()
                                 if xml}
@@ -183,8 +183,8 @@ class ContentCache(object):
             output = \
                 self._get_text_content_from_pmids_local(list(cached))
         if uncached:
-            identifiers = get_content_identifiers_from_pmids(uncached)
-            text_ref_ids = set(identifier[0] for identifier in identifiers)
+            idf_dict = get_content_identifiers_from_pmids(uncached)
+            text_ref_ids = {idf[0] for idf in idf_dict.values()}
             cached = text_ref_ids & self._load_cached_text_ref_ids()
             uncached = list(set(text_ref_ids) - cached)
             pmid_rows = []
@@ -193,10 +193,10 @@ class ContentCache(object):
                     extend(self.
                            _get_text_content_from_text_ref_ids_local(cached))
                 pmid_rows = [(pmid, text_ref_id)
-                             for pmid, text_ref_id in identifiers.items()
+                             for pmid, text_ref_id in idf_dict.items()
                              if text_ref_id in cached]
             if uncached:
-                identifiers = [idf for idf in identifiers
+                identifiers = [idf for idf in idf_dict.values()
                                if idf[0] in cached]
                 ref_dict, content_dict = _get_text_content(identifiers)
                 content_dict = {ref: xml for ref, xml in content_dict.items()
