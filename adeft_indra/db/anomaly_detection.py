@@ -16,8 +16,8 @@ class AnomalyDetectorsManager(object):
         make_table_anomaly_detectors = \
             """CREATE TABLE IF NOT EXISTS anomaly_detectors (
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                   groundng TEXT,
-                   anomaly_detector BLOB
+                   grounding TEXT,
+                   anomaly_detector BLOB);
             """
         make_idx_anomaly_detectors_grounding = \
             """CREATE INDEX IF NOT EXISTS
@@ -46,7 +46,7 @@ class AnomalyDetectorsManager(object):
             with closing(conn.cursor()) as cur:
                 cur.execute(query, [grounding])
                 res = cur.fetchone()
-        return len(res) == 1
+        return res
 
     def save(self, grounding, anomaly_detector):
         query = """INSERT INTO
@@ -76,7 +76,7 @@ class AnomalyDetectorsManager(object):
         return pickle.loads(res)
 
 
-class AnomalyDetectionResultsManager(object):
+class ResultsManager(object):
     def __init__(self, cache_path=CACHE_PATH):
         self.cache_path = CACHE_PATH
         self._setup_table()
@@ -119,9 +119,9 @@ class AnomalyDetectionResultsManager(object):
                 """
         with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
-                cur.execute(query)
+                cur.execute(query, [agent_text, grounding])
                 res = cur.fetchone()
-        return len(res) == 1
+        return res
 
     def add_row(self, row):
         insert_row = \
