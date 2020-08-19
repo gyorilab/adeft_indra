@@ -12,22 +12,30 @@ class AnomalyDetectionResultsManager(object):
         self._setup_table()
 
     def _setup_table(self):
-        make_result_table = \
-                """CREATE TABLE IF NOT EXISTS results (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       agent_text TEXT,
-                       grounding TEXT,
-                       num_training_texts INTEGER,
-                       num_prediction_texts INTEGER,
-                       num_anomalous_texts INTEGER,
-                       specificity REAL,
-                       std_specifity REAL
-                       UNIQUE(agent_text, grounding)
-                   );
-                """
+        make_results_table = \
+            """CREATE TABLE IF NOT EXISTS results (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   agent_text TEXT,
+                   grounding TEXT,
+                   num_training_texts INTEGER,
+                   num_prediction_texts INTEGER,
+                   num_anomalous_texts INTEGER,
+                   specificity REAL,
+                   std_specifity REAL
+                   UNIQUE(agent_text, grounding)
+               );
+            """
+        make_idx_results_agent_text_grounding = \
+            """CREATE UNIQUE INDEX IF NOT EXISTS
+                   idx_results_agent_text_grounding
+               ON
+                   results (agent_text, grounding);
+            """
         with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
-                cur.execute(make_result_table)
+                for query in [make_results_table,
+                              make_idx_results_agent_text_grounding]:
+                    cur.execute(query)
             conn.commit()
 
     def add_row(self, row):
