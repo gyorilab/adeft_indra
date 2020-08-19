@@ -36,7 +36,7 @@ class ContentCache(object):
                 FROM
                     pmids
                 WHERE
-                    pmid_id IN ({','.join(['?']*len(pmids))});
+                    pmid IN ({','.join(['?']*len(pmids))});
             """
         with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
@@ -145,39 +145,39 @@ class ContentCache(object):
 
     def get_text_content_from_stmt_ids(self, stmt_ids, njobs=1):
         output = []
-        cached = self._load_cached_stmt_ids(stmt_ids)
-        uncached = list(set(stmt_ids) - cached)
-        cached = list(cached)
-        if cached:
+        cached_stmt_ids = self._load_cached_stmt_ids(stmt_ids)
+        uncached_stmt_ids = list(set(stmt_ids) - cached_stmt_ids)
+        cached_stmt_ids = list(cached_stmt_ids)
+        if cached_stmt_ids:
             output = \
-                self._get_text_content_from_stmt_ids_local(cached)
-        if uncached:
-            idf_dict = get_content_identifiers_from_stmt_ids(uncached)
-            text_ref_ids = {idf[0] for idf in idf_dict.values()}
-            cached = self._load_cached_text_ref_ids(text_ref_ids)
-            uncached = list(set(text_ref_ids) - cached)
-            cached = list(cached)
+                self._get_text_content_from_stmt_ids_local(cached_stmt_ids)
+        if uncached_stmt_ids:
+            idf_dict = get_content_identifiers_from_stmt_ids(uncached_stmt_ids)
+            text_ref_ids = [idf[0] for idf in idf_dict.values()]
+            cached_trids = self._load_cached_text_ref_ids(text_ref_ids)
+            uncached_trids = list(set(text_ref_ids) - cached_trids)
+            cached_trids = list(cached_trids)
             stmt_rows = []
-            if cached:
+            if cached_trids:
                 output.\
                     extend(self.
-                           _get_text_content_from_text_ref_ids_local(cached))
-                stmt_rows = [(stmt_id, text_ref_id)
-                             for stmt_id, text_ref_id in idf_dict.items()
-                             if text_ref_id in cached and text_ref_id]
-            if uncached:
+                           _get_text_content_from_text_ref_ids_local(
+                               cached_trids))
+                stmt_rows = [(stmt_id, ref[0])
+                             for stmt_id, ref in idf_dict.items()
+                             if ref[0] in cached_trids]
+            if uncached_trids:
                 identifiers = [idf for idf in idf_dict.values()
-                               if idf[0] in uncached and idf]
-                ref_dict, content_dict = _get_text_content(identifiers)
-                content_dict = {ref: xml for ref, xml in content_dict.items()
-                                if xml}
+                               if idf[0] in uncached_trids]
+                content_dict = _get_text_content(identifiers)
                 plaintexts = extract_plaintext(content_dict.values(),
                                                njobs=njobs)
                 content_rows = [(ref[0], text)
                                 for ref, text in
                                 zip(content_dict.keys(), plaintexts)]
                 stmt_rows = [(stmt_id, ref[0])
-                             for stmt_id, ref in ref_dict.items() if ref]
+                             for stmt_id, ref in idf_dict.items()
+                             if ref[0] in uncached_trids]
                 output.extend(plaintexts)
                 self._insert_content(content_rows)
             if stmt_rows:
@@ -186,39 +186,39 @@ class ContentCache(object):
 
     def get_text_content_from_pmids(self, pmids, njobs=1):
         output = []
-        cached = self._load_cached_pmids(pmids)
-        uncached = list(set(pmids) - cached)
-        cached = list(cached)
-        if cached:
+        cached_pmids = self._load_cached_pmids(pmids)
+        uncached_pmids = list(set(pmids) - cached_pmids)
+        cached_pmids = list(cached_pmids)
+        if cached_pmids:
             output = \
-                self._get_text_content_from_pmids_local(cached)
-        if uncached:
-            idf_dict = get_content_identifiers_from_pmids(uncached)
-            text_ref_ids = {idf[0] for idf in idf_dict.values()}
-            cached = self._load_cached_text_ref_ids(text_ref_ids)
-            uncached = list(set(text_ref_ids) - cached)
-            cached = list(cached)
+                self._get_text_content_from_pmids_local(cached_pmids)
+        if uncached_pmids:
+            idf_dict = get_content_identifiers_from_pmids(uncached_pmids)
+            text_ref_ids = [idf[0] for idf in idf_dict.values()]
+            cached_trids = self._load_cached_text_ref_ids(text_ref_ids)
+            uncached_trids = list(set(text_ref_ids) - cached_trids)
+            cached_trids = list(cached_trids)
             pmid_rows = []
-            if cached:
+            if cached_trids:
                 output.\
                     extend(self.
-                           _get_text_content_from_text_ref_ids_local(cached))
-                pmid_rows = [(pmid, text_ref_id)
-                             for pmid, text_ref_id in idf_dict.items()
-                             if text_ref_id in cached]
-            if uncached:
+                           _get_text_content_from_text_ref_ids_local(
+                               cached_trids))
+                pmid_rows = [(pmid, ref[0])
+                             for pmid, ref in idf_dict.items()
+                             if ref[0] in cached_trids]
+            if uncached_trids:
                 identifiers = [idf for idf in idf_dict.values()
-                               if idf[0] in cached]
-                ref_dict, content_dict = _get_text_content(identifiers)
-                content_dict = {ref: xml for ref, xml in content_dict.items()
-                                if xml}
+                               if idf[0] in uncached_trids]
+                content_dict = _get_text_content(identifiers)
                 plaintexts = extract_plaintext(content_dict.values(),
                                                njobs=njobs)
                 content_rows = [(ref[0], text)
                                 for ref, text in
                                 zip(content_dict.keys(), plaintexts)]
                 pmid_rows = [(pmid, ref[0])
-                             for pmid, ref in ref_dict.items() if ref]
+                             for pmid, ref in idf_dict.items()
+                             if ref[0] in uncached_trids]
                 output.extend(plaintexts)
                 self._insert_content(content_rows)
             if pmid_rows:

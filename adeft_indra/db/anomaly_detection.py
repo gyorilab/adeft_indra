@@ -91,7 +91,7 @@ class ResultsManager(object):
                    num_prediction_texts INTEGER,
                    num_anomalous_texts INTEGER,
                    specificity REAL,
-                   std_specifity REAL,
+                   std_specificity REAL,
                    UNIQUE(agent_text, grounding)
                );
             """
@@ -127,8 +127,8 @@ class ResultsManager(object):
         insert_row = \
             """INSERT OR IGNORE INTO
                    results (agent_text, grounding, num_training_texts,
-                            num_training_texts, num_prediction_texts,
-                            num_anomalous_texts, specificity, std_specificity)
+                            num_prediction_texts, num_anomalous_texts,
+                            specificity, std_specificity)
                VALUES
                    (?, ?, ?, ?, ?, ?, ?);
             """
