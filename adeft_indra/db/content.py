@@ -11,127 +11,127 @@ from adeft_indra.locations import CACHE_PATH
 
 class ContentCache(object):
     def __init__(self, cache_path=CACHE_PATH):
+        self.cache_path = CACHE_PATH
         self._setup_tables()
 
     def _load_cached_stmt_ids(self):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            cur = conn.cursor()
-            select_stmt_ids = \
-                """SELECT
-                       stmt_id
-                   FROM
-                       stmts
-                """
+        select_stmt_ids = \
+            """SELECT
+                   stmt_id
+               FROM
+                   stmts
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(select_stmt_ids)
                 stmt_ids = cur.fetchall()
         return {row[0] for row in stmt_ids}
 
     def _load_cached_pmids(self):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            select_pmids = \
-                """SELECT
-                       pmid
-                   FROM
-                       pmids
-                """
+        select_pmids = \
+            """SELECT
+                   pmid
+               FROM
+                   pmids
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(select_pmids)
                 pmids = cur.fetchall()
         return {str(row[0]) for row in pmids}
 
     def _load_cached_text_ref_ids(self):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            select_text_ref_ids = \
-                """SELECT
-                       text_ref_id
-                   FROM
-                       content
-                """
+        select_text_ref_ids = \
+            """SELECT
+                   text_ref_id
+               FROM
+                   content
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(select_text_ref_ids)
                 text_ref_ids = cur.fetchall()
         return {(row[0]) for row in text_ref_ids}
 
     def _get_text_content_from_stmt_ids_local(self, stmt_ids):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            query = \
-                f"""SELECT DISTINCT
-                        plaintext
-                    FROM
-                        stmts
-                    JOIN
-                        content
-                    ON
-                        stmts.text_ref_id = content.text_ref_id
-                    WHERE
-                        stmt_id IN ({','.join(['?']*len(stmt_ids))})
-                """
+        query = \
+            f"""SELECT DISTINCT
+                    plaintext
+                FROM
+                    stmts
+                JOIN
+                    content
+                ON
+                    stmts.text_ref_id = content.text_ref_id
+                WHERE
+                    stmt_id IN ({','.join(['?']*len(stmt_ids))})
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 res = cur.execute(query, stmt_ids).fetchall()
         return [row[0] for row in res]
 
     def _get_text_content_from_pmids_local(self, pmids):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            query = \
-                f"""SELECT DISTINCT
-                        plaintext
-                    FROM
-                        pmids
-                    JOIN
-                        content
-                    ON
-                        pmids.text_ref_id = content.text_ref_id
-                    WHERE
-                        pmid IN ({','.join(['?']*len(pmids))})
-                """
+        query = \
+            f"""SELECT DISTINCT
+                    plaintext
+                FROM
+                    pmids
+                JOIN
+                    content
+                ON
+                    pmids.text_ref_id = content.text_ref_id
+                WHERE
+                    pmid IN ({','.join(['?']*len(pmids))})
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 res = cur.execute(query, pmids).fetchall()
         return [row[0] for row in res]
 
     def _get_text_content_from_text_ref_ids_local(self, text_ref_ids):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            query = \
-                f"""SELECT DISTINCT
-                        plaintext
-                    FROM
-                        content
-                    WHERE
-                        text_ref_id IN ({','.join(['?']*len(text_ref_ids))})
-                """
+        query = \
+            f"""SELECT DISTINCT
+                    plaintext
+                FROM
+                    content
+                WHERE
+                    text_ref_id IN ({','.join(['?']*len(text_ref_ids))})
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 res = cur.execute(query, text_ref_ids).fetchall()
         return [row[0] for row in res]
 
     def _insert_content(self, content_rows):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            content_insert_query = """INSERT OR IGNORE INTO
-                                          content (text_ref_id, plaintext)
-                                      VALUES
-                                          (?, ?);
-                                   """
+        content_insert_query = """INSERT OR IGNORE INTO
+                                      content (text_ref_id, plaintext)
+                                  VALUES
+                                      (?, ?);
+                               """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.executemany(content_insert_query, content_rows)
             conn.commit()
 
     def _insert_stmts(self, stmt_rows):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            stmts_insert_query = """INSERT INTO
-                                        stmts (stmt_id, text_ref_id)
-                                    VALUES
-                                        (?, ?);
-                                 """
+        stmts_insert_query = """INSERT INTO
+                                    stmts (stmt_id, text_ref_id)
+                                VALUES
+                                    (?, ?);
+                             """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.executemany(stmts_insert_query, stmt_rows)
             conn.commit()
 
     def _insert_pmids(self, pmid_rows):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            pmids_insert_query = """INSERT INTO
-                                        pmids (pmid, text_ref_id)
-                                    VALUES
-                                        (?, ?);
-                                 """
+        pmids_insert_query = """INSERT INTO
+                                    pmids (pmid, text_ref_id)
+                                VALUES
+                                    (?, ?);
+                             """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.executemany(pmids_insert_query, pmid_rows)
             conn.commit()
@@ -219,63 +219,63 @@ class ContentCache(object):
         return output
 
     def _setup_tables(self):
-        with closing(sqlite3.connect(CACHE_PATH)) as conn:
-            make_table_content = \
-                """CREATE TABLE IF NOT EXISTS content (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       text_ref_id INTEGER NOT NULL,
-                       plaintext TEXT,
-                       UNIQUE(text_ref_id, plaintext)
-                   );
-                """
-            make_table_stmts = \
-                """CREATE TABLE IF NOT EXISTS stmts (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       stmt_id INTEGER NOT NULL,
-                       text_ref_id INTEGER NOT NULL,
-                       FOREIGN KEY
-                           (text_ref_id) REFERENCES content (text_ref_id)
-                   );
-                """
-            make_table_pmids = \
-                """CREATE TABLE IF NOT EXISTS pmids (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       pmid INTEGER NOT NULL,
-                       text_ref_id INTEGER NOT NULL,
-                       FOREIGN KEY
-                           (text_ref_id) REFERENCES content (text_ref_id)
-                   );
-                """
-            make_idx_content_text_ref_id = \
-                """CREATE UNIQUE INDEX IF NOT EXISTS
-                       idx_content_text_ref_id
-                   ON
-                       content (text_ref_id);
-                """
-            make_idx_stmts_stmt_id = \
-                """CREATE UNIQUE INDEX IF NOT EXISTS
-                       idx_stmts_stmt_id
-                   ON
-                       stmts (stmt_id);
-                """
-            make_idx_stmts_text_ref_id = \
-                """CREATE INDEX IF NOT EXISTS
-                       idx_stmts_text_ref_id
-                   ON
-                       stmts (text_ref_id);
-                """
-            make_idx_pmids_pmid = \
-                """CREATE UNIQUE INDEX IF NOT EXISTS
-                       idx_pmids_pmid
-                   ON
-                       pmids (pmid);
-                """
-            make_idx_pmids_text_ref_id = \
-                """CREATE UNIQUE INDEX IF NOT EXISTS
-                       idx_pmids_pmid_text_ref_id
-                   ON
-                       pmids (text_ref_id);
-                """
+        make_table_content = \
+            """CREATE TABLE IF NOT EXISTS content (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   text_ref_id INTEGER NOT NULL,
+                   plaintext TEXT,
+                   UNIQUE(text_ref_id, plaintext)
+               );
+            """
+        make_table_stmts = \
+            """CREATE TABLE IF NOT EXISTS stmts (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   stmt_id INTEGER NOT NULL,
+                   text_ref_id INTEGER NOT NULL,
+                   FOREIGN KEY
+                       (text_ref_id) REFERENCES content (text_ref_id)
+               );
+            """
+        make_table_pmids = \
+            """CREATE TABLE IF NOT EXISTS pmids (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   pmid INTEGER NOT NULL,
+                   text_ref_id INTEGER NOT NULL,
+                   FOREIGN KEY
+                       (text_ref_id) REFERENCES content (text_ref_id)
+               );
+            """
+        make_idx_content_text_ref_id = \
+            """CREATE UNIQUE INDEX IF NOT EXISTS
+                   idx_content_text_ref_id
+               ON
+                   content (text_ref_id);
+            """
+        make_idx_stmts_stmt_id = \
+            """CREATE UNIQUE INDEX IF NOT EXISTS
+                   idx_stmts_stmt_id
+               ON
+                   stmts (stmt_id);
+            """
+        make_idx_stmts_text_ref_id = \
+            """CREATE INDEX IF NOT EXISTS
+                   idx_stmts_text_ref_id
+               ON
+                   stmts (text_ref_id);
+            """
+        make_idx_pmids_pmid = \
+            """CREATE UNIQUE INDEX IF NOT EXISTS
+                   idx_pmids_pmid
+               ON
+                   pmids (pmid);
+            """
+        make_idx_pmids_text_ref_id = \
+            """CREATE UNIQUE INDEX IF NOT EXISTS
+                   idx_pmids_pmid_text_ref_id
+               ON
+                   pmids (text_ref_id);
+            """
+        with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
                 for query in [make_table_content, make_table_stmts,
                               make_table_pmids,
