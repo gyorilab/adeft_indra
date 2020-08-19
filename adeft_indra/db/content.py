@@ -14,42 +14,49 @@ class ContentCache(object):
         self.cache_path = CACHE_PATH
         self._setup_tables()
 
-    def _load_cached_stmt_ids(self):
+    def _load_cached_stmt_ids(self, stmt_ids):
         select_stmt_ids = \
-            """SELECT
-                   stmt_id
-               FROM
-                   stmts
+            f"""SELECT
+                    stmt_id
+                FROM
+                    stmts
+                WHERE
+                    stmt_id IN ({','.join(['?']*len(stmt_ids))}); 
             """
         with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
-                cur.execute(select_stmt_ids)
+                cur.execute(select_stmt_ids, stmt_ids)
                 stmt_ids = cur.fetchall()
         return {row[0] for row in stmt_ids}
 
-    def _load_cached_pmids(self):
+    def _load_cached_pmids(self, pmids):
         select_pmids = \
-            """SELECT
-                   pmid
-               FROM
-                   pmids
+            f"""SELECT
+                    pmid
+                FROM
+                    pmids
+                WHERE
+                    pmid_id IN ({','.join(['?']*len(pmids))});
             """
         with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
-                cur.execute(select_pmids)
-                pmids = cur.fetchall()
-        return {str(row[0]) for row in pmids}
+                cur.execute(select_pmids,
+                            [int(pmid) for pmid in pmids])
+                res = cur.fetchall()
+        return {str(row[0]) for row in res}
 
-    def _load_cached_text_ref_ids(self):
+    def _load_cached_text_ref_ids(self, text_ref_ids):
         select_text_ref_ids = \
-            """SELECT
-                   text_ref_id
-               FROM
-                   content
+            f"""SELECT
+                    text_ref_id
+                FROM
+                    content
+                WHERE
+                    text_ref_id IN ({','.join(['?']*len(text_ref_ids))});
             """
         with closing(sqlite3.connect(self.cache_path)) as conn:
             with closing(conn.cursor()) as cur:
-                cur.execute(select_text_ref_ids)
+                cur.execute(select_text_ref_ids, text_ref_ids)
                 text_ref_ids = cur.fetchall()
         return {(row[0]) for row in text_ref_ids}
 
@@ -138,7 +145,7 @@ class ContentCache(object):
 
     def get_text_content_from_stmt_ids(self, stmt_ids, njobs=1):
         output = []
-        cached = set(stmt_ids) & self._load_cached_stmt_ids()
+        cached = self._load_cached_stmt_ids(stmt_ids)
         uncached = list(set(stmt_ids) - cached)
         cached = list(cached)
         if cached:
@@ -147,7 +154,7 @@ class ContentCache(object):
         if uncached:
             idf_dict = get_content_identifiers_from_stmt_ids(uncached)
             text_ref_ids = {idf[0] for idf in idf_dict.values()}
-            cached = text_ref_ids & self._load_cached_text_ref_ids()
+            cached = self._load_cached_text_ref_ids(text_ref_ids)
             uncached = list(set(text_ref_ids) - cached)
             cached = list(cached)
             stmt_rows = []
@@ -179,7 +186,7 @@ class ContentCache(object):
 
     def get_text_content_from_pmids(self, pmids, njobs=1):
         output = []
-        cached = set(pmids) & self._load_cached_pmids()
+        cached = self._load_cached_pmids(pmids)
         uncached = list(set(pmids) - cached)
         cached = list(cached)
         if cached:
@@ -188,7 +195,7 @@ class ContentCache(object):
         if uncached:
             idf_dict = get_content_identifiers_from_pmids(uncached)
             text_ref_ids = {idf[0] for idf in idf_dict.values()}
-            cached = text_ref_ids & self._load_cached_text_ref_ids()
+            cached = self._load_cached_text_ref_ids(text_ref_ids)
             uncached = list(set(text_ref_ids) - cached)
             cached = list(cached)
             pmid_rows = []
