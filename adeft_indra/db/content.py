@@ -140,14 +140,16 @@ class ContentCache(object):
         output = []
         cached = set(stmt_ids) & self._load_cached_stmt_ids()
         uncached = list(set(stmt_ids) - cached)
+        cached = list(cached)
         if cached:
             output = \
-                self._get_text_content_from_stmt_ids_local(list(cached))
+                self._get_text_content_from_stmt_ids_local(cached)
         if uncached:
             idf_dict = get_content_identifiers_from_stmt_ids(uncached)
             text_ref_ids = {idf[0] for idf in idf_dict.values()}
             cached = text_ref_ids & self._load_cached_text_ref_ids()
             uncached = list(set(text_ref_ids) - cached)
+            cached = list(cached)
             stmt_rows = []
             if cached:
                 output.\
@@ -179,14 +181,16 @@ class ContentCache(object):
         output = []
         cached = set(pmids) & self._load_cached_pmids()
         uncached = list(set(pmids) - cached)
+        cached = list(cached)
         if cached:
             output = \
-                self._get_text_content_from_pmids_local(list(cached))
+                self._get_text_content_from_pmids_local(cached)
         if uncached:
             idf_dict = get_content_identifiers_from_pmids(uncached)
             text_ref_ids = {idf[0] for idf in idf_dict.values()}
             cached = text_ref_ids & self._load_cached_text_ref_ids()
             uncached = list(set(text_ref_ids) - cached)
+            cached = list(cached)
             pmid_rows = []
             if cached:
                 output.\
