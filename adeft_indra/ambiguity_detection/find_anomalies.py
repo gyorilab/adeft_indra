@@ -77,7 +77,7 @@ class AdeftAnomalyDetector(object):
         # the underlying model and then added to the set of excluded stop words
         tokenize = TfidfVectorizer().build_tokenizer()
         tokens = [token.lower() for token in
-                  tokenize(' '.join(blacklist))]
+                  tokenize(' '.join(self.blacklist))]
         self.stop = set(english_stopwords).union(tokens)
         # Mappings to allow users to directly pass in parameter names
         # for model instead of syntax to access them in an sklearn pipeline
