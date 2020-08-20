@@ -222,7 +222,7 @@ class ContentCache(object):
                 output.extend(plaintexts)
                 self._insert_content(content_rows)
             if pmid_rows:
-                self._insert_stmts(pmid_rows)
+                self._insert_pmids(pmid_rows)
         return output
 
     def _setup_tables(self):
