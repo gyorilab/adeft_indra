@@ -21,7 +21,7 @@ with open('../../results/cord19_ad_blacklist.json') as f:
 param_grid = {'max_features': [100], 'nu': [0.2]}
 with open('../../data/new_grounding_table.tsv', newline='') as csvfile:
     rows = csv.DictReader(csvfile, delimiter='\t')
-    for row in rows:
+    for i, row in enumerate(rows):
         grounding = row['grounding']
         if not grounding:
             continue
@@ -29,7 +29,7 @@ with open('../../data/new_grounding_table.tsv', newline='') as csvfile:
         if ns not in ['CHEBI', 'FPLX', 'HGNC']:
             continue
         agent_text = row['text']
-        print(f'Anomaly detector for {agent_text}, {grounding}')
+        print(f'{i}: Anomaly detector for {agent_text}, {grounding}')
         if results_manager.in_table(agent_text, grounding):
             print('Results already exist in table')
             continue
@@ -43,7 +43,7 @@ with open('../../data/new_grounding_table.tsv', newline='') as csvfile:
                 continue
             grounding_texts = cc.get_text_content_from_pmids(pmids, njobs=8)
             blacklist = blacklist_map[grounding]
-            detector = AdeftAnomalyDetector()
+            detector = AdeftAnomalyDetector(blacklist=blacklist)
             if len(grounding_texts) >= 5:
                 detector.cv(grounding_texts, [], param_grid, n_jobs=5, cv=5)
                 adm.save(grounding, detector)
