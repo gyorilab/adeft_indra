@@ -16,9 +16,14 @@ S3_BUCKET_RESOURCES = 'bigmech'
 S3_DOCUMENT_FREQUENCIES_PATH = 'entrez_pubmed_dictionary.pkl'
 
 
-RESOURCES_PATH = os.path.join(here, 'resources')
-CACHE_PATH = os.path.join(RESOURCES_PATH, 'cache.db')
-DOCUMENT_FREQUENCIES_PATH = os.path.join(RESOURCES_PATH,
+ADEFT_INDRA_HOME = os.environ.get('ADEFT_INDRA_HOME') or \
+    os.path.expanduser('~/.adeft_indra')
+
+
+CONTENT_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'content.db')
+RESULTS_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'results.db')
+PLAINTEXT_CACHE_PATH = os.path.join(ADEFT_INDRA_HOME, 'cache.db')
+DOCUMENT_FREQUENCIES_PATH = os.path.join(ADEFT_INDRA_HOME,
                                          'document_frequencies.pkl')
-GROUNDING_THESAURUS_PATH = os.path.join(RESOURCES_PATH,
+GROUNDING_THESAURUS_PATH = os.path.join(ADEFT_INDRA_HOME,
                                         'grounding_thesaurus.json')

@@ -4,12 +4,11 @@ import pickle
 import sqlite3
 from contextlib import closing
 
-from adeft_indra.locations import CACHE_PATH
+from adeft_indra.locations import RESULTS_DB_PATH
 
 
 class AnomalyDetectorsManager(object):
-    def __init__(self, cache_path=CACHE_PATH):
-        self.cache_path = cache_path
+    def __init__(self):
         self._setup_table()
 
     def _setup_table(self):
@@ -17,6 +16,7 @@ class AnomalyDetectorsManager(object):
             """CREATE TABLE IF NOT EXISTS anomaly_detectors (
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    grounding TEXT,
+                   num_training_texts INTEGER,
                    anomaly_detector BLOB);
             """
         make_idx_anomaly_detectors_grounding = \
@@ -25,7 +25,7 @@ class AnomalyDetectorsManager(object):
                ON
                    anomaly_detectors (grounding);
             """
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 for query in [make_table_anomaly_detectors,
                               make_idx_anomaly_detectors_grounding]:
@@ -42,43 +42,46 @@ class AnomalyDetectorsManager(object):
                    grounding = ?
                LIMIT 1
             """
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(query, [grounding])
                 res = cur.fetchone()
         return res
 
-    def save(self, grounding, anomaly_detector):
+    def save(self, grounding, num_training_texts, anomaly_detector):
         query = """INSERT INTO
-                       anomaly_detectors (grounding, anomaly_detector)
+                       anomaly_detectors (grounding,
+                                          num_training_texts,
+                                          anomaly_detector)
                    VALUES
-                       (?, ?);
+                       (?, ?, ?);
                 """
         pdata = pickle.dumps(anomaly_detector, pickle.HIGHEST_PROTOCOL)
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
-                cur.execute(query, [grounding, sqlite3.Binary(pdata)])
+                cur.execute(query, [grounding,
+                                    num_training_texts,
+                                    sqlite3.Binary(pdata)])
             conn.commit()
 
     def load(self, grounding):
         query = """SELECT
-                       anomaly_detector
+                       num_training_texts, anomaly_detector
                    FROM
                        anomaly_detectors
                    WHERE
                        grounding = ?
                    LIMIT 1
                 """
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(query, [grounding])
-                res = cur.fetchone()[0]
-        return pickle.loads(res)
+                res = cur.fetchone()
+        return (res[0], pickle.loads(res[1]))
 
 
 class ResultsManager(object):
-    def __init__(self, cache_path=CACHE_PATH):
-        self.cache_path = CACHE_PATH
+    def __init__(self):
         self._setup_table()
 
     def _setup_table(self):
@@ -101,7 +104,7 @@ class ResultsManager(object):
                ON
                    results (agent_text, grounding);
             """
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 for query in [make_table_results,
                               make_idx_results_agent_text_grounding]:
@@ -117,7 +120,7 @@ class ResultsManager(object):
                        agent_text = ? AND grounding = ?
                    LIMIT 1
                 """
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(query, [agent_text, grounding])
                 res = cur.fetchone()
@@ -132,7 +135,7 @@ class ResultsManager(object):
                VALUES
                    (?, ?, ?, ?, ?, ?, ?);
             """
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(insert_row, row)
             conn.commit()
@@ -140,7 +143,7 @@ class ResultsManager(object):
     def dump(self, outpath):
         outpath = os.path.realpath(os.path.expanduser(outpath))
         query = "SELECT * FROM results"
-        with closing(sqlite3.connect(self.cache_path)) as conn:
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(query)
                 with open(outpath, 'w', newline='') as f:
