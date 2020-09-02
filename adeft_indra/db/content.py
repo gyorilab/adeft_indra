@@ -74,14 +74,14 @@ def _load_cached_plaintexts(pmids):
     return list(res)
 
 
-def _insert_content(self, content_rows):
+def _insert_content(content_rows):
     content_insert_query = \
         """INSERT OR IGNORE INTO
-               content (pmid, plaintext)
+               plaintexts (pmid, plaintext)
            VALUES
                (?, ?);
     """
-    with closing(sqlite3.connect(self.cache_path)) as conn:
+    with closing(sqlite3.connect(PLAINTEXT_CACHE_PATH)) as conn:
         with closing(conn.cursor()) as cur:
             cur.executemany(content_insert_query, content_rows)
         conn.commit()
