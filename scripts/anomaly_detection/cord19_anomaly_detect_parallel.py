@@ -103,4 +103,4 @@ def anomaly_detect(args):
 if __name__ == '__main__':
     n_jobs = 8
     with Pool(n_jobs) as pool:
-        pool.map(anomaly_detect, groundings)
+        pool.map(anomaly_detect, groundings, chunksize=1)
