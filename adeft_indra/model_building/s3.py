@@ -5,7 +5,7 @@ import tempfile
 
 from adeft.download import get_s3_models
 
-from adeft_indra.locations import S3_BUCKET, S3_MODELS_PATH
+from adeft_indra.locations import S3_BUCKET_ADEFT, S3_MODELS_PATH
 
 
 def model_to_s3(disambiguator):
@@ -24,26 +24,26 @@ def model_to_s3(disambiguator):
     with tempfile.NamedTemporaryFile() as temp:
         with open(temp.name, 'w') as f:
             json.dump(s3_models, f)
-        client.upload_file(temp.name, S3_BUCKET,
+        client.upload_file(temp.name, S3_BUCKET_ADEFT,
                            os.path.join(S3_MODELS_PATH, 's3_models.json'))
 
     with tempfile.NamedTemporaryFile() as temp:
         with open(temp.name, 'w') as f:
             json.dump(grounding_dict, f)
-        client.upload_file(temp.name, S3_BUCKET,
+        client.upload_file(temp.name, S3_BUCKET_ADEFT,
                            os.path.join(S3_MODELS_PATH, model_name,
                                         f'{model_name}_grounding_dict.json'))
 
     with tempfile.NamedTemporaryFile() as temp:
         with open(temp.name, 'w') as f:
             json.dump(names, f)
-        client.upload_file(temp.name, S3_BUCKET,
+        client.upload_file(temp.name, S3_BUCKET_ADEFT,
                            os.path.join(S3_MODELS_PATH, model_name,
                                         f'{model_name}_names.json'))
 
     with tempfile.NamedTemporaryFile() as temp:
         classifier.dump_model(temp.name)
-        client.upload_file(temp.name, S3_BUCKET,
+        client.upload_file(temp.name, S3_BUCKET_ADEFT,
                            os.path.join(S3_MODELS_PATH, model_name,
                                         f'{model_name}_model.gz'))
 
