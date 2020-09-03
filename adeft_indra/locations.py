@@ -2,7 +2,6 @@ import os
 
 from adeft import __version__
 
-__all__ = ['RESOURCES_PATH', 'S3_BUCKET_ADEFT', 'S3_MODELS_PATH']
 
 here = os.path.dirname(os.path.abspath(__file__))
 
@@ -22,7 +21,6 @@ ADEFT_INDRA_HOME = os.environ.get('ADEFT_INDRA_HOME') or \
 
 CONTENT_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'content.db')
 RESULTS_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'results.db')
-PLAINTEXT_CACHE_PATH = os.path.join(ADEFT_INDRA_HOME, 'cache.db')
 DOCUMENT_FREQUENCIES_PATH = os.path.join(ADEFT_INDRA_HOME,
                                          'document_frequencies.pkl')
 GROUNDING_THESAURUS_PATH = os.path.join(ADEFT_INDRA_HOME,
