@@ -56,6 +56,10 @@ class AdeftGrounder(object):
                 for grounding_key in grounding_keys:
                     entry = deepcopy(self.index2grounding[grounding_key])
                     entry['longform_text'] = longform_text
+                if len(entity_tokens) == len(processed_tokens):
+                    entry['partial_match'] = False
+                else:
+                    entry['partial_match'] = True
                     results.append(entry)
         result_dict = {}
         for result in results:
