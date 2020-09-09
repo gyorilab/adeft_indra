@@ -25,3 +25,4 @@ DOCUMENT_FREQUENCIES_PATH = os.path.join(ADEFT_INDRA_HOME,
                                          'document_frequencies.pkl')
 GROUNDING_THESAURUS_PATH = os.path.join(ADEFT_INDRA_HOME,
                                         'grounding_thesaurus.json')
+GROUNDER_PATH = os.path.join(ADEFT_INDRA_HOME, 'adeft_grounder.pkl')

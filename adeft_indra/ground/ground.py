@@ -1,10 +1,13 @@
+import os
 import csv
+import pickle
 from copy import deepcopy
 from collections import defaultdict
 
 from gilda.resources import GROUNDING_TERMS_PATH
-
 from adeft.util import SearchTrie, get_candidate
+
+from adeft_indra.locations import GROUNDER_PATH
 from adeft_indra.ground.util import expand_dashes, greek_aware_stem, \
     normalize, text_similarity
 
@@ -75,3 +78,14 @@ class AdeftGrounder(object):
         out = [result for result in result_dict.values()
                if result['score'][0] > 0]
         return sorted(out, key=lambda x: (-x['score'][0], -x['score'][1]))
+
+
+def load_grounder(rebuild=False):
+    if rebuild or not os.path.exists(GROUNDER_PATH):
+        grounder = AdeftGrounder()
+        with open(GROUNDER_PATH, 'wb') as f:
+            pickle.dump(grounder, f)
+    else:
+        with open(GROUNDER_PATH, 'rb') as f:
+            grounder = pickle.load(f)
+    return grounder
