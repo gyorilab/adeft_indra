@@ -7,10 +7,13 @@ from indra.literature.adeft_tools import universal_extract_text
 from adeft_indra.locations import CONTENT_DB_PATH
 
 
-def get_plaintexts_for_pmids(pmids):
+def get_plaintexts_for_pmids(pmids, contains=None):
+    if contains is None:
+        contains = []
     # Find which pmids have associated plaintexts already cached
     xmls = _get_xmls_for_pmids(pmids)
-    plaintexts = {pmid: universal_extract_text(xml) for pmid, xml in xmls}
+    plaintexts = {pmid: universal_extract_text(xml, contains=contains)
+                  for pmid, xml in xmls}
     return plaintexts
 
 
