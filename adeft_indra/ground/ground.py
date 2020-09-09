@@ -18,7 +18,8 @@ def load_default_index2grounding():
         for index, row in enumerate(reader):
             entry = {'grounding': f'{row[2]}:{row[3]}',
                      'type': row[5],
-                     'raw_text': row[1]}
+                     'raw_text': row[1],
+                     'name': row[4]}
             index2grounding[index] = entry
             text2index[normalize(row[1])].append(index)
             lexicon.append(row[1])
