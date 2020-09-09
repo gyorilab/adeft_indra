@@ -31,14 +31,15 @@ def get_pmids_for_agent_text(agent_text):
     return [row[0] for row in res]
 
 
-def get_pmids_for_entity(ns, id_):
+def get_pmids_for_entity(ns, id_, major_topic=False):
+    table = 'entity_pmids_major' if major_topic else 'entity_pmids'
     query = \
-        """SELECT
-               pmid
-           FROM
-               entity_pmids
-           WHERE
-               grounding = ?;
+        f"""SELECT
+                pmid
+            FROM
+                {table}
+            WHERE
+                grounding = ?;
         """
     with closing(sqlite3.connect(CONTENT_DB_PATH)) as conn:
         with closing(conn.cursor()) as cur:
