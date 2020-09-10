@@ -2,7 +2,7 @@ import re
 from fuzzywuzzy import fuzz
 from itertools import chain, combinations, product
 
-from adeft.nlp.stem import stem
+from adeft.nlp import stem
 from adeft.util import get_candidate
 
 
