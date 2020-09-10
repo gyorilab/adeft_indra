@@ -1,5 +1,3 @@
-import os
-import csv
 import pickle
 import sqlite3
 from contextlib import closing
@@ -8,22 +6,23 @@ from adeft_indra.locations import RESULTS_DB_PATH
 
 
 class AnomalyDetectorsManager(object):
-    def __init__(self):
+    def __init__(self, table_name):
+        self.table_name = table_name
         self._setup_table()
 
     def _setup_table(self):
         make_table_anomaly_detectors = \
-            """CREATE TABLE IF NOT EXISTS anomaly_detectors (
-                   id INTEGER PRIMARY KEY AUTOINCREMENT,
-                   grounding TEXT,
-                   num_training_texts INTEGER,
-                   anomaly_detector BLOB);
-            """
+            f"""CREATE TABLE IF NOT EXISTS {self.table_name} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    grounding TEXT,
+                    num_training_texts INTEGER,
+                    anomaly_detector BLOB);
+             """
         make_idx_anomaly_detectors_grounding = \
-            """CREATE INDEX IF NOT EXISTS
+            f"""CREATE INDEX IF NOT EXISTS
                    idx_anomaly_detectors_grounding
                ON
-                   anomaly_detectors (grounding);
+                   {self.table_name} (grounding);
             """
         with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
@@ -34,12 +33,12 @@ class AnomalyDetectorsManager(object):
 
     def in_table(self, grounding):
         query = \
-            """SELECT
+            f"""SELECT
                    grounding
                FROM
-                   anomaly_detectors
+                   {self.table_name}
                WHERE
-                   grounding = ?
+                   grounding = ? AND anomaly_detector IS NOT NULL
                LIMIT 1
             """
         with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
@@ -49,8 +48,8 @@ class AnomalyDetectorsManager(object):
         return res
 
     def save(self, grounding, num_training_texts, anomaly_detector):
-        query = """INSERT INTO
-                       anomaly_detectors (grounding,
+        query = f"""INSERT INTO
+                       {self.table_name} (grounding,
                                           num_training_texts,
                                           anomaly_detector)
                    VALUES
@@ -65,10 +64,10 @@ class AnomalyDetectorsManager(object):
             conn.commit()
 
     def load(self, grounding):
-        query = """SELECT
+        query = f"""SELECT
                        num_training_texts, anomaly_detector
                    FROM
-                       anomaly_detectors
+                       {self.table_name}
                    WHERE
                        grounding = ?
                    LIMIT 1
@@ -81,12 +80,13 @@ class AnomalyDetectorsManager(object):
 
 
 class ResultsManager(object):
-    def __init__(self):
+    def __init__(self, table_name):
+        self.table_name = table_name
         self._setup_table()
 
     def _setup_table(self):
         make_table_results = \
-            """CREATE TABLE IF NOT EXISTS results (
+            f"""CREATE TABLE IF NOT EXISTS {self.table_name} (
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    agent_text TEXT,
                    grounding TEXT,
@@ -99,10 +99,10 @@ class ResultsManager(object):
                );
             """
         make_idx_results_agent_text_grounding = \
-            """CREATE UNIQUE INDEX IF NOT EXISTS
+            f"""CREATE UNIQUE INDEX IF NOT EXISTS
                    idx_results_agent_text_grounding
                ON
-                   results (agent_text, grounding);
+                   {self.table_name} (agent_text, grounding);
             """
         with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
@@ -112,10 +112,10 @@ class ResultsManager(object):
             conn.commit()
 
     def in_table(self, agent_text, grounding):
-        query = """SELECT
+        query = f"""SELECT
                        agent_text, grounding
                    FROM
-                       results
+                       {self.table_name}
                    WHERE
                        agent_text = ? AND grounding = ?
                    LIMIT 1
@@ -128,8 +128,8 @@ class ResultsManager(object):
 
     def add_row(self, row):
         insert_row = \
-            """INSERT OR IGNORE INTO
-                   results (agent_text, grounding, num_training_texts,
+            f"""INSERT OR IGNORE INTO
+                {self.table_name} (agent_text, grounding, num_training_texts,
                             num_prediction_texts, num_anomalous_texts,
                             specificity, std_specificity)
                VALUES
@@ -140,13 +140,10 @@ class ResultsManager(object):
                 cur.execute(insert_row, row)
             conn.commit()
 
-    def dump(self, outpath):
-        outpath = os.path.realpath(os.path.expanduser(outpath))
-        query = "SELECT * FROM results"
+    def get_results(self):
+        query = f"SELECT * FROM {self.table_name}"
         with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(query)
-                with open(outpath, 'w', newline='') as f:
-                    writer = csv.writer(f)
-                    for row in cur:
-                        writer.writewrow(row)
+                res = cur.fetchall()
+        return res
