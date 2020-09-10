@@ -59,10 +59,10 @@ class AdeftGrounder(object):
                 for grounding_key in grounding_keys:
                     entry = deepcopy(self.index2grounding[grounding_key])
                     entry['longform_text'] = longform_text
-                if len(entity_tokens) == len(processed_tokens):
-                    entry['partial_match'] = False
-                else:
-                    entry['partial_match'] = True
+                    if len(entity_tokens) == len(processed_tokens):
+                        entry['partial_match'] = False
+                    else:
+                        entry['partial_match'] = True
                     results.append(entry)
         result_dict = {}
         for result in results:
@@ -84,8 +84,16 @@ def load_grounder(rebuild=False):
     if rebuild or not os.path.exists(GROUNDER_PATH):
         grounder = AdeftGrounder()
         with open(GROUNDER_PATH, 'wb') as f:
-            pickle.dump(grounder, f)
+            pickle.dump(grounder, f, protocol=pickle.HIGHEST_PROTOCOL)
     else:
         with open(GROUNDER_PATH, 'rb') as f:
-            grounder = pickle.load(f)
+            grounder = pickle.load(f, protocol=pickle.HIGHEST_PROTOCOL)
     return grounder
+
+
+def ground(text, grounder=None):
+    if grounder is None:
+        grounder = load_grounder()
+    grounding_results = [entry for entry in grounder.ground(text)
+                         if not entry['partial_match']]
+    return [(entry['grounding'], entry['name']) for entry in grounding_results]
