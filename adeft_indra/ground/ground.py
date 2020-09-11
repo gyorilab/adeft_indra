@@ -12,6 +12,9 @@ from adeft_indra.ground.util import expand_dashes, greek_aware_stem, \
     normalize, text_similarity
 
 
+__all__ = ['AdeftGrounder']
+
+
 class AdeftGrounder(object):
     def __init__(self, rebuild=False):
         if rebuild or not os.path.exists(GROUNDER_PATH):
