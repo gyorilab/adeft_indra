@@ -147,3 +147,66 @@ class ResultsManager(object):
                 cur.execute(query)
                 res = cur.fetchall()
         return res
+
+
+class AdeftabilityResultsManager(object):
+    def __init__(self, table_name):
+        self.table_name = table_name
+        self._setup_table()
+
+    def _setup_table(self):
+        make_table_results = \
+            f"""CREATE TABLE IF NOT EXISTS {self.table_name} (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   agent_text TEXT,
+                   score REAL,
+                   UNIQUE(agent_text)
+               );
+            """
+        make_idx_results_agent_text_grounding = \
+            f"""CREATE UNIQUE INDEX IF NOT EXISTS
+                   idx_{self.table_name}_agent_text
+               ON
+                   {self.table_name} (agent_text);
+            """
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
+            with closing(conn.cursor()) as cur:
+                for query in [make_table_results,
+                              make_idx_results_agent_text_grounding]:
+                    cur.execute(query)
+            conn.commit()
+
+    def in_table(self, agent_text):
+        query = f"""SELECT
+                       agent_text
+                   FROM
+                       {self.table_name}
+                   WHERE
+                       agent_text = ?
+                   LIMIT 1
+                """
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
+            with closing(conn.cursor()) as cur:
+                cur.execute(query, [agent_text])
+                res = cur.fetchone()
+        return res
+
+    def add_row(self, row):
+        insert_row = \
+            f"""INSERT OR IGNORE INTO
+                {self.table_name} (agent_text, score)
+               VALUES
+                   (?, ?);
+            """
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
+            with closing(conn.cursor()) as cur:
+                cur.execute(insert_row, row)
+            conn.commit()
+
+    def get_results(self):
+        query = f"SELECT * FROM {self.table_name}"
+        with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
+            with closing(conn.cursor()) as cur:
+                cur.execute(query)
+                res = cur.fetchall()
+        return res
