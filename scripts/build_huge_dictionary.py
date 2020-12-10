@@ -20,13 +20,8 @@ def preprocess(text):
     return [token.lower() for token in tokenize(text)]
 
 
-with open('../data/entrez_all_pmids.json') as f:
-    pmids = json.load(f)
-
-all_pmids = set()
-for pmid_list in pmids.values():
-    all_pmids |= set(pmid_list)
-
+with open('../data/combined_pmids.json') as f:
+    all_pmids = json.load(f)
 
 class ContentIterator(object):
     def __init__(self, pmid_list, chunksize=10000):
@@ -44,7 +39,7 @@ class ContentIterator(object):
 
 
 all_pubmed_content = ContentIterator(all_pmids)
-dictionary = Dictionary(text for text in all_pubmed_content)
+dictionary = Dictionary((text for text in all_pubmed_content), prune_at=None)
 location = '../results/pubmed_dictionary.pkl'
 dictionary.save(location)
 

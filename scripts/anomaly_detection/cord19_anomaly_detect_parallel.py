@@ -11,8 +11,8 @@ from adeft_indra.ambiguity_detection.find_anomalies import AdeftAnomalyDetector
 
 
 lock = Lock()
-adm = AnomalyDetectorsManager()
-results_manager = ResultsManager()
+adm = AnomalyDetectorsManager('anomaly_detectors_major')
+results_manager = ResultsManager('results_major')
 
 
 with open('../../results/cord19_ad_blacklist.json') as f:
@@ -20,7 +20,8 @@ with open('../../results/cord19_ad_blacklist.json') as f:
 
 
 grounding_table = pd.read_csv('../../data/new_grounding_table.tsv',
-                              sep='\t', usecols=['text', 'grounding'])
+                              sep='\t', usecols=['text', 'grounding'],
+                              keep_default_na=False)
 groundings = [(text, grounding)
               for text, grounding in grounding_table.to_numpy()
               if grounding]
@@ -43,7 +44,7 @@ def anomaly_detect(args):
         num_grounding_texts, detector = adm.load(grounding)
     else:
         # Gathering content to train new anomaly detector
-        pmids = get_pmids_for_entity(ns, id_)
+        pmids = get_pmids_for_entity(ns, id_, major_topic=True)
         if not pmids:
             # No pmids found
             return
@@ -55,7 +56,16 @@ def anomaly_detect(args):
         grounding_texts = list(get_plaintexts_for_pmids(pmids).values())
         num_grounding_texts = len(grounding_texts)
         blacklist = blacklist_map[grounding]
-        detector = AdeftAnomalyDetector(blacklist=blacklist)
+        try:
+            detector = AdeftAnomalyDetector(blacklist=blacklist)
+        except TypeError as e:
+            with lock:
+                print('*******************')
+                print(grounding)
+                print(agent_text)
+                print(blacklist)
+                print('*******************')
+                raise e
         if num_grounding_texts >= 5:
             detector.cv(grounding_texts, [], param_grid, n_jobs=1, cv=5)
             adm.save(grounding, len(grounding_texts), detector)
@@ -70,6 +80,7 @@ def anomaly_detect(args):
             outrow = [agent_text, grounding, num_grounding_texts,
                       None, None, None, None]
             results_manager.add_row(outrow)
+            return
     agent_text_pmids = get_pmids_for_agent_text(agent_text)
     if not agent_text_pmids:
         return
@@ -79,7 +90,16 @@ def anomaly_detect(args):
                   ' associated pmids. Truncating at random.')
         agent_text_pmids = random.choices(agent_text_pmids,
                                           k=10000)
-    pred_content = list(get_plaintexts_for_pmids(agent_text_pmids).values())
+    try:
+        pred_content = get_plaintexts_for_pmids(agent_text_pmids,
+                                                contains=[agent_text])
+    except Exception:
+        outrow = [agent_text, grounding, num_grounding_texts,
+                  None, None, None, None]
+        results_manager.add_row(outrow)
+        return
+    pred_content = [text for text in pred_content.values() if text
+                    and len(text) > 5]
     outrow = [agent_text, grounding, num_grounding_texts, len(pred_content)]
     if num_grounding_texts < 5 or len(pred_content) < 1:
         with lock:
@@ -88,6 +108,7 @@ def anomaly_detect(args):
                   f' {agent_text}.')
         outrow += [None, None, None]
         results_manager.add_row(outrow)
+        return
     preds = detector.predict(pred_content)
     total_anomalous = sum(preds)
     spec = detector.specificity
@@ -96,11 +117,10 @@ def anomaly_detect(args):
     results_manager.add_row(outrow)
     with lock:
         print(f'Anomaly detection successful for grounding {grounding}'
-              f' and agent text {agent_text}.\n'
-              f'{",".join(outrow)}')
+              f' and agent text {agent_text}.')
 
 
 if __name__ == '__main__':
-    n_jobs = 8
+    n_jobs = 28
     with Pool(n_jobs) as pool:
         pool.map(anomaly_detect, groundings, chunksize=1)

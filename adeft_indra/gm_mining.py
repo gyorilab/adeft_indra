@@ -49,7 +49,10 @@ class TfidfAgentTexts(object):
         n2 = self.total_documents
         for text, count in tfidf_agent_texts.DFs.items():
             p1 = count/n1
-            p2 = self.DFs[text]/n2
+            try:
+                p2 = self.DFs[text]/n2
+            except KeyError:
+                p2 = 0
             h = 2*asin(sqrt(p1)) - 2*asin(sqrt(p2))
             result[text] = h
         return sorted(result.items(), key=lambda x: -x[1])
