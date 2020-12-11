@@ -122,8 +122,15 @@ def prevalence_cdf(theta, n, t, sensitivity, specificity):
 
 
 def prevalence_credible_interval_exact(n, t, sens, spec, alpha):
+    c1, c2 = 1 - spec, sens + spec - 1
+    denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
     def f(theta):
         return prevalence_cdf(theta, n, t, sens, spec)
+    if denominator == 0:
+        if t > n/2:
+            return (1.0, 1.0)
+        elif t < n/2:
+            return (0.0, 0.0)
     left = brentq(lambda x: f(x) - alpha/2, 0, 1, xtol=1e-3, rtol=1e-3,
                   maxiter=100)
     right = brentq(lambda x: f(x) - 1 + alpha/2, 0, 1, xtol=1e-3, rtol=1e-3,
