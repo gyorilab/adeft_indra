@@ -117,7 +117,7 @@ def prevalence_cdf(theta, n, t, sensitivity, specificity):
         if t > n/2:
             return 1.0 if theta == 1.0 else 0.0
         elif t < n/2:
-            return 1.0 if theta >= 0.5 else 0.0
+            return 1.0 if theta == 0.0 else 1.0
     return numerator/denominator
 
 
