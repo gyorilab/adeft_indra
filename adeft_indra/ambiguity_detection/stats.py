@@ -7,6 +7,8 @@ from scipy.stats import beta
 from scipy.optimize import brentq
 from scipy.special import loggamma
 
+from ._stats import prevalence_credible_interval_exact
+
 
 logger = logging.getLogger(__file__)
 
@@ -57,85 +59,6 @@ def youdens_j_score(y_true, y_pred, pos_label=1):
     sens = sensitivity_score(y_true, y_pred, pos_label)
     spec = specificity_score(y_true, y_pred, pos_label)
     return sens + spec - 1
-
-
-def gamma_star(a):
-    if a == 0:
-        output = np.float('inf')
-    elif a > 1e9:
-        output = 1.0
-    else:
-        log_output = (loggamma(a) + a - 0.5*np.log(2*np.pi) -
-                      (a - 0.5)*np.log(a))
-        output = np.exp(log_output)
-    return output
-
-
-def D(p, q, x):
-    if x == 0 or x == 1:
-        return 0.0
-    part1 = np.sqrt(p*q/(2*np.pi * (p+q))) * \
-        gamma_star(p+q)/(gamma_star(p)*gamma_star(q))
-    x0 = p/(p+q)
-    sigma = (x - x0)/x0
-    tau = (x0 - x)/(1 - x0)
-    part2 = np.exp(p*(np.log1p(sigma) - sigma) + q*(np.log1p(tau) - tau))
-    return (part1 * part2)
-
-
-def K(p, q, x, tol=1e-12):
-    def coefficient(n):
-        m = n // 2
-        if n % 2 == 0:
-            result = m*(q-m)/((p+2*m-1)*(p+2*m)) * x
-        else:
-            result = -(p+m)*(p+q+m)/((p+2*m)*(p+2*m+1)) * x
-        return result
-    delC = coefficient(1)
-    C, D = 1 + delC, 1
-    n = 2
-    while abs(delC) > tol:
-        D = 1/(D*coefficient(n) + 1)
-        delC *= (D - 1)
-        C += delC
-        n += 1
-    return 1/C
-
-
-def betainc(p, q, x):
-    if x > p/(p+q):
-        return 1 - betainc(q, p, 1-x)
-    else:
-        return D(p, q, x)/p * K(p, q, x)
-
-
-def prevalence_cdf(theta, n, t, sensitivity, specificity):
-    c1, c2 = 1 - specificity, sensitivity + specificity - 1
-    numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
-    denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
-    if denominator == 0:
-        if t > n/2:
-            return 1.0 if theta == 1.0 else 0.0
-        elif t < n/2:
-            return 1.0 if theta == 0.0 else 1.0
-    return numerator/denominator
-
-
-def prevalence_credible_interval_exact(n, t, sens, spec, alpha):
-    c1, c2 = 1 - spec, sens + spec - 1
-    denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
-    def f(theta):
-        return prevalence_cdf(theta, n, t, sens, spec)
-    if denominator == 0:
-        if t > n/2:
-            return (1.0, 1.0)
-        elif t < n/2:
-            return (0.0, 0.0)
-    left = brentq(lambda x: f(x) - alpha/2, 0, 1, xtol=1e-3, rtol=1e-3,
-                  maxiter=100)
-    right = brentq(lambda x: f(x) - 1 + alpha/2, 0, 1, xtol=1e-3, rtol=1e-3,
-                   maxiter=100)
-    return (left, right)
 
 
 def sample_interval(n, t, sens_shape, sens_range,
