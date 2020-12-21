@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from os import path
 from setuptools.extension import Extension
 from setuptools import dist, setup, find_packages, Command
@@ -18,9 +19,17 @@ else:
 
 ext = '.pyx' if USE_CYTHON else '.c'
 
+defs = [('NPY_NO_DEPRECATED_API', 0)]
+inc_path = np.get_include()
+lib_path = path.join(inc_path, '..', '..', 'random', 'lib')
+
 extensions = [
     Extension('adeft_indra.ambiguity_detection._stats',
-              ['adeft_indra/ambiguity_detection/_stats' + ext]),
+              ['adeft_indra/ambiguity_detection/_stats' + ext],
+              include_dirs=[inc_path],
+              library_dirs=[lib_path],
+              libraries=['npyrandom'],
+              define_macros=defs)
     ]
 
 if USE_CYTHON:
