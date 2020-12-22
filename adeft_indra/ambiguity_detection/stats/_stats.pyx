@@ -77,7 +77,6 @@ cdef double betainc(float p, float q, float x):
         return D(p, q, x)/p * K(p, q, x)
 
 
-@cython.cdivision(True)
 cdef prevalence_cdf(double theta, int n, int t,
                     double sensitivity, double specificity):
     cdef double c1, c2, numerator, denominator
@@ -163,7 +162,7 @@ cdef void _prevalence_credible_interval(int n, int t,
 
     i = 0
     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b
-    with x.lock:
+    with x.lock, nogil:
         for i in range(num_samples):
             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
             spec_array[i] = random_beta(rng, _spec_a, _spec_b)

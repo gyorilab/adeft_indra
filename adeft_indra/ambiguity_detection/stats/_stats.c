@@ -1085,6 +1085,18 @@ static const char *__pyx_f[] = {
   "bit_generator.pxd",
 };
 /* #### Code section: utility_code_proto_before_types ### */
+/* NoFastGil.proto */
+#define __Pyx_PyGILState_Ensure PyGILState_Ensure
+#define __Pyx_PyGILState_Release PyGILState_Release
+#define __Pyx_FastGIL_Remember()
+#define __Pyx_FastGIL_Forget()
+#define __Pyx_FastGilFuncInit()
+
+/* ForceInitThreads.proto */
+#ifndef __PYX_FORCE_INIT_THREADS
+  #define __PYX_FORCE_INIT_THREADS 0
+#endif
+
 /* #### Code section: numeric_typedefs ### */
 
 /* "../../.virtualenvs/py38/lib/python3.8/site-packages/numpy/__init__.cython-30.pxd":732
@@ -1395,7 +1407,7 @@ struct __pyx_opt_args_11adeft_indra_19ambiguity_detection_5stats_6_stats_K {
   double tol;
 };
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":95
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":94
  * 
  * 
  * ctypedef struct interval_params:             # <<<<<<<<<<<<<<
@@ -3204,9 +3216,9 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc
   return __pyx_r;
 }
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":81
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":80
  * 
- * @cython.cdivision(True)
+ * 
  * cdef prevalence_cdf(double theta, int n, int t,             # <<<<<<<<<<<<<<
  *                     double sensitivity, double specificity):
  *     cdef double c1, c2, numerator, denominator
@@ -3228,7 +3240,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("prevalence_cdf", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":84
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":83
  *                     double sensitivity, double specificity):
  *     cdef double c1, c2, numerator, denominator
  *     c1, c2 = 1 - specificity, sensitivity + specificity - 1             # <<<<<<<<<<<<<<
@@ -3240,7 +3252,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
   __pyx_v_c1 = __pyx_t_1;
   __pyx_v_c2 = __pyx_t_2;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":85
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":84
  *     cdef double c1, c2, numerator, denominator
  *     c1, c2 = 1 - specificity, sensitivity + specificity - 1
  *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))             # <<<<<<<<<<<<<<
@@ -3249,7 +3261,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
  */
   __pyx_v_numerator = (__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + (__pyx_v_c2 * __pyx_v_theta))) - __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":86
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":85
  *     c1, c2 = 1 - specificity, sensitivity + specificity - 1
  *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)             # <<<<<<<<<<<<<<
@@ -3258,7 +3270,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
  */
   __pyx_v_denominator = (__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + __pyx_v_c2)) - __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":87
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":86
  *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:             # <<<<<<<<<<<<<<
@@ -3268,17 +3280,17 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
   __pyx_t_3 = ((__pyx_v_denominator == 0.0) != 0);
   if (__pyx_t_3) {
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":88
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":87
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:
  *         if t > n/2:             # <<<<<<<<<<<<<<
  *             return 1.0 if theta == 1.0 else 0.0
  *         elif t < n/2:
  */
-    __pyx_t_3 = ((__pyx_v_t > (((long)__pyx_v_n) / 2)) != 0);
+    __pyx_t_3 = ((__pyx_v_t > (((double)__pyx_v_n) / 2.0)) != 0);
     if (__pyx_t_3) {
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":89
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":88
  *     if denominator == 0:
  *         if t > n/2:
  *             return 1.0 if theta == 1.0 else 0.0             # <<<<<<<<<<<<<<
@@ -3297,7 +3309,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
       __pyx_t_4 = 0;
       goto __pyx_L0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":88
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":87
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:
  *         if t > n/2:             # <<<<<<<<<<<<<<
@@ -3306,17 +3318,17 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
  */
     }
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":90
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":89
  *         if t > n/2:
  *             return 1.0 if theta == 1.0 else 0.0
  *         elif t < n/2:             # <<<<<<<<<<<<<<
  *             return 1.0 if theta == 0.0 else 1.0
  *     return numerator/denominator
  */
-    __pyx_t_3 = ((__pyx_v_t < (((long)__pyx_v_n) / 2)) != 0);
+    __pyx_t_3 = ((__pyx_v_t < (((double)__pyx_v_n) / 2.0)) != 0);
     if (__pyx_t_3) {
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":91
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":90
  *             return 1.0 if theta == 1.0 else 0.0
  *         elif t < n/2:
  *             return 1.0 if theta == 0.0 else 1.0             # <<<<<<<<<<<<<<
@@ -3335,7 +3347,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
       __pyx_t_4 = 0;
       goto __pyx_L0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":90
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":89
  *         if t > n/2:
  *             return 1.0 if theta == 1.0 else 0.0
  *         elif t < n/2:             # <<<<<<<<<<<<<<
@@ -3344,7 +3356,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
  */
     }
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":87
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":86
  *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:             # <<<<<<<<<<<<<<
@@ -3353,7 +3365,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
  */
   }
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":92
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":91
  *         elif t < n/2:
  *             return 1.0 if theta == 0.0 else 1.0
  *     return numerator/denominator             # <<<<<<<<<<<<<<
@@ -3361,15 +3373,19 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = PyFloat_FromDouble((__pyx_v_numerator / __pyx_v_denominator)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
+  if (unlikely(__pyx_v_denominator == 0)) {
+    PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+    __PYX_ERR(0, 91, __pyx_L1_error)
+  }
+  __pyx_t_4 = PyFloat_FromDouble((__pyx_v_numerator / __pyx_v_denominator)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_r = __pyx_t_4;
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":81
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":80
  * 
- * @cython.cdivision(True)
+ * 
  * cdef prevalence_cdf(double theta, int n, int t,             # <<<<<<<<<<<<<<
  *                     double sensitivity, double specificity):
  *     cdef double c1, c2, numerator, denominator
@@ -3386,7 +3402,7 @@ static PyObject *__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prev
   return __pyx_r;
 }
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":104
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":103
  * 
  * @cython.cdivision(True)
  * cdef double f1(double theta, void *args):             # <<<<<<<<<<<<<<
@@ -3407,7 +3423,7 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f1(doub
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("f1", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":105
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":104
  * @cython.cdivision(True)
  * cdef double f1(double theta, void *args):
  *     cdef interval_params *params = <interval_params *> args             # <<<<<<<<<<<<<<
@@ -3416,35 +3432,35 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f1(doub
  */
   __pyx_v_params = ((__pyx_t_11adeft_indra_19ambiguity_detection_5stats_6_stats_interval_params *)__pyx_v_args);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":106
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":105
  * cdef double f1(double theta, void *args):
  *     cdef interval_params *params = <interval_params *> args
  *     return prevalence_cdf(theta, params.n, params.t,             # <<<<<<<<<<<<<<
  *                           params.sens, params.spec) - params.alpha/2
  * 
  */
-  __pyx_t_1 = __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalence_cdf(__pyx_v_theta, __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens, __pyx_v_params->spec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalence_cdf(__pyx_v_theta, __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens, __pyx_v_params->spec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":107
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":106
  *     cdef interval_params *params = <interval_params *> args
  *     return prevalence_cdf(theta, params.n, params.t,
  *                           params.sens, params.spec) - params.alpha/2             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = PyFloat_FromDouble((__pyx_v_params->alpha / 2.0)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble((__pyx_v_params->alpha / 2.0)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 107, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_4;
   goto __pyx_L0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":104
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":103
  * 
  * @cython.cdivision(True)
  * cdef double f1(double theta, void *args):             # <<<<<<<<<<<<<<
@@ -3464,7 +3480,7 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f1(doub
   return __pyx_r;
 }
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":111
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":110
  * 
  * @cython.cdivision(True)
  * cdef double f2(double theta, void *args):             # <<<<<<<<<<<<<<
@@ -3485,7 +3501,7 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f2(doub
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("f2", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":112
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":111
  * @cython.cdivision(True)
  * cdef double f2(double theta, void *args):
  *     cdef interval_params *params = <interval_params *> args             # <<<<<<<<<<<<<<
@@ -3494,38 +3510,38 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f2(doub
  */
   __pyx_v_params = ((__pyx_t_11adeft_indra_19ambiguity_detection_5stats_6_stats_interval_params *)__pyx_v_args);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":113
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":112
  * cdef double f2(double theta, void *args):
  *     cdef interval_params *params = <interval_params *> args
  *     return prevalence_cdf(theta, params.n, params.t,             # <<<<<<<<<<<<<<
  *                           params.sens, params.spec) - 1 + params.alpha/2
  * 
  */
-  __pyx_t_1 = __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalence_cdf(__pyx_v_theta, __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens, __pyx_v_params->spec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalence_cdf(__pyx_v_theta, __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens, __pyx_v_params->spec); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":114
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":113
  *     cdef interval_params *params = <interval_params *> args
  *     return prevalence_cdf(theta, params.n, params.t,
  *                           params.sens, params.spec) - 1 + params.alpha/2             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_t_1, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_params->alpha / 2.0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble((__pyx_v_params->alpha / 2.0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_4;
   goto __pyx_L0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":111
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":110
  * 
  * @cython.cdivision(True)
  * cdef double f2(double theta, void *args):             # <<<<<<<<<<<<<<
@@ -3545,7 +3561,7 @@ static double __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f2(doub
   return __pyx_r;
 }
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":117
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":116
  * 
  * 
  * cdef void prevalence_credible_interval_exact(int n, int t,             # <<<<<<<<<<<<<<
@@ -3569,7 +3585,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
   int __pyx_t_6;
   __Pyx_RefNannySetupContext("prevalence_credible_interval_exact", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":122
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":121
  *     cdef double c1, c2, denominator, left, right
  *     cdef interval_params args
  *     args.n, args.t = n, t             # <<<<<<<<<<<<<<
@@ -3581,7 +3597,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
   __pyx_v_args.n = __pyx_t_1;
   __pyx_v_args.t = __pyx_t_2;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":123
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":122
  *     cdef interval_params args
  *     args.n, args.t = n, t
  *     args.sens, args.spec, args.alpha = sens, spec, alpha             # <<<<<<<<<<<<<<
@@ -3595,7 +3611,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
   __pyx_v_args.spec = __pyx_t_4;
   __pyx_v_args.alpha = __pyx_t_5;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":124
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":123
  *     args.n, args.t = n, t
  *     args.sens, args.spec, args.alpha = sens, spec, alpha
  *     c1, c2 = 1 - spec, sens + spec - 1             # <<<<<<<<<<<<<<
@@ -3607,7 +3623,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
   __pyx_v_c1 = __pyx_t_5;
   __pyx_v_c2 = __pyx_t_4;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":125
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":124
  *     args.sens, args.spec, args.alpha = sens, spec, alpha
  *     c1, c2 = 1 - spec, sens + spec - 1
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)             # <<<<<<<<<<<<<<
@@ -3616,7 +3632,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
   __pyx_v_denominator = (__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + __pyx_v_c2)) - __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":126
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":125
  *     c1, c2 = 1 - spec, sens + spec - 1
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:             # <<<<<<<<<<<<<<
@@ -3626,7 +3642,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
   __pyx_t_6 = ((__pyx_v_denominator == 0.0) != 0);
   if (__pyx_t_6) {
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":127
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":126
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:
  *         if t > n/2:             # <<<<<<<<<<<<<<
@@ -3636,7 +3652,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
     __pyx_t_6 = ((__pyx_v_t > (((double)__pyx_v_n) / 2.0)) != 0);
     if (__pyx_t_6) {
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":128
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":127
  *     if denominator == 0:
  *         if t > n/2:
  *             result[0] = 1.0             # <<<<<<<<<<<<<<
@@ -3645,7 +3661,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
       (__pyx_v_result[0]) = 1.0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":129
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":128
  *         if t > n/2:
  *             result[0] = 1.0
  *             result[1] = 1.0             # <<<<<<<<<<<<<<
@@ -3654,7 +3670,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
       (__pyx_v_result[1]) = 1.0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":130
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":129
  *             result[0] = 1.0
  *             result[1] = 1.0
  *             return             # <<<<<<<<<<<<<<
@@ -3663,7 +3679,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
       goto __pyx_L0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":127
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":126
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:
  *         if t > n/2:             # <<<<<<<<<<<<<<
@@ -3672,7 +3688,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
     }
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":131
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":130
  *             result[1] = 1.0
  *             return
  *         elif t < n/2:             # <<<<<<<<<<<<<<
@@ -3682,7 +3698,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
     __pyx_t_6 = ((__pyx_v_t < (((double)__pyx_v_n) / 2.0)) != 0);
     if (__pyx_t_6) {
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":132
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":131
  *             return
  *         elif t < n/2:
  *             result[0] = 0.0             # <<<<<<<<<<<<<<
@@ -3691,7 +3707,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
       (__pyx_v_result[0]) = 0.0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":133
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":132
  *         elif t < n/2:
  *             result[0] = 0.0
  *             result[1] = 0.0             # <<<<<<<<<<<<<<
@@ -3700,7 +3716,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
       (__pyx_v_result[1]) = 0.0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":134
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":133
  *             result[0] = 0.0
  *             result[1] = 0.0
  *             return             # <<<<<<<<<<<<<<
@@ -3709,7 +3725,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
       goto __pyx_L0;
 
-      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":131
+      /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":130
  *             result[1] = 1.0
  *             return
  *         elif t < n/2:             # <<<<<<<<<<<<<<
@@ -3718,7 +3734,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
     }
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":126
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":125
  *     c1, c2 = 1 - spec, sens + spec - 1
  *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
  *     if denominator == 0:             # <<<<<<<<<<<<<<
@@ -3727,7 +3743,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
   }
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":135
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":134
  *             result[1] = 0.0
  *             return
  *     left = brentq(f1, 0, 1, &args, 1e-3, 1e-3, 100, NULL)             # <<<<<<<<<<<<<<
@@ -3736,7 +3752,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
   __pyx_v_left = __pyx_f_5scipy_8optimize_15cython_optimize_6_zeros_brentq(__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f1, 0.0, 1.0, (&__pyx_v_args), 1e-3, 1e-3, 0x64, NULL);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":136
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":135
  *             return
  *     left = brentq(f1, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
  *     right = brentq(f2, 0, 1, &args, 1e-3, 1e-3, 100, NULL)             # <<<<<<<<<<<<<<
@@ -3745,7 +3761,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
   __pyx_v_right = __pyx_f_5scipy_8optimize_15cython_optimize_6_zeros_brentq(__pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_f2, 0.0, 1.0, (&__pyx_v_args), 1e-3, 1e-3, 0x64, NULL);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":137
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":136
  *     left = brentq(f1, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
  *     right = brentq(f2, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
  *     result[0] = left             # <<<<<<<<<<<<<<
@@ -3754,7 +3770,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
   (__pyx_v_result[0]) = __pyx_v_left;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":138
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":137
  *     right = brentq(f2, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
  *     result[0] = left
  *     result[1] = right             # <<<<<<<<<<<<<<
@@ -3763,7 +3779,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
  */
   (__pyx_v_result[1]) = __pyx_v_right;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":117
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":116
  * 
  * 
  * cdef void prevalence_credible_interval_exact(int n, int t,             # <<<<<<<<<<<<<<
@@ -3776,7 +3792,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalenc
   __Pyx_RefNannyFinishContext();
 }
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":141
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":140
  * 
  * 
  * cdef void _prevalence_credible_interval(int n, int t,             # <<<<<<<<<<<<<<
@@ -3821,7 +3837,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_prevalence_credible_interval", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":151
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":150
  *     cdef double sens, spec, left_acc, right_acc
  *     cdef double _sens_a, _sens_b, _spec_a, _spec_b
  *     cdef const char *capsule_name = "BitGenerator"             # <<<<<<<<<<<<<<
@@ -3830,7 +3846,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   __pyx_v_capsule_name = ((char const *)"BitGenerator");
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":155
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":154
  *     cdef double *spec_array
  * 
  *     sens_array = <double *> PyMem_Malloc(num_samples * sizeof(double))             # <<<<<<<<<<<<<<
@@ -3839,7 +3855,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   __pyx_v_sens_array = ((double *)PyMem_Malloc((__pyx_v_num_samples * (sizeof(double)))));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":156
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":155
  * 
  *     sens_array = <double *> PyMem_Malloc(num_samples * sizeof(double))
  *     spec_array = <double *> PyMem_Malloc(num_samples * sizeof(double))             # <<<<<<<<<<<<<<
@@ -3848,14 +3864,14 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   __pyx_v_spec_array = ((double *)PyMem_Malloc((__pyx_v_num_samples * (sizeof(double)))));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":158
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":157
  *     spec_array = <double *> PyMem_Malloc(num_samples * sizeof(double))
  * 
  *     x = PCG64()             # <<<<<<<<<<<<<<
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_PCG64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_PCG64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -3873,26 +3889,26 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
     PyObject *__pyx_callargs[1] = {__pyx_t_3, };
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_v_x = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":159
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":158
  * 
  *     x = PCG64()
  *     capsule = x.capsule             # <<<<<<<<<<<<<<
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_capsule); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_capsule); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_capsule = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":160
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":159
  *     x = PCG64()
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):             # <<<<<<<<<<<<<<
@@ -3902,20 +3918,20 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
   __pyx_t_5 = ((!(PyCapsule_IsValid(__pyx_v_capsule, __pyx_v_capsule_name) != 0)) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":161
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":160
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")             # <<<<<<<<<<<<<<
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)
  * 
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 161, __pyx_L1_error)
+    __PYX_ERR(0, 160, __pyx_L1_error)
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":160
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":159
  *     x = PCG64()
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):             # <<<<<<<<<<<<<<
@@ -3924,30 +3940,30 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   }
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":162
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":161
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)             # <<<<<<<<<<<<<<
  * 
  *     i = 0
  */
-  __pyx_t_6 = PyCapsule_GetPointer(__pyx_v_capsule, __pyx_v_capsule_name); if (unlikely(__pyx_t_6 == ((void *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
+  __pyx_t_6 = PyCapsule_GetPointer(__pyx_v_capsule, __pyx_v_capsule_name); if (unlikely(__pyx_t_6 == ((void *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 161, __pyx_L1_error)
   __pyx_v_rng = ((bitgen_t *)__pyx_t_6);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":164
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":163
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)
  * 
  *     i = 0             # <<<<<<<<<<<<<<
  *     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b
- *     with x.lock:
+ *     with x.lock, nogil:
  */
   __pyx_v_i = 0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":165
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":164
  * 
  *     i = 0
  *     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b             # <<<<<<<<<<<<<<
- *     with x.lock:
+ *     with x.lock, nogil:
  *         for i in range(num_samples):
  */
   __pyx_t_7 = __pyx_v_sens_a;
@@ -3959,19 +3975,19 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
   __pyx_v__spec_a = __pyx_t_9;
   __pyx_v__spec_b = __pyx_t_10;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":166
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":165
  *     i = 0
  *     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b
- *     with x.lock:             # <<<<<<<<<<<<<<
+ *     with x.lock, nogil:             # <<<<<<<<<<<<<<
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
  */
   /*with:*/ {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_lock); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_lock); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_11 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_exit); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_exit); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 165, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_enter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 166, __pyx_L4_error)
+    __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_enter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 165, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_12 = NULL;
     __pyx_t_4 = 0;
@@ -3989,7 +4005,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
       PyObject *__pyx_callargs[1] = {__pyx_t_12, };
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
       __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L4_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 165, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -3999,45 +4015,64 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
       {
         (void)__pyx_t_13; (void)__pyx_t_14; (void)__pyx_t_15; /* mark used */
         /*try:*/ {
+          {
+              #ifdef WITH_THREAD
+              PyThreadState *_save;
+              Py_UNBLOCK_THREADS
+              __Pyx_FastGIL_Remember();
+              #endif
+              /*try:*/ {
 
-          /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":167
+                /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":166
  *     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b
- *     with x.lock:
+ *     with x.lock, nogil:
  *         for i in range(num_samples):             # <<<<<<<<<<<<<<
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
  *             spec_array[i] = random_beta(rng, _spec_a, _spec_b)
  */
-          __pyx_t_4 = __pyx_v_num_samples;
-          __pyx_t_16 = __pyx_t_4;
-          for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-            __pyx_v_i = __pyx_t_17;
+                __pyx_t_4 = __pyx_v_num_samples;
+                __pyx_t_16 = __pyx_t_4;
+                for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+                  __pyx_v_i = __pyx_t_17;
 
-            /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":168
- *     with x.lock:
+                  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":167
+ *     with x.lock, nogil:
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)             # <<<<<<<<<<<<<<
  *             spec_array[i] = random_beta(rng, _spec_a, _spec_b)
  *     i = 0
  */
-            (__pyx_v_sens_array[__pyx_v_i]) = random_beta(__pyx_v_rng, __pyx_v__sens_a, __pyx_v__sens_b);
+                  (__pyx_v_sens_array[__pyx_v_i]) = random_beta(__pyx_v_rng, __pyx_v__sens_a, __pyx_v__sens_b);
 
-            /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":169
+                  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":168
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
  *             spec_array[i] = random_beta(rng, _spec_a, _spec_b)             # <<<<<<<<<<<<<<
  *     i = 0
  *     for i in range(num_samples):
  */
-            (__pyx_v_spec_array[__pyx_v_i]) = random_beta(__pyx_v_rng, __pyx_v__spec_a, __pyx_v__spec_b);
-          }
+                  (__pyx_v_spec_array[__pyx_v_i]) = random_beta(__pyx_v_rng, __pyx_v__spec_a, __pyx_v__spec_b);
+                }
+              }
 
-          /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":166
+              /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":165
  *     i = 0
  *     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b
- *     with x.lock:             # <<<<<<<<<<<<<<
+ *     with x.lock, nogil:             # <<<<<<<<<<<<<<
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
  */
+              /*finally:*/ {
+                /*normal exit:*/{
+                  #ifdef WITH_THREAD
+                  __Pyx_FastGIL_Forget();
+                  Py_BLOCK_THREADS
+                  #endif
+                  goto __pyx_L16;
+                }
+                __pyx_L16:;
+              }
+          }
         }
       }
     }
@@ -4046,7 +4081,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
         if (__pyx_t_11) {
           __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_tuple__2, NULL);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 166, __pyx_L1_error)
+          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 165, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_15);
           __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
         }
@@ -4054,14 +4089,14 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
       }
       __pyx_L7:;
     }
-    goto __pyx_L16;
+    goto __pyx_L19;
     __pyx_L4_error:;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     goto __pyx_L1_error;
-    __pyx_L16:;
+    __pyx_L19:;
   }
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":170
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":169
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
  *             spec_array[i] = random_beta(rng, _spec_a, _spec_b)
  *     i = 0             # <<<<<<<<<<<<<<
@@ -4070,7 +4105,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   __pyx_v_i = 0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":171
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":170
  *             spec_array[i] = random_beta(rng, _spec_a, _spec_b)
  *     i = 0
  *     for i in range(num_samples):             # <<<<<<<<<<<<<<
@@ -4082,7 +4117,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
   for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
     __pyx_v_i = __pyx_t_17;
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":172
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":171
  *     i = 0
  *     for i in range(num_samples):
  *         prevalence_credible_interval_exact(n, t,             # <<<<<<<<<<<<<<
@@ -4091,7 +4126,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
     __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats_prevalence_credible_interval_exact(__pyx_v_n, __pyx_v_t, (__pyx_v_sens_array[__pyx_v_i]), (__pyx_v_spec_array[__pyx_v_i]), __pyx_v_alpha, __pyx_v_temp_result);
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":176
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":175
  *                                            spec_array[i],
  *                                            alpha, temp_result)
  *         result[0] += temp_result[0]             # <<<<<<<<<<<<<<
@@ -4101,7 +4136,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
     __pyx_t_18 = 0;
     (__pyx_v_result[__pyx_t_18]) = ((__pyx_v_result[__pyx_t_18]) + (__pyx_v_temp_result[0]));
 
-    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":177
+    /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":176
  *                                            alpha, temp_result)
  *         result[0] += temp_result[0]
  *         result[1] += temp_result[1]             # <<<<<<<<<<<<<<
@@ -4112,7 +4147,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
     (__pyx_v_result[__pyx_t_18]) = ((__pyx_v_result[__pyx_t_18]) + (__pyx_v_temp_result[1]));
   }
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":178
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":177
  *         result[0] += temp_result[0]
  *         result[1] += temp_result[1]
  *     PyMem_Free(sens_array)             # <<<<<<<<<<<<<<
@@ -4121,7 +4156,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   PyMem_Free(__pyx_v_sens_array);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":179
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":178
  *         result[1] += temp_result[1]
  *     PyMem_Free(sens_array)
  *     PyMem_Free(spec_array)             # <<<<<<<<<<<<<<
@@ -4130,7 +4165,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   PyMem_Free(__pyx_v_spec_array);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":180
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":179
  *     PyMem_Free(sens_array)
  *     PyMem_Free(spec_array)
  *     result[0] = result[0]/num_samples             # <<<<<<<<<<<<<<
@@ -4139,11 +4174,11 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   if (unlikely(__pyx_v_num_samples == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 180, __pyx_L1_error)
+    __PYX_ERR(0, 179, __pyx_L1_error)
   }
   (__pyx_v_result[0]) = ((__pyx_v_result[0]) / ((double)__pyx_v_num_samples));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":181
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":180
  *     PyMem_Free(spec_array)
  *     result[0] = result[0]/num_samples
  *     result[1] = result[1]/num_samples             # <<<<<<<<<<<<<<
@@ -4152,11 +4187,11 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
  */
   if (unlikely(__pyx_v_num_samples == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 181, __pyx_L1_error)
+    __PYX_ERR(0, 180, __pyx_L1_error)
   }
   (__pyx_v_result[1]) = ((__pyx_v_result[1]) / ((double)__pyx_v_num_samples));
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":141
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":140
  * 
  * 
  * cdef void _prevalence_credible_interval(int n, int t,             # <<<<<<<<<<<<<<
@@ -4178,7 +4213,7 @@ static void __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalen
   __Pyx_RefNannyFinishContext();
 }
 
-/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":184
+/* "adeft_indra/ambiguity_detection/stats/_stats.pyx":183
  * 
  * 
  * def prevalence_credible_interval(n, t, sens_a, sens_b, spec_a, spec_b, alpha,             # <<<<<<<<<<<<<<
@@ -4254,61 +4289,61 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       switch (__pyx_nargs) {
         case  0:
         if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_n)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_t)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 1); __PYX_ERR(0, 184, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 1); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sens_a)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 2); __PYX_ERR(0, 184, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 2); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sens_b)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 3); __PYX_ERR(0, 184, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 3); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_spec_a)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 4); __PYX_ERR(0, 184, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 4); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_spec_b)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 5); __PYX_ERR(0, 184, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 5); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_alpha)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 6); __PYX_ERR(0, 184, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, 6); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_num_samples);
           if (value) { values[7] = value; kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "prevalence_credible_interval") < 0)) __PYX_ERR(0, 184, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "prevalence_credible_interval") < 0)) __PYX_ERR(0, 183, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -4336,7 +4371,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, __pyx_nargs); __PYX_ERR(0, 184, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("prevalence_credible_interval", 0, 7, 8, __pyx_nargs); __PYX_ERR(0, 183, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("adeft_indra.ambiguity_detection.stats._stats.prevalence_credible_interval", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4376,39 +4411,39 @@ static PyObject *__pyx_pf_11adeft_indra_19ambiguity_detection_5stats_6_stats_pre
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("prevalence_credible_interval", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":189
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":188
  *     cdef int _n, _t, _num_samples
  *     cdef double _sens_a, _sens_b, _spec_a, _spec_b, _alpha
  *     _n, _t, _num_samples, _alpha = n, t, num_samples, alpha             # <<<<<<<<<<<<<<
  *     _sens_a, _sens_b, _spec_a, _spec_b, = sens_a, sens_b, spec_a, spec_b
  *     _prevalence_credible_interval(_n, _t, _sens_a, _sens_b, _spec_a, _spec_b,
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_n); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_t); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_num_samples); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
-  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_v_alpha); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_n); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_t); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_num_samples); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_v_alpha); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
   __pyx_v__n = __pyx_t_1;
   __pyx_v__t = __pyx_t_2;
   __pyx_v__num_samples = __pyx_t_3;
   __pyx_v__alpha = __pyx_t_4;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":190
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":189
  *     cdef double _sens_a, _sens_b, _spec_a, _spec_b, _alpha
  *     _n, _t, _num_samples, _alpha = n, t, num_samples, alpha
  *     _sens_a, _sens_b, _spec_a, _spec_b, = sens_a, sens_b, spec_a, spec_b             # <<<<<<<<<<<<<<
  *     _prevalence_credible_interval(_n, _t, _sens_a, _sens_b, _spec_a, _spec_b,
  *                                   _alpha, _num_samples, result)
  */
-  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_v_sens_a); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
-  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_v_sens_b); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
-  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_v_spec_a); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
-  __pyx_t_7 = __pyx_PyFloat_AsDouble(__pyx_v_spec_b); if (unlikely((__pyx_t_7 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_v_sens_a); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_v_sens_b); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_v_spec_a); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
+  __pyx_t_7 = __pyx_PyFloat_AsDouble(__pyx_v_spec_b); if (unlikely((__pyx_t_7 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 189, __pyx_L1_error)
   __pyx_v__sens_a = __pyx_t_4;
   __pyx_v__sens_b = __pyx_t_5;
   __pyx_v__spec_a = __pyx_t_6;
   __pyx_v__spec_b = __pyx_t_7;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":191
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":190
  *     _n, _t, _num_samples, _alpha = n, t, num_samples, alpha
  *     _sens_a, _sens_b, _spec_a, _spec_b, = sens_a, sens_b, spec_a, spec_b
  *     _prevalence_credible_interval(_n, _t, _sens_a, _sens_b, _spec_a, _spec_b,             # <<<<<<<<<<<<<<
@@ -4417,17 +4452,17 @@ static PyObject *__pyx_pf_11adeft_indra_19ambiguity_detection_5stats_6_stats_pre
  */
   __pyx_f_11adeft_indra_19ambiguity_detection_5stats_6_stats__prevalence_credible_interval(__pyx_v__n, __pyx_v__t, __pyx_v__sens_a, __pyx_v__sens_b, __pyx_v__spec_a, __pyx_v__spec_b, __pyx_v__alpha, __pyx_v__num_samples, __pyx_v_result);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":193
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":192
  *     _prevalence_credible_interval(_n, _t, _sens_a, _sens_b, _spec_a, _spec_b,
  *                                   _alpha, _num_samples, result)
  *     return (result[0], result[1])             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_8 = PyFloat_FromDouble((__pyx_v_result[0])); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __pyx_t_8 = PyFloat_FromDouble((__pyx_v_result[0])); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = PyFloat_FromDouble((__pyx_v_result[1])); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble((__pyx_v_result[1])); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 193, __pyx_L1_error)
+  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_GIVEREF(__pyx_t_8);
   PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_8);
@@ -4439,7 +4474,7 @@ static PyObject *__pyx_pf_11adeft_indra_19ambiguity_detection_5stats_6_stats_pre
   __pyx_t_10 = 0;
   goto __pyx_L0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":184
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":183
  * 
  * 
  * def prevalence_credible_interval(n, t, sens_a, sens_b, spec_a, spec_b, alpha,             # <<<<<<<<<<<<<<
@@ -5829,8 +5864,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 161, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 160, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 166, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 966, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -5842,25 +5877,25 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":161
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":160
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")             # <<<<<<<<<<<<<<
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)
  * 
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_Invalid_pointer_to_anon_func_sta); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 161, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_Invalid_pointer_to_anon_func_sta); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":166
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":165
  *     i = 0
  *     _sens_a, _sens_b, _spec_a, _spec_b = sens_a, sens_b, spec_a, spec_b
- *     with x.lock:             # <<<<<<<<<<<<<<
+ *     with x.lock, nogil:             # <<<<<<<<<<<<<<
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, _sens_a, _sens_b)
  */
-  __pyx_tuple__2 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 166, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -5886,18 +5921,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":184
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":183
  * 
  * 
  * def prevalence_credible_interval(n, t, sens_a, sens_b, spec_a, spec_b, alpha,             # <<<<<<<<<<<<<<
  *                                  num_samples=5000):
  *     cdef double result[2]
  */
-  __pyx_tuple__5 = PyTuple_Pack(17, __pyx_n_s_n, __pyx_n_s_t, __pyx_n_s_sens_a, __pyx_n_s_sens_b, __pyx_n_s_spec_a, __pyx_n_s_spec_b, __pyx_n_s_alpha, __pyx_n_s_num_samples, __pyx_n_s_result, __pyx_n_s_n_2, __pyx_n_s_t_2, __pyx_n_s_num_samples_2, __pyx_n_s_sens_a_2, __pyx_n_s_sens_b_2, __pyx_n_s_spec_a_2, __pyx_n_s_spec_b_2, __pyx_n_s_alpha_2); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(17, __pyx_n_s_n, __pyx_n_s_t, __pyx_n_s_sens_a, __pyx_n_s_sens_b, __pyx_n_s_spec_a, __pyx_n_s_spec_b, __pyx_n_s_alpha, __pyx_n_s_num_samples, __pyx_n_s_result, __pyx_n_s_n_2, __pyx_n_s_t_2, __pyx_n_s_num_samples_2, __pyx_n_s_sens_a_2, __pyx_n_s_sens_b_2, __pyx_n_s_spec_a_2, __pyx_n_s_spec_b_2, __pyx_n_s_alpha_2); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(8, 0, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_ambiguity_detection, __pyx_n_s_prevalence_credible_interval, 184, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __pyx_tuple__7 = PyTuple_Pack(1, ((PyObject *)__pyx_int_5000)); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(8, 0, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_ambiguity_detection, __pyx_n_s_prevalence_credible_interval, 183, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 183, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(1, ((PyObject *)__pyx_int_5000)); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
   __Pyx_RefNannyFinishContext();
@@ -6384,17 +6419,17 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":184
+  /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":183
  * 
  * 
  * def prevalence_credible_interval(n, t, sens_a, sens_b, spec_a, spec_b, alpha,             # <<<<<<<<<<<<<<
  *                                  num_samples=5000):
  *     cdef double result[2]
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_19ambiguity_detection_5stats_6_stats_1prevalence_credible_interval, 0, __pyx_n_s_prevalence_credible_interval, NULL, __pyx_n_s_adeft_indra_ambiguity_detection_2, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_19ambiguity_detection_5stats_6_stats_1prevalence_credible_interval, 0, __pyx_n_s_prevalence_credible_interval, NULL, __pyx_n_s_adeft_indra_ambiguity_detection_2, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_prevalence_credible_interval, __pyx_t_2) < 0) __PYX_ERR(0, 184, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_prevalence_credible_interval, __pyx_t_2) < 0) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "adeft_indra/ambiguity_detection/stats/_stats.pyx":1
