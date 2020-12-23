@@ -1,5 +1,6 @@
 import zlib
 import sqlite3
+import lxml.etree as etree
 from contextlib import closing
 from collections import Counter
 from multiprocessing import Pool
@@ -121,7 +122,6 @@ def get_agent_texts_for_pmids(pmids):
             res = cur.execute(query, pmids).fetchall()
     return {pmid: dict(Counter(agent_texts.split(',')))
             for pmid, agent_texts in res}
-    
 
 
 def get_agent_texts_for_entity(ns, id_):
@@ -130,3 +130,23 @@ def get_agent_texts_for_entity(ns, id_):
         return []
     counts = get_agent_texts_for_pmids(pmids)
     return counts
+
+
+def get_abbreviations(xml):
+    try:
+        tree = etree.fromstring(xml)
+    except etree.XMLSyntaxError:
+        return {}
+    items = tree.xpath('.//glossary/def-list/def-item')
+    result = {}
+    for item in items:
+        term_elements = item.xpath('./term')
+        if not term_elements:
+            continue
+        term = ''.join(term_elements[0].itertext()).strip()
+        def_elements = item.xpath('./def')
+        if not def_elements:
+            continue
+        def_ = ''.join(def_elements[0].itertext()).strip()
+        result[term] = def_
+    return result

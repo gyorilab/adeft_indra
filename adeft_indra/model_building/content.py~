@@ -1,9 +1,0 @@
-from gilda import ground
-
-
-def find_groundings(shortform):
-    groundings = [(grounding.term.db, grounding.term.id)
-                  for grounding in ground(shortform)
-                  if grounding.match.exact]
-    return groundings
-    
