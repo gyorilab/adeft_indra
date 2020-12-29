@@ -1,13 +1,5 @@
 import logging
-from multiprocessing import Pool
-
-import numpy as np
-import scipy as sp
-from scipy.stats import beta
-from scipy.optimize import brentq
-from scipy.special import loggamma
-
-from ._stats import prevalence_credible_interval_exact
+from sklearn.metrics import make_scorer
 
 
 logger = logging.getLogger(__file__)
@@ -61,35 +53,10 @@ def youdens_j_score(y_true, y_pred, pos_label=1):
     return sens + spec - 1
 
 
-def sample_interval(n, t, sens_shape, sens_range,
-                    spec_shape, spec_range, alpha):
-    sp.random.seed()
-
-    scale = sens_range[1] - sens_range[0]
-    loc = sens_range[0]
-    sens = beta.rvs(sens_shape[0], sens_shape[1], scale=scale, loc=loc)
-    scale = spec_range[1] - spec_range[0]
-    loc = spec_range[0]
-    spec = beta.rvs(spec_shape[0], spec_shape[1], scale=scale, loc=loc)
-    return prevalence_credible_interval_exact(n, t, sens, spec, alpha)
-
-
-def prevalence_credible_interval(n, t, sens_shape, sens_range,
-                                 spec_shape, spec_range, alpha,
-                                 num_samples=5000, n_jobs=1):
-    if n_jobs > 1:
-        with Pool(n_jobs) as pool:
-            future_results = [pool.apply_async(sample_interval,
-                                               args=(n, t, sens_shape,
-                                                     sens_range,
-                                                     spec_shape,
-                                                     spec_range,
-                                                     alpha))
-                              for i in range(num_samples)]
-            results = [interval.get() for interval in future_results]
-    else:
-        results = [sample_interval(n, t, sens_shape, sens_range,
-                                   spec_shape, spec_range, alpha)
-                   for i in range(num_samples)]
-    return (np.mean([t[0] for t in results]),
-            np.mean([t[1] for t in results]))
+def make_anomaly_detector_scorer():
+    sensitivity_scorer = make_scorer(sensitivity_score, pos_label=-1.0)
+    specificity_scorer = make_scorer(specificity_score, pos_label=-1.0)
+    yj_scorer = make_scorer(youdens_j_score, pos_label=-1.0)
+    scorer = {'sens': sensitivity_scorer, 'spec': specificity_scorer,
+              'yj': yj_scorer}
+    return scorer
