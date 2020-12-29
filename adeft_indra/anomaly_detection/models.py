@@ -8,10 +8,13 @@ from sklearn.pipeline import Pipeline
 from adeft.nlp import english_stopwords
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import KFold, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+
 from adeft_indra.tfidf import AdeftTfidfVectorizer
-from .stats import sensitivity_score, specificity_score, youdens_j_score
+from .stats import sensitivity_score, specificity_score, youdens_j_score, \
+    make_anomaly_detector_scorer
 
 logger = logging.getLogger(__file__)
 
@@ -21,48 +24,7 @@ gensim_logger.setLevel('WARNING')
 sklearn_logger.setLevel('WARNING')
 
 
-class AdeftAnomalyDetector(object):
-    """Trains one class classifier to detect samples unlike training texts
-
-    Fits a OneClassSVM with tfidf vectorized ngram features using sklearns
-    OneClassSVM and TfidfVectorizer classes. As its name implies,
-    the OneClassSVM takes data from only a single class. It attempts to
-    predict whether new datapoints come from the same distribution as the
-    training examples.
-
-    Parameters
-    ----------
-    blacklist : list of str
-        List of tokens to exclude as features.
-
-    Attributes
-    ----------
-    estimator : py:class:`sklearn.pipeline.Pipeline`
-        A fitted sklearn pipeline that transforms text data with a
-        TfidfVectorizer and applies a OneClassSVM. This attribute is None
-        if the anomaly detector has not been fitted
-    sensitivity : float
-        Crossvalidated sensitivity if fit with the cv method. This is the
-        proportion of anomalous examples in the test data that are predicted
-        to be anomalous.
-    specificity : float
-        Crossvalidated specificity if fit with the cv method. This is the
-        proportion of non-anomalos examples in the test data that are
-        predicted to not be anomalous. Sensitivity and specificity are used
-        to compute confidence intervals for the proportion of anomalous
-        examples in a set of texts.
-    best_score : float
-        The score used is sensitivity + specificity - 1. Crossvalidated value
-        of this score if fit with the cv method. The width of the confidence
-        interval for the proportion of anomalous examples in a set of texts
-        is inversely proportional to this score.
-    best_params : dict
-        Best parameters find in grid search if fit with the cv method
-    cv_results : dict
-        cv_results_ attribute of
-        py:class:`sklearn.model_selection.GridSearchCV` if fit with the
-        cv method
-    """
+class BaseAnomalyDetector(object):
     def __init__(self, tfidf_path=None, blacklist=None):
         self.tfidf_path = tfidf_path
         self.blacklist = [] if blacklist is None else blacklist
@@ -72,73 +34,29 @@ class AdeftAnomalyDetector(object):
         self.best_score = None
         self.best_params = None
         self.cv_results = None
-
         # Terms in the blacklist are tokenized and preprocessed just as in
         # the underlying model and then added to the set of excluded stop words
         tokenize = TfidfVectorizer().build_tokenizer()
         tokens = [token.lower() for token in
                   tokenize(' '.join(self.blacklist))]
         self.stop = set(english_stopwords).union(tokens)
-        # Mappings to allow users to directly pass in parameter names
-        # for model instead of syntax to access them in an sklearn pipeline
-        self.__param_mapping = {'nu': 'oc_svm__nu',
-                                'max_features': 'tfidf__max_features'}
+        self.__param_mapping = self._get_param_mapping()
         self.__inverse_param_mapping = {value: key for
                                         key, value in
                                         self.__param_mapping.items()}
 
-    def train(self, texts, nu=0.5, ngram_range=(1, 1), max_features=1000):
-        """Fit estimator on a set of training texts
+    def train(self, texts, **params):
+        raise NotImplementedError
 
-        Parameters
-        ----------
-        texts : list of str
-            List of texts to use as training data
-        nu : Optional[float]
-            Upper bound on the fraction of allowed training errors
-            and lower bound on of the fraction of support vectors
-        max_features : int
-            Maximum number of tfidf-vectorized ngrams to use as features in
-            model. Selects top_features by term frequency Default: 100
-        """
-        # initialize pipeline
-        pipeline = Pipeline([('tfidf',
-                              AdeftTfidfVectorizer(dict_path=self.tfidf_path,
-                                                   max_features=max_features,
-                                                   stop_words=self.stop)),
-                             ('oc_svm',
-                              OneClassSVM(kernel='linear', nu=nu))])
-
-        pipeline.fit(texts)
-        self.estimator = pipeline
-
-    def cv(self, texts, anomalous_texts, param_grid, n_jobs=1, cv=5):
-        """Performs grid search to select and fit a model
-
-        Parameters
-        ----------
-        texts : list of str
-            Training texts for OneClassSVM
-        anomalous_texts : list of str
-            Example anomalous texts for testing purposes. In practice, we
-            typically do not have access to such texts.
-        param_grid : Optional[dict]
-            Grid search parameters. Can contain all parameters from the
-            the train method.
-         n_jobs : Optional[int]
-            Number of jobs to use when performing grid_search
-            Default: 1
-        cv : Optional[int]
-            Number of folds to use in crossvalidation. Default: 5
-        """
-        pipeline = Pipeline([('tfidf',
-                              AdeftTfidfVectorizer(self.tfidf_path,
-                                                   stop_words=self.stop)),
-                             ('oc_svm',
-                              OneClassSVM(kernel='linear'))])
+    def cv(self, texts, anomalous_texts, param_grid, n_jobs=1, cv=5,
+           random_state=None):
+        pipeline = self._make_pipeline()
+        texts = list(texts)
+        anomalous_texts = list(anomalous_texts)
         # Create crossvalidation splits for both the training texts and
         # the anomalous texts
-        train_splits = KFold(n_splits=cv, shuffle=True).split(texts)
+        train_splits = KFold(n_splits=cv, random_state=random_state,
+                             shuffle=True).split(texts)
         # Handle case where an insufficient amount of anomalous texts
         # are provided. In this case only specificity can be estimated
         if len(anomalous_texts) < cv:
@@ -146,7 +64,7 @@ class AdeftAnomalyDetector(object):
             y = [1.0]*len(texts)
             splits = train_splits
         else:
-            anomalous_splits = KFold(n_splits=cv,
+            anomalous_splits = KFold(n_splits=cv, random_state=random_state,
                                      shuffle=True).split(anomalous_texts)
             # Combine training texts and anomalous texts into a single dataset
             # Give label -1.0 for anomalous texts, 1.0 otherwise
@@ -158,6 +76,7 @@ class AdeftAnomalyDetector(object):
                                               anom_test + len(texts))))
                       for (train, test), (_, anom_test)
                       in zip(train_splits, anomalous_splits))
+        scorer = make_anomaly_detector_scorer()
         sensitivity_scorer = make_scorer(sensitivity_score, pos_label=-1.0)
         specificity_scorer = make_scorer(specificity_score, pos_label=-1.0)
         yj_scorer = make_scorer(youdens_j_score, pos_label=-1.0)
@@ -241,3 +160,42 @@ class AdeftAnomalyDetector(object):
         return {'sens_mean': sens, 'sens_std': sens_std,
                 'spec_mean': spec, 'spec_std': spec_std,
                 'params': params}
+
+    def _make_scorer(self):
+        sensitivity_scorer = make_scorer(sensitivity_score, pos_label=-1.0)
+        specificity_scorer = make_scorer(specificity_score, pos_label=-1.0)
+        yj_scorer = make_scorer(youdens_j_score, pos_label=-1.0)
+        scorer = {'sens': sensitivity_scorer, 'spec': specificity_scorer,
+                  'yj': yj_scorer}
+        return scorer
+
+    def _get_param_mapping(self):
+        raise NotImplementedError
+
+    def _make_pipeline(self, **params):
+        raise NotImplementedError
+
+    def _train(self, texts, **params):
+        pipeline = self._make_pipeline(**params)
+        pipeline.fit(texts)
+        self.estimator = pipeline
+        return self.estimator
+
+
+class AdeftAnomalyDetector(BaseAnomalyDetector):
+    def train(self, texts, nu=0.5, ngram_range=(1, 1), max_features=1000):
+        params = {'nu': nu, 'ngram_range': ngram_range,
+                  'max_features': max_features}
+        return self._train(texts, **params)
+
+    def _get_param_mapping(self):
+        return {'nu': 'oc_svm__nu',
+                'max_features': 'tfidf__max_features'}
+
+    def _make_pipeline(self, nu=0.5, ngram_range=(1, 1), max_features=1000):
+        return Pipeline([('tfidf',
+                          AdeftTfidfVectorizer(dict_path=self.tfidf_path,
+                                               max_features=max_features,
+                                               stop_words=self.stop)),
+                         ('oc_svm',
+                          OneClassSVM(kernel='linear', nu=nu))])
