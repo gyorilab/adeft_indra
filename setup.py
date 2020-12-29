@@ -24,8 +24,8 @@ inc_path = np.get_include()
 lib_path = path.join(inc_path, '..', '..', 'random', 'lib')
 
 extensions = [
-    Extension('adeft_indra.ambiguity_detection.stats._stats',
-              ['adeft_indra/ambiguity_detection/stats/_stats' + ext],
+    Extension('adeft_indra.anomaly_detection.stats._stats',
+              ['adeft_indra/anomaly_detection/stats/_stats' + ext],
               include_dirs=[inc_path],
               library_dirs=[lib_path],
               libraries=['npyrandom'],
