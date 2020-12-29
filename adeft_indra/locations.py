@@ -20,6 +20,8 @@ ADEFT_INDRA_HOME = os.environ.get('ADEFT_INDRA_HOME') or \
 
 
 CONTENT_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'content.db')
+# A temporary expedient during migration
+UPDATE_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'update_text_content.db')
 RESULTS_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'results.db')
 DOCUMENT_FREQUENCIES_PATH = os.path.join(ADEFT_INDRA_HOME,
                                          'document_frequencies.pkl')

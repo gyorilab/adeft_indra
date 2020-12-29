@@ -1,13 +1,15 @@
+import json
 import zlib
 import sqlite3
 import lxml.etree as etree
 from contextlib import closing
 from collections import Counter
 from multiprocessing import Pool
-from indra.literature.adeft_tools import universal_extract_text
+from indra.literature.adeft_tools import universal_extract_text, \
+    filter_paragraphs
 
 
-from adeft_indra.locations import CONTENT_DB_PATH
+from adeft_indra.locations import CONTENT_DB_PATH, UPDATE_DB_PATH
 
 
 def _extract_text(arg):
@@ -25,15 +27,25 @@ def universal_extract_texts(xmls, contains=None, n_jobs=1):
 
 
 def get_plaintexts_for_pmids(pmids, contains=None, n_jobs=1):
+    pmids = tuple(pmids)
+    query = \
+        f"""SELECT
+                pmid, paragraphs
+            FROM
+                text_content
+            WHERE
+                pmid IN ({','.join(['?']*len(pmids))})
+    """
+    with closing(sqlite3.connect(UPDATE_DB_PATH)) as conn:
+        with closing(conn.cursor()) as cur:
+            paragraphs_list = cur.execute(query, pmids).fetchall()
     if contains is None:
         contains = []
-    # Find which pmids have associated plaintexts already cached
-    xmls = _get_xmls_for_pmids(pmids)
-    pmids = [pmid for pmid, _ in xmls]
-    texts = universal_extract_texts([xml for _, xml in xmls],
-                                    contains=contains, n_jobs=n_jobs)
-    plaintexts = {pmid: text for pmid, text in zip(pmids, texts)}
-    return plaintexts
+    paragraphs_list = ((pmid, filter_paragraphs(json.loads(paragraphs),
+                                                contains=contains))
+                       for pmid, paragraphs in paragraphs_list)
+    return {pmid: plaintext for pmid, plaintext in paragraphs_list
+            if len(plaintext) > 1}
 
 
 def get_pmids_for_agent_text(agent_text):
@@ -134,8 +146,8 @@ def get_agent_texts_for_entity(ns, id_):
 
 def get_abbreviations(xml):
     try:
-        tree = etree.fromstring(xml)
-    except etree.XMLSyntaxError:
+        tree = etree.fromstring(xml.encode('utf-8'))
+    except Exception:
         return {}
     items = tree.xpath('.//glossary/def-list/def-item')
     result = {}
