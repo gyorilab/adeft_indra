@@ -66,3 +66,18 @@ class AdeftTfidfVectorizer(BaseEstimator, TransformerMixin):
 
     def _preprocess(self, text):
         return [token.lower() for token in self.tokenize(text)]
+
+
+class FrozenTfidfVectorizer(AdeftTfidfVectorizer):
+    def __init__(self, adeft_tfidf_vectorizer):
+        self.max_features = adeft_tfidf_vectorizer.max_features
+        self.tokenize = adeft_tfidf_vectorizer.tokenize
+        self.stop_words = adeft_tfidf_vectorizer.stop_words
+        if not (adeft_tfidf_vectorizer.model and
+                adeft_tfidf_vectorizer.dictionary):
+            raise ValueError('Input AdeftTfidfVectorizer has not been fit.')
+        self.model = adeft_tfidf_vectorizer.model
+        self.dictionary = adeft_tfidf_vectorizer.dictionary
+
+    def fit(self, raw_documents, y=None):
+        return self
