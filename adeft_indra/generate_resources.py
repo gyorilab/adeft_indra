@@ -1,3 +1,4 @@
+import os
 import boto3
 
 
@@ -12,4 +13,6 @@ def download_DF_dictionary():
 
 
 if __name__ == '__main__':
+    if not os.path.exists(loc.ADEFT_INDRA_HOME):
+        os.makedirs(loc.ADEFT_INDRA_HOME)
     download_DF_dictionary()
