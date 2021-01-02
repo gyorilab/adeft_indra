@@ -131,30 +131,46 @@ def tree_kernel(X, Y, trees):
     cdef SIZE_t n_samples_Y = Y.shape[0]
     cdef SIZE_t n_features_Y = Y.shape[1]
     cdef SIZE_t n_trees = len(trees)
-
     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,
                                                      n_samples_Y),
                                                     dtype=DTYPE)
 
-    cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray = X.data
-    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray = X.indices
-    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr
-    cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data
-    cdef INT32_t* X_indices = <INT32_t*>X_indices_ndarray.data
-    cdef INT32_t* X_indptr = <INT32_t*>X_indptr_ndarray.data
+    cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray
+    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray
+    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray
+    cdef DTYPE_t* X_data = NULL
+    cdef INT32_t* X_indices = NULL
+    cdef INT32_t* X_indptr = NULL
 
-    cdef np.ndarray[ndim=1, dtype=DTYPE_t] Y_data_ndarray = Y.data
-    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray = Y.indices
-    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr
-    cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data
-    cdef INT32_t* Y_indices = <INT32_t*>Y_indices_ndarray.data
-    cdef INT32_t* Y_indptr = <INT32_t*>Y_indptr_ndarray.data
+    cdef np.ndarray[ndim=1, dtype=DTYPE_t] Y_data_ndarray
+    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray
+    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray
+    cdef DTYPE_t* Y_data = NULL
+    cdef INT32_t* Y_indices = NULL
+    cdef INT32_t* Y_indptr = NULL
 
     cdef np.ndarray[ndim=1, dtype=SIZE_t] X_leaf_array
     cdef np.ndarray[ndim=1, dtype=SIZE_t] Y_leaf_array
 
     X_is_sparse = issparse(X)
     Y_is_sparse = issparse(Y)
+
+    if X_is_sparse:
+        X_data_ndarray = X.data
+        X_indices_ndarray = X.indices
+        X_indptr_ndarray = X.indptr
+        X_data = <DTYPE_t*>X_data_ndarray.data
+        X_indices = <INT32_t*>X_indices_ndarray.data
+        X_indptr = <INT32_t*>X_indptr_ndarray.data
+
+    if Y_is_sparse:
+        Y_data_ndarray = Y.data
+        Y_indices_ndarray = Y.indices
+        Y_indptr_ndarray = Y.indptr
+        Y_data = <DTYPE_t*>Y_data_ndarray.data
+        Y_indices = <INT32_t*>Y_indices_ndarray.data
+        Y_indptr = <INT32_t*>Y_indptr_ndarray.data
+
     trees = [KernelTree(tree) for tree in trees]
     for tree in trees:
         if X_is_sparse:
