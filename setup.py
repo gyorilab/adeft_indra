@@ -29,6 +29,9 @@ extensions = [
               include_dirs=[inc_path],
               library_dirs=[lib_path],
               libraries=['npyrandom'],
+              define_macros=defs),
+    Extension('adeft_indra.anomaly_detection._tree_kernel',
+              ['adeft_indra/anomaly_detection/_tree_kernel' + ext],
               define_macros=defs)
     ]
 
