@@ -36,22 +36,17 @@ cdef inline np.ndarray _apply_dense(object X, KernelTree tree):
     if not isinstance(X, np.ndarray):
         raise ValueError("X should be in np.ndarray format, got %s"
                          % type(X))
-
     if X.dtype != DTYPE:
         raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
-
     # Extract input
     cdef const DTYPE_t[:, :] X_ndarray = X
     cdef SIZE_t n_samples = X.shape[0]
-
     # Initialize output
     cdef np.ndarray[SIZE_t] out = np.zeros((n_samples,), dtype=np.intp)
     cdef SIZE_t* out_ptr = <SIZE_t*> out.data
-
     # Initialize auxiliary data-structure
     cdef Node* node = NULL
     cdef SIZE_t i = 0
-
     with nogil:
         for i in range(n_samples):
             node = tree.nodes
@@ -64,7 +59,6 @@ cdef inline np.ndarray _apply_dense(object X, KernelTree tree):
                     node = &tree.nodes[node.right_child]
 
             out_ptr[i] = <SIZE_t>(node - tree.nodes)  # node offset
-
     return out
 
 
@@ -143,15 +137,15 @@ def tree_kernel(X, Y, trees):
                                                     dtype=DTYPE)
 
     cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray = X.data
-    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray  = X.indices
-    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray  = X.indptr
+    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray = X.indices
+    cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr
     cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data
     cdef INT32_t* X_indices = <INT32_t*>X_indices_ndarray.data
     cdef INT32_t* X_indptr = <INT32_t*>X_indptr_ndarray.data
 
     cdef np.ndarray[ndim=1, dtype=DTYPE_t] Y_data_ndarray = Y.data
-    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray  = Y.indices
-    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray  = Y.indptr
+    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray = Y.indices
+    cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr
     cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data
     cdef INT32_t* Y_indices = <INT32_t*>Y_indices_ndarray.data
     cdef INT32_t* Y_indptr = <INT32_t*>Y_indptr_ndarray.data
@@ -178,5 +172,5 @@ def tree_kernel(X, Y, trees):
         j = 0
         for i in range(len(X_leaf_array)):
             for j in range(len(Y_leaf_array)):
-                out[i, j] += (X_leaf_array[i] == X_leaf_array[j])
+                out[i, j] += (X_leaf_array[i] == Y_leaf_array[j])
     return out/len(trees)

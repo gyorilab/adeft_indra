@@ -5281,8 +5281,8 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  *     if not isinstance(X, np.ndarray):
  *         raise ValueError("X should be in np.ndarray format, got %s"
  *                          % type(X))             # <<<<<<<<<<<<<<
- * 
  *     if X.dtype != DTYPE:
+ *         raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
  */
     __pyx_t_3 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_X_should_be_in_np_ndarray_format, ((PyObject *)Py_TYPE(__pyx_v_X))); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 38, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
@@ -5292,7 +5292,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  *     if not isinstance(X, np.ndarray):
  *         raise ValueError("X should be in np.ndarray format, got %s"             # <<<<<<<<<<<<<<
  *                          % type(X))
- * 
+ *     if X.dtype != DTYPE:
  */
     __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 37, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -5310,125 +5310,125 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   }
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":40
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":39
+ *         raise ValueError("X should be in np.ndarray format, got %s"
  *                          % type(X))
- * 
  *     if X.dtype != DTYPE:             # <<<<<<<<<<<<<<
  *         raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
- * 
+ *     # Extract input
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_DTYPE); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_DTYPE); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 39, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = PyObject_RichCompare(__pyx_t_4, __pyx_t_3, Py_NE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_5 = PyObject_RichCompare(__pyx_t_4, __pyx_t_3, Py_NE); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(1, 40, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(1, 39, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   if (unlikely(__pyx_t_2)) {
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":41
- * 
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":40
+ *                          % type(X))
  *     if X.dtype != DTYPE:
  *         raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)             # <<<<<<<<<<<<<<
- * 
  *     # Extract input
+ *     cdef const DTYPE_t[:, :] X_ndarray = X
  */
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_dtype); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 41, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_dtype); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_3 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_X_dtype_should_be_np_float32_got, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 41, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_X_dtype_should_be_np_float32_got, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 41, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 40, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_Raise(__pyx_t_5, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __PYX_ERR(1, 41, __pyx_L1_error)
+    __PYX_ERR(1, 40, __pyx_L1_error)
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":40
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":39
+ *         raise ValueError("X should be in np.ndarray format, got %s"
  *                          % type(X))
- * 
  *     if X.dtype != DTYPE:             # <<<<<<<<<<<<<<
  *         raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
- * 
+ *     # Extract input
  */
   }
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":44
- * 
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":42
+ *         raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
  *     # Extract input
  *     cdef const DTYPE_t[:, :] X_ndarray = X             # <<<<<<<<<<<<<<
  *     cdef SIZE_t n_samples = X.shape[0]
- * 
+ *     # Initialize output
  */
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t__const__(__pyx_v_X, 0); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(1, 44, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t__const__(__pyx_v_X, 0); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(1, 42, __pyx_L1_error)
   __pyx_v_X_ndarray = __pyx_t_6;
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":45
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":43
  *     # Extract input
  *     cdef const DTYPE_t[:, :] X_ndarray = X
  *     cdef SIZE_t n_samples = X.shape[0]             # <<<<<<<<<<<<<<
- * 
  *     # Initialize output
+ *     cdef np.ndarray[SIZE_t] out = np.zeros((n_samples,), dtype=np.intp)
  */
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 45, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_5, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 45, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_5, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_7 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 45, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_7 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 43, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_n_samples = __pyx_t_7;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":48
- * 
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":45
+ *     cdef SIZE_t n_samples = X.shape[0]
  *     # Initialize output
  *     cdef np.ndarray[SIZE_t] out = np.zeros((n_samples,), dtype=np.intp)             # <<<<<<<<<<<<<<
  *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data
- * 
+ *     # Initialize auxiliary data-structure
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
   __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_intp); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_intp); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(1, 48, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 48, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 45, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_9) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_9, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 48, __pyx_L1_error)
+  if (!(likely(((__pyx_t_9) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_9, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 45, __pyx_L1_error)
   __pyx_t_10 = ((PyArrayObject *)__pyx_t_9);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_10, &__Pyx_TypeInfo_nn___pyx_t_7sklearn_4tree_5_tree_SIZE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_out = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_out.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 48, __pyx_L1_error)
+      __PYX_ERR(1, 45, __pyx_L1_error)
     } else {__pyx_pybuffernd_out.diminfo[0].strides = __pyx_pybuffernd_out.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_out.diminfo[0].shape = __pyx_pybuffernd_out.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -5436,36 +5436,36 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
   __pyx_v_out = ((PyArrayObject *)__pyx_t_9);
   __pyx_t_9 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":49
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":46
  *     # Initialize output
  *     cdef np.ndarray[SIZE_t] out = np.zeros((n_samples,), dtype=np.intp)
  *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data             # <<<<<<<<<<<<<<
- * 
  *     # Initialize auxiliary data-structure
+ *     cdef Node* node = NULL
  */
   __pyx_v_out_ptr = ((__pyx_t_7sklearn_4tree_5_tree_SIZE_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_out)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":52
- * 
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":48
+ *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data
  *     # Initialize auxiliary data-structure
  *     cdef Node* node = NULL             # <<<<<<<<<<<<<<
  *     cdef SIZE_t i = 0
- * 
+ *     with nogil:
  */
   __pyx_v_node = NULL;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":53
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":49
  *     # Initialize auxiliary data-structure
  *     cdef Node* node = NULL
  *     cdef SIZE_t i = 0             # <<<<<<<<<<<<<<
- * 
  *     with nogil:
+ *         for i in range(n_samples):
  */
   __pyx_v_i = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":55
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":50
+ *     cdef Node* node = NULL
  *     cdef SIZE_t i = 0
- * 
  *     with nogil:             # <<<<<<<<<<<<<<
  *         for i in range(n_samples):
  *             node = tree.nodes
@@ -5478,8 +5478,8 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
       #endif
       /*try:*/ {
 
-        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":56
- * 
+        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":51
+ *     cdef SIZE_t i = 0
  *     with nogil:
  *         for i in range(n_samples):             # <<<<<<<<<<<<<<
  *             node = tree.nodes
@@ -5490,7 +5490,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
         for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
           __pyx_v_i = __pyx_t_12;
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":57
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":52
  *     with nogil:
  *         for i in range(n_samples):
  *             node = tree.nodes             # <<<<<<<<<<<<<<
@@ -5500,7 +5500,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
           __pyx_t_13 = __pyx_v_tree->nodes;
           __pyx_v_node = __pyx_t_13;
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":59
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":54
  *             node = tree.nodes
  *             # While node not a leaf
  *             while node.left_child != _TREE_LEAF:             # <<<<<<<<<<<<<<
@@ -5511,7 +5511,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_t_2 = ((__pyx_v_node->left_child != __pyx_v_11adeft_indra_17anomaly_detection_12_tree_kernel__TREE_LEAF) != 0);
             if (!__pyx_t_2) break;
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":61
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":56
  *             while node.left_child != _TREE_LEAF:
  *                 # ... and node.right_child != _TREE_LEAF:
  *                 if X_ndarray[i, node.feature] <= node.threshold:             # <<<<<<<<<<<<<<
@@ -5523,7 +5523,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_t_2 = (((*((__pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t const  *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_X_ndarray.data + __pyx_t_14 * __pyx_v_X_ndarray.strides[0]) ) + __pyx_t_15 * __pyx_v_X_ndarray.strides[1]) ))) <= __pyx_v_node->threshold) != 0);
             if (__pyx_t_2) {
 
-              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":62
+              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":57
  *                 # ... and node.right_child != _TREE_LEAF:
  *                 if X_ndarray[i, node.feature] <= node.threshold:
  *                     node = &tree.nodes[node.left_child]             # <<<<<<<<<<<<<<
@@ -5532,7 +5532,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
               __pyx_v_node = (&(__pyx_v_tree->nodes[__pyx_v_node->left_child]));
 
-              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":61
+              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":56
  *             while node.left_child != _TREE_LEAF:
  *                 # ... and node.right_child != _TREE_LEAF:
  *                 if X_ndarray[i, node.feature] <= node.threshold:             # <<<<<<<<<<<<<<
@@ -5542,7 +5542,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
               goto __pyx_L12;
             }
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":64
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":59
  *                     node = &tree.nodes[node.left_child]
  *                 else:
  *                     node = &tree.nodes[node.right_child]             # <<<<<<<<<<<<<<
@@ -5555,20 +5555,20 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_L12:;
           }
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":66
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":61
  *                     node = &tree.nodes[node.right_child]
  * 
  *             out_ptr[i] = <SIZE_t>(node - tree.nodes)  # node offset             # <<<<<<<<<<<<<<
- * 
  *     return out
+ * 
  */
           (__pyx_v_out_ptr[__pyx_v_i]) = ((__pyx_t_7sklearn_4tree_5_tree_SIZE_t)(__pyx_v_node - __pyx_v_tree->nodes));
         }
       }
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":55
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":50
+ *     cdef Node* node = NULL
  *     cdef SIZE_t i = 0
- * 
  *     with nogil:             # <<<<<<<<<<<<<<
  *         for i in range(n_samples):
  *             node = tree.nodes
@@ -5585,9 +5585,9 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
       }
   }
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":68
- *             out_ptr[i] = <SIZE_t>(node - tree.nodes)  # node offset
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":62
  * 
+ *             out_ptr[i] = <SIZE_t>(node - tree.nodes)  # node offset
  *     return out             # <<<<<<<<<<<<<<
  * 
  * 
@@ -5632,7 +5632,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
   return __pyx_r;
 }
 
-/* "adeft_indra/anomaly_detection/_tree_kernel.pyx":73
+/* "adeft_indra/anomaly_detection/_tree_kernel.pyx":67
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * cdef inline np.ndarray _apply_sparse_csr(DTYPE_t *X_data,             # <<<<<<<<<<<<<<
@@ -5676,67 +5676,67 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
   __pyx_pybuffernd_out.data = NULL;
   __pyx_pybuffernd_out.rcbuffer = &__pyx_pybuffer_out;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":82
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":76
  *     """
  *     # Initialize output
  *     cdef np.ndarray[SIZE_t, ndim=1] out = np.zeros((n_samples,),             # <<<<<<<<<<<<<<
  *                                                    dtype=np.intp)
  *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 82, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_samples); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":83
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":77
  *     # Initialize output
  *     cdef np.ndarray[SIZE_t, ndim=1] out = np.zeros((n_samples,),
  *                                                    dtype=np.intp)             # <<<<<<<<<<<<<<
  *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data
  * 
  */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 83, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 83, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_intp); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 83, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_intp); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(1, 83, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_5) < 0) __PYX_ERR(1, 77, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":82
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":76
  *     """
  *     # Initialize output
  *     cdef np.ndarray[SIZE_t, ndim=1] out = np.zeros((n_samples,),             # <<<<<<<<<<<<<<
  *                                                    dtype=np.intp)
  *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data
  */
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 82, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 82, __pyx_L1_error)
+  if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 76, __pyx_L1_error)
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_7sklearn_4tree_5_tree_SIZE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_out = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_out.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 82, __pyx_L1_error)
+      __PYX_ERR(1, 76, __pyx_L1_error)
     } else {__pyx_pybuffernd_out.diminfo[0].strides = __pyx_pybuffernd_out.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_out.diminfo[0].shape = __pyx_pybuffernd_out.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -5744,7 +5744,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
   __pyx_v_out = ((PyArrayObject *)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":84
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":78
  *     cdef np.ndarray[SIZE_t, ndim=1] out = np.zeros((n_samples,),
  *                                                    dtype=np.intp)
  *     cdef SIZE_t* out_ptr = <SIZE_t*> out.data             # <<<<<<<<<<<<<<
@@ -5753,7 +5753,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_out_ptr = ((__pyx_t_7sklearn_4tree_5_tree_SIZE_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_out)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":87
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":81
  * 
  *     # Initialize auxiliary data-structure
  *     cdef DTYPE_t feature_value = 0.             # <<<<<<<<<<<<<<
@@ -5762,7 +5762,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_feature_value = 0.;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":88
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":82
  *     # Initialize auxiliary data-structure
  *     cdef DTYPE_t feature_value = 0.
  *     cdef Node* node = NULL             # <<<<<<<<<<<<<<
@@ -5771,7 +5771,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_node = NULL;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":89
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":83
  *     cdef DTYPE_t feature_value = 0.
  *     cdef Node* node = NULL
  *     cdef DTYPE_t* X_sample = NULL             # <<<<<<<<<<<<<<
@@ -5780,7 +5780,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_X_sample = NULL;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":90
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":84
  *     cdef Node* node = NULL
  *     cdef DTYPE_t* X_sample = NULL
  *     cdef SIZE_t i = 0             # <<<<<<<<<<<<<<
@@ -5789,7 +5789,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_i = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":91
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":85
  *     cdef DTYPE_t* X_sample = NULL
  *     cdef SIZE_t i = 0
  *     cdef INT32_t k = 0             # <<<<<<<<<<<<<<
@@ -5798,7 +5798,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_k = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":96
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":90
  *     # for each feature; functionally, it is an efficient way to identify
  *     # which features are nonzero in the present sample.
  *     cdef SIZE_t* feature_to_sample = NULL             # <<<<<<<<<<<<<<
@@ -5807,25 +5807,25 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
   __pyx_v_feature_to_sample = NULL;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":98
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":92
  *     cdef SIZE_t* feature_to_sample = NULL
  * 
  *     safe_realloc(&X_sample, n_features)             # <<<<<<<<<<<<<<
  *     safe_realloc(&feature_to_sample, n_features)
  *     with nogil:
  */
-  __pyx_fuse_0__pyx_f_7sklearn_4tree_6_utils_safe_realloc((&__pyx_v_X_sample), __pyx_v_n_features); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 98, __pyx_L1_error)
+  __pyx_fuse_0__pyx_f_7sklearn_4tree_6_utils_safe_realloc((&__pyx_v_X_sample), __pyx_v_n_features); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 92, __pyx_L1_error)
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":99
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":93
  * 
  *     safe_realloc(&X_sample, n_features)
  *     safe_realloc(&feature_to_sample, n_features)             # <<<<<<<<<<<<<<
  *     with nogil:
  *         memset(feature_to_sample, -1, n_features * sizeof(SIZE_t))
  */
-  __pyx_fuse_1__pyx_f_7sklearn_4tree_6_utils_safe_realloc((&__pyx_v_feature_to_sample), __pyx_v_n_features); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 99, __pyx_L1_error)
+  __pyx_fuse_1__pyx_f_7sklearn_4tree_6_utils_safe_realloc((&__pyx_v_feature_to_sample), __pyx_v_n_features); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 93, __pyx_L1_error)
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":100
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":94
  *     safe_realloc(&X_sample, n_features)
  *     safe_realloc(&feature_to_sample, n_features)
  *     with nogil:             # <<<<<<<<<<<<<<
@@ -5840,7 +5840,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
       #endif
       /*try:*/ {
 
-        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":101
+        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":95
  *     safe_realloc(&feature_to_sample, n_features)
  *     with nogil:
  *         memset(feature_to_sample, -1, n_features * sizeof(SIZE_t))             # <<<<<<<<<<<<<<
@@ -5849,7 +5849,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
         (void)(memset(__pyx_v_feature_to_sample, -1, (__pyx_v_n_features * (sizeof(__pyx_t_7sklearn_4tree_5_tree_SIZE_t)))));
 
-        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":103
+        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":97
  *         memset(feature_to_sample, -1, n_features * sizeof(SIZE_t))
  * 
  *         for i in range(n_samples):             # <<<<<<<<<<<<<<
@@ -5861,7 +5861,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
         for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
           __pyx_v_i = __pyx_t_9;
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":104
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":98
  * 
  *         for i in range(n_samples):
  *             node = tree.nodes             # <<<<<<<<<<<<<<
@@ -5871,7 +5871,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
           __pyx_t_10 = __pyx_v_tree->nodes;
           __pyx_v_node = __pyx_t_10;
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":105
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":99
  *         for i in range(n_samples):
  *             node = tree.nodes
  *             for k in range(X_indptr[i], X_indptr[i + 1]):             # <<<<<<<<<<<<<<
@@ -5883,7 +5883,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
           for (__pyx_t_13 = (__pyx_v_X_indptr[__pyx_v_i]); __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
             __pyx_v_k = __pyx_t_13;
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":106
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":100
  *             node = tree.nodes
  *             for k in range(X_indptr[i], X_indptr[i + 1]):
  *                 feature_to_sample[X_indices[k]] = i             # <<<<<<<<<<<<<<
@@ -5892,7 +5892,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
             (__pyx_v_feature_to_sample[(__pyx_v_X_indices[__pyx_v_k])]) = __pyx_v_i;
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":107
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":101
  *             for k in range(X_indptr[i], X_indptr[i + 1]):
  *                 feature_to_sample[X_indices[k]] = i
  *                 X_sample[X_indices[k]] = X_data[k]             # <<<<<<<<<<<<<<
@@ -5902,7 +5902,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             (__pyx_v_X_sample[(__pyx_v_X_indices[__pyx_v_k])]) = (__pyx_v_X_data[__pyx_v_k]);
           }
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":110
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":104
  * 
  *             # While node not a leaf
  *             while node.left_child != _TREE_LEAF:             # <<<<<<<<<<<<<<
@@ -5913,7 +5913,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_t_14 = ((__pyx_v_node->left_child != __pyx_v_11adeft_indra_17anomaly_detection_12_tree_kernel__TREE_LEAF) != 0);
             if (!__pyx_t_14) break;
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":112
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":106
  *             while node.left_child != _TREE_LEAF:
  *                 # ... and node.right_child != _TREE_LEAF:
  *                 if feature_to_sample[node.feature] == i:             # <<<<<<<<<<<<<<
@@ -5923,7 +5923,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_t_14 = (((__pyx_v_feature_to_sample[__pyx_v_node->feature]) == __pyx_v_i) != 0);
             if (__pyx_t_14) {
 
-              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":113
+              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":107
  *                 # ... and node.right_child != _TREE_LEAF:
  *                 if feature_to_sample[node.feature] == i:
  *                     feature_value = X_sample[node.feature]             # <<<<<<<<<<<<<<
@@ -5932,7 +5932,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
               __pyx_v_feature_value = (__pyx_v_X_sample[__pyx_v_node->feature]);
 
-              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":112
+              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":106
  *             while node.left_child != _TREE_LEAF:
  *                 # ... and node.right_child != _TREE_LEAF:
  *                 if feature_to_sample[node.feature] == i:             # <<<<<<<<<<<<<<
@@ -5942,7 +5942,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
               goto __pyx_L12;
             }
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":116
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":110
  * 
  *                 else:
  *                     feature_value = 0.             # <<<<<<<<<<<<<<
@@ -5954,7 +5954,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             }
             __pyx_L12:;
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":118
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":112
  *                     feature_value = 0.
  * 
  *                 if feature_value <= node.threshold:             # <<<<<<<<<<<<<<
@@ -5964,7 +5964,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_t_14 = ((__pyx_v_feature_value <= __pyx_v_node->threshold) != 0);
             if (__pyx_t_14) {
 
-              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":119
+              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":113
  * 
  *                 if feature_value <= node.threshold:
  *                     node = &tree.nodes[node.left_child]             # <<<<<<<<<<<<<<
@@ -5973,7 +5973,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
               __pyx_v_node = (&(__pyx_v_tree->nodes[__pyx_v_node->left_child]));
 
-              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":118
+              /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":112
  *                     feature_value = 0.
  * 
  *                 if feature_value <= node.threshold:             # <<<<<<<<<<<<<<
@@ -5983,7 +5983,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
               goto __pyx_L13;
             }
 
-            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":121
+            /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":115
  *                     node = &tree.nodes[node.left_child]
  *                 else:
  *                     node = &tree.nodes[node.right_child]             # <<<<<<<<<<<<<<
@@ -5996,7 +5996,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
             __pyx_L13:;
           }
 
-          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":123
+          /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":117
  *                     node = &tree.nodes[node.right_child]
  * 
  *             out_ptr[i] = <SIZE_t>(node - tree.nodes)  # node offset             # <<<<<<<<<<<<<<
@@ -6006,7 +6006,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
           (__pyx_v_out_ptr[__pyx_v_i]) = ((__pyx_t_7sklearn_4tree_5_tree_SIZE_t)(__pyx_v_node - __pyx_v_tree->nodes));
         }
 
-        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":126
+        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":120
  * 
  *         # Free auxiliary arrays
  *         free(X_sample)             # <<<<<<<<<<<<<<
@@ -6015,7 +6015,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
  */
         free(__pyx_v_X_sample);
 
-        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":127
+        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":121
  *         # Free auxiliary arrays
  *         free(X_sample)
  *         free(feature_to_sample)             # <<<<<<<<<<<<<<
@@ -6025,7 +6025,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
         free(__pyx_v_feature_to_sample);
       }
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":100
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":94
  *     safe_realloc(&X_sample, n_features)
  *     safe_realloc(&feature_to_sample, n_features)
  *     with nogil:             # <<<<<<<<<<<<<<
@@ -6044,7 +6044,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
       }
   }
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":128
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":122
  *         free(X_sample)
  *         free(feature_to_sample)
  *     return out             # <<<<<<<<<<<<<<
@@ -6056,7 +6056,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
   __pyx_r = ((PyArrayObject *)__pyx_v_out);
   goto __pyx_L0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":73
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":67
  * @cython.boundscheck(False)
  * @cython.wraparound(False)
  * cdef inline np.ndarray _apply_sparse_csr(DTYPE_t *X_data,             # <<<<<<<<<<<<<<
@@ -6089,7 +6089,7 @@ static CYTHON_INLINE PyArrayObject *__pyx_f_11adeft_indra_17anomaly_detection_12
   return __pyx_r;
 }
 
-/* "adeft_indra/anomaly_detection/_tree_kernel.pyx":131
+/* "adeft_indra/anomaly_detection/_tree_kernel.pyx":125
  * 
  * 
  * @cython.boundscheck(False)             # <<<<<<<<<<<<<<
@@ -6149,26 +6149,26 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       switch (__pyx_nargs) {
         case  0:
         if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_X)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 131, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 125, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_Y)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 131, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 125, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("tree_kernel", 1, 3, 3, 1); __PYX_ERR(1, 131, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("tree_kernel", 1, 3, 3, 1); __PYX_ERR(1, 125, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_trees)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 131, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 125, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("tree_kernel", 1, 3, 3, 2); __PYX_ERR(1, 131, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("tree_kernel", 1, 3, 3, 2); __PYX_ERR(1, 125, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "tree_kernel") < 0)) __PYX_ERR(1, 131, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "tree_kernel") < 0)) __PYX_ERR(1, 125, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 3)) {
       goto __pyx_L5_argtuple_error;
@@ -6183,7 +6183,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("tree_kernel", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 131, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("tree_kernel", 1, 3, 3, __pyx_nargs); __PYX_ERR(1, 125, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("adeft_indra.anomaly_detection._tree_kernel.tree_kernel", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -6313,113 +6313,113 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_pybuffernd_Y_leaf_array.data = NULL;
   __pyx_pybuffernd_Y_leaf_array.rcbuffer = &__pyx_pybuffer_Y_leaf_array;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":135
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":129
  * def tree_kernel(X, Y, trees):
  *     cdef int i, j
  *     cdef SIZE_t n_samples_X = X.shape[0]             # <<<<<<<<<<<<<<
  *     cdef SIZE_t n_features_X = X.shape[1]
  *     cdef SIZE_t n_samples_Y = Y.shape[0]
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 135, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 135, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 129, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 135, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 129, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_n_samples_X = __pyx_t_3;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":136
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":130
  *     cdef int i, j
  *     cdef SIZE_t n_samples_X = X.shape[0]
  *     cdef SIZE_t n_features_X = X.shape[1]             # <<<<<<<<<<<<<<
  *     cdef SIZE_t n_samples_Y = Y.shape[0]
  *     cdef SIZE_t n_features_Y = Y.shape[1]
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 136, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 136, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 136, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 130, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_n_features_X = __pyx_t_3;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":137
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":131
  *     cdef SIZE_t n_samples_X = X.shape[0]
  *     cdef SIZE_t n_features_X = X.shape[1]
  *     cdef SIZE_t n_samples_Y = Y.shape[0]             # <<<<<<<<<<<<<<
  *     cdef SIZE_t n_features_Y = Y.shape[1]
  *     cdef SIZE_t n_trees = len(trees)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 137, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 131, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 137, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 131, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 137, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 131, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_n_samples_Y = __pyx_t_3;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":138
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":132
  *     cdef SIZE_t n_features_X = X.shape[1]
  *     cdef SIZE_t n_samples_Y = Y.shape[0]
  *     cdef SIZE_t n_features_Y = Y.shape[1]             # <<<<<<<<<<<<<<
  *     cdef SIZE_t n_trees = len(trees)
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 138, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 138, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 138, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyIndex_AsSsize_t(__pyx_t_1); if (unlikely((__pyx_t_3 == ((npy_intp)-1)) && PyErr_Occurred())) __PYX_ERR(1, 132, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_n_features_Y = __pyx_t_3;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":139
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":133
  *     cdef SIZE_t n_samples_Y = Y.shape[0]
  *     cdef SIZE_t n_features_Y = Y.shape[1]
  *     cdef SIZE_t n_trees = len(trees)             # <<<<<<<<<<<<<<
  * 
  *     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,
  */
-  __pyx_t_4 = PyObject_Length(__pyx_v_trees); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 139, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_trees); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 133, __pyx_L1_error)
   __pyx_v_n_trees = __pyx_t_4;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":141
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":135
  *     cdef SIZE_t n_trees = len(trees)
  * 
  *     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,             # <<<<<<<<<<<<<<
  *                                                      n_samples_Y),
  *                                                     dtype=DTYPE)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_samples_X); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_samples_X); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":142
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":136
  * 
  *     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,
  *                                                      n_samples_Y),             # <<<<<<<<<<<<<<
  *                                                     dtype=DTYPE)
  * 
  */
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_samples_Y); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 142, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_samples_Y); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 136, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":141
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":135
  *     cdef SIZE_t n_trees = len(trees)
  * 
  *     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,             # <<<<<<<<<<<<<<
  *                                                      n_samples_Y),
  *                                                     dtype=DTYPE)
  */
-  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_1);
@@ -6427,45 +6427,45 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_5);
   __pyx_t_1 = 0;
   __pyx_t_5 = 0;
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":143
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":137
  *     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,
  *                                                      n_samples_Y),
  *                                                     dtype=DTYPE)             # <<<<<<<<<<<<<<
  * 
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray = X.data
  */
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 143, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_DTYPE); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 143, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_DTYPE); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(1, 143, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(1, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":141
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":135
  *     cdef SIZE_t n_trees = len(trees)
  * 
  *     cdef np.ndarray[DTYPE_t, ndim=2] out = np.zeros((n_samples_X,             # <<<<<<<<<<<<<<
  *                                                      n_samples_Y),
  *                                                     dtype=DTYPE)
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 141, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 135, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 141, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 135, __pyx_L1_error)
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_out.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_out = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_out.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 141, __pyx_L1_error)
+      __PYX_ERR(1, 135, __pyx_L1_error)
     } else {__pyx_pybuffernd_out.diminfo[0].strides = __pyx_pybuffernd_out.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_out.diminfo[0].shape = __pyx_pybuffernd_out.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_out.diminfo[1].strides = __pyx_pybuffernd_out.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_out.diminfo[1].shape = __pyx_pybuffernd_out.rcbuffer->pybuffer.shape[1];
     }
   }
@@ -6473,22 +6473,22 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_out = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":145
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":139
  *                                                     dtype=DTYPE)
  * 
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray = X.data             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray  = X.indices
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray  = X.indptr
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray = X.indices
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 145, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 145, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 139, __pyx_L1_error)
   __pyx_t_8 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_X_data_ndarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_nn___pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_X_data_ndarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_X_data_ndarray.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 145, __pyx_L1_error)
+      __PYX_ERR(1, 139, __pyx_L1_error)
     } else {__pyx_pybuffernd_X_data_ndarray.diminfo[0].strides = __pyx_pybuffernd_X_data_ndarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_X_data_ndarray.diminfo[0].shape = __pyx_pybuffernd_X_data_ndarray.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -6496,22 +6496,22 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_X_data_ndarray = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":146
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":140
  * 
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray = X.data
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray  = X.indices             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray  = X.indptr
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray = X.indices             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr
  *     cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 146, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 140, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 146, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 140, __pyx_L1_error)
   __pyx_t_9 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_X_indices_ndarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_nn___pyx_t_7sklearn_4tree_5_tree_INT32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_X_indices_ndarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_X_indices_ndarray.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 146, __pyx_L1_error)
+      __PYX_ERR(1, 140, __pyx_L1_error)
     } else {__pyx_pybuffernd_X_indices_ndarray.diminfo[0].strides = __pyx_pybuffernd_X_indices_ndarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_X_indices_ndarray.diminfo[0].shape = __pyx_pybuffernd_X_indices_ndarray.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -6519,22 +6519,22 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_X_indices_ndarray = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":147
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":141
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] X_data_ndarray = X.data
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray  = X.indices
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray  = X.indptr             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray = X.indices
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr             # <<<<<<<<<<<<<<
  *     cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data
  *     cdef INT32_t* X_indices = <INT32_t*>X_indices_ndarray.data
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 147, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 141, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 147, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 141, __pyx_L1_error)
   __pyx_t_10 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_X_indptr_ndarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_10, &__Pyx_TypeInfo_nn___pyx_t_7sklearn_4tree_5_tree_INT32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_X_indptr_ndarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_X_indptr_ndarray.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 147, __pyx_L1_error)
+      __PYX_ERR(1, 141, __pyx_L1_error)
     } else {__pyx_pybuffernd_X_indptr_ndarray.diminfo[0].strides = __pyx_pybuffernd_X_indptr_ndarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_X_indptr_ndarray.diminfo[0].shape = __pyx_pybuffernd_X_indptr_ndarray.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -6542,17 +6542,17 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_X_indptr_ndarray = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":148
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray  = X.indices
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray  = X.indptr
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":142
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indices_ndarray = X.indices
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr
  *     cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data             # <<<<<<<<<<<<<<
  *     cdef INT32_t* X_indices = <INT32_t*>X_indices_ndarray.data
  *     cdef INT32_t* X_indptr = <INT32_t*>X_indptr_ndarray.data
  */
   __pyx_v_X_data = ((__pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_X_data_ndarray)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":149
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray  = X.indptr
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":143
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] X_indptr_ndarray = X.indptr
  *     cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data
  *     cdef INT32_t* X_indices = <INT32_t*>X_indices_ndarray.data             # <<<<<<<<<<<<<<
  *     cdef INT32_t* X_indptr = <INT32_t*>X_indptr_ndarray.data
@@ -6560,7 +6560,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  */
   __pyx_v_X_indices = ((__pyx_t_7sklearn_4tree_5_tree_INT32_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_X_indices_ndarray)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":150
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":144
  *     cdef DTYPE_t* X_data = <DTYPE_t*>X_data_ndarray.data
  *     cdef INT32_t* X_indices = <INT32_t*>X_indices_ndarray.data
  *     cdef INT32_t* X_indptr = <INT32_t*>X_indptr_ndarray.data             # <<<<<<<<<<<<<<
@@ -6569,22 +6569,22 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  */
   __pyx_v_X_indptr = ((__pyx_t_7sklearn_4tree_5_tree_INT32_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_X_indptr_ndarray)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":152
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":146
  *     cdef INT32_t* X_indptr = <INT32_t*>X_indptr_ndarray.data
  * 
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] Y_data_ndarray = Y.data             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray  = Y.indices
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray  = Y.indptr
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray = Y.indices
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 152, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 146, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 152, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 146, __pyx_L1_error)
   __pyx_t_11 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_Y_data_ndarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_11, &__Pyx_TypeInfo_nn___pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_Y_data_ndarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_Y_data_ndarray.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 152, __pyx_L1_error)
+      __PYX_ERR(1, 146, __pyx_L1_error)
     } else {__pyx_pybuffernd_Y_data_ndarray.diminfo[0].strides = __pyx_pybuffernd_Y_data_ndarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_Y_data_ndarray.diminfo[0].shape = __pyx_pybuffernd_Y_data_ndarray.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -6592,22 +6592,22 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_Y_data_ndarray = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":153
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":147
  * 
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] Y_data_ndarray = Y.data
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray  = Y.indices             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray  = Y.indptr
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray = Y.indices             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr
  *     cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 153, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 153, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 147, __pyx_L1_error)
   __pyx_t_12 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_Y_indices_ndarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_12, &__Pyx_TypeInfo_nn___pyx_t_7sklearn_4tree_5_tree_INT32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_Y_indices_ndarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_Y_indices_ndarray.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 153, __pyx_L1_error)
+      __PYX_ERR(1, 147, __pyx_L1_error)
     } else {__pyx_pybuffernd_Y_indices_ndarray.diminfo[0].strides = __pyx_pybuffernd_Y_indices_ndarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_Y_indices_ndarray.diminfo[0].shape = __pyx_pybuffernd_Y_indices_ndarray.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -6615,22 +6615,22 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_Y_indices_ndarray = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":154
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":148
  *     cdef np.ndarray[ndim=1, dtype=DTYPE_t] Y_data_ndarray = Y.data
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray  = Y.indices
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray  = Y.indptr             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray = Y.indices
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr             # <<<<<<<<<<<<<<
  *     cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data
  *     cdef INT32_t* Y_indices = <INT32_t*>Y_indices_ndarray.data
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 154, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_Y, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 154, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(1, 148, __pyx_L1_error)
   __pyx_t_13 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_Y_indptr_ndarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_13, &__Pyx_TypeInfo_nn___pyx_t_7sklearn_4tree_5_tree_INT32_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_Y_indptr_ndarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_Y_indptr_ndarray.rcbuffer->pybuffer.buf = NULL;
-      __PYX_ERR(1, 154, __pyx_L1_error)
+      __PYX_ERR(1, 148, __pyx_L1_error)
     } else {__pyx_pybuffernd_Y_indptr_ndarray.diminfo[0].strides = __pyx_pybuffernd_Y_indptr_ndarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_Y_indptr_ndarray.diminfo[0].shape = __pyx_pybuffernd_Y_indptr_ndarray.rcbuffer->pybuffer.shape[0];
     }
   }
@@ -6638,17 +6638,17 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __pyx_v_Y_indptr_ndarray = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":155
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray  = Y.indices
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray  = Y.indptr
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":149
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indices_ndarray = Y.indices
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr
  *     cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data             # <<<<<<<<<<<<<<
  *     cdef INT32_t* Y_indices = <INT32_t*>Y_indices_ndarray.data
  *     cdef INT32_t* Y_indptr = <INT32_t*>Y_indptr_ndarray.data
  */
   __pyx_v_Y_data = ((__pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_Y_data_ndarray)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":156
- *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray  = Y.indptr
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":150
+ *     cdef np.ndarray[ndim=1, dtype=INT32_t] Y_indptr_ndarray = Y.indptr
  *     cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data
  *     cdef INT32_t* Y_indices = <INT32_t*>Y_indices_ndarray.data             # <<<<<<<<<<<<<<
  *     cdef INT32_t* Y_indptr = <INT32_t*>Y_indptr_ndarray.data
@@ -6656,7 +6656,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  */
   __pyx_v_Y_indices = ((__pyx_t_7sklearn_4tree_5_tree_INT32_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_Y_indices_ndarray)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":157
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":151
  *     cdef DTYPE_t* Y_data = <DTYPE_t*>Y_data_ndarray.data
  *     cdef INT32_t* Y_indices = <INT32_t*>Y_indices_ndarray.data
  *     cdef INT32_t* Y_indptr = <INT32_t*>Y_indptr_ndarray.data             # <<<<<<<<<<<<<<
@@ -6665,14 +6665,14 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  */
   __pyx_v_Y_indptr = ((__pyx_t_7sklearn_4tree_5_tree_INT32_t *)__pyx_f_5numpy_7ndarray_4data_data(((PyArrayObject *)__pyx_v_Y_indptr_ndarray)));
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":162
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":156
  *     cdef np.ndarray[ndim=1, dtype=SIZE_t] Y_leaf_array
  * 
  *     X_is_sparse = issparse(X)             # <<<<<<<<<<<<<<
  *     Y_is_sparse = issparse(Y)
  *     trees = [KernelTree(tree) for tree in trees]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_issparse); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 162, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_issparse); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 156, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_5 = NULL;
   __pyx_t_14 = 0;
@@ -6690,21 +6690,21 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
     PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_X};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_14, 1+__pyx_t_14);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 162, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 156, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __pyx_v_X_is_sparse = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":163
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":157
  * 
  *     X_is_sparse = issparse(X)
  *     Y_is_sparse = issparse(Y)             # <<<<<<<<<<<<<<
  *     trees = [KernelTree(tree) for tree in trees]
  *     for tree in trees:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_issparse); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 163, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_issparse); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 157, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_5 = NULL;
   __pyx_t_14 = 0;
@@ -6722,14 +6722,14 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
     PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_Y};
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_14, 1+__pyx_t_14);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 163, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 157, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
   __pyx_v_Y_is_sparse = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":164
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":158
  *     X_is_sparse = issparse(X)
  *     Y_is_sparse = issparse(Y)
  *     trees = [KernelTree(tree) for tree in trees]             # <<<<<<<<<<<<<<
@@ -6737,32 +6737,32 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  *         if X_is_sparse:
  */
   { /* enter inner scope */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 164, __pyx_L5_error)
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 158, __pyx_L5_error)
     __Pyx_GOTREF(__pyx_t_1);
     if (likely(PyList_CheckExact(__pyx_v_trees)) || PyTuple_CheckExact(__pyx_v_trees)) {
       __pyx_t_6 = __pyx_v_trees; __Pyx_INCREF(__pyx_t_6); __pyx_t_4 = 0;
       __pyx_t_15 = NULL;
     } else {
-      __pyx_t_4 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_v_trees); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 164, __pyx_L5_error)
+      __pyx_t_4 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_v_trees); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 158, __pyx_L5_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_15 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 164, __pyx_L5_error)
+      __pyx_t_15 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 158, __pyx_L5_error)
     }
     for (;;) {
       if (likely(!__pyx_t_15)) {
         if (likely(PyList_CheckExact(__pyx_t_6))) {
           if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_6)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_4); __Pyx_INCREF(__pyx_t_5); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 164, __pyx_L5_error)
+          __pyx_t_5 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_4); __Pyx_INCREF(__pyx_t_5); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 158, __pyx_L5_error)
           #else
-          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 164, __pyx_L5_error)
+          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 158, __pyx_L5_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         } else {
           if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_6)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_4); __Pyx_INCREF(__pyx_t_5); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 164, __pyx_L5_error)
+          __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_4); __Pyx_INCREF(__pyx_t_5); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 158, __pyx_L5_error)
           #else
-          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 164, __pyx_L5_error)
+          __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 158, __pyx_L5_error)
           __Pyx_GOTREF(__pyx_t_5);
           #endif
         }
@@ -6772,7 +6772,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(1, 164, __pyx_L5_error)
+            else __PYX_ERR(1, 158, __pyx_L5_error)
           }
           break;
         }
@@ -6780,9 +6780,9 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
       }
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_tree, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree), __pyx_7genexpr__pyx_v_tree); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 164, __pyx_L5_error)
+      __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)__pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree), __pyx_7genexpr__pyx_v_tree); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 158, __pyx_L5_error)
       __Pyx_GOTREF(__pyx_t_5);
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(1, 164, __pyx_L5_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(1, 158, __pyx_L5_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -6796,7 +6796,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   __Pyx_DECREF_SET(__pyx_v_trees, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":165
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":159
  *     Y_is_sparse = issparse(Y)
  *     trees = [KernelTree(tree) for tree in trees]
  *     for tree in trees:             # <<<<<<<<<<<<<<
@@ -6807,26 +6807,26 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
     __pyx_t_1 = __pyx_v_trees; __Pyx_INCREF(__pyx_t_1); __pyx_t_4 = 0;
     __pyx_t_15 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_trees); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 165, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_trees); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 159, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_15 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 165, __pyx_L1_error)
+    __pyx_t_15 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_15)) __PYX_ERR(1, 159, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_15)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_6 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 165, __pyx_L1_error)
+        __pyx_t_6 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 159, __pyx_L1_error)
         #else
-        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 165, __pyx_L1_error)
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 159, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 165, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(1, 159, __pyx_L1_error)
         #else
-        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 165, __pyx_L1_error)
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 159, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         #endif
       }
@@ -6836,7 +6836,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(1, 165, __pyx_L1_error)
+          else __PYX_ERR(1, 159, __pyx_L1_error)
         }
         break;
       }
@@ -6845,33 +6845,33 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
     __Pyx_XDECREF_SET(__pyx_v_tree, __pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":166
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":160
  *     trees = [KernelTree(tree) for tree in trees]
  *     for tree in trees:
  *         if X_is_sparse:             # <<<<<<<<<<<<<<
  *             X_leaf_array = _apply_sparse_csr(X_data, X_indices, X_indptr,
  *                                              n_samples_X, n_features_X, tree)
  */
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_X_is_sparse); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(1, 166, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_X_is_sparse); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(1, 160, __pyx_L1_error)
     if (__pyx_t_16) {
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":168
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":162
  *         if X_is_sparse:
  *             X_leaf_array = _apply_sparse_csr(X_data, X_indices, X_indptr,
  *                                              n_samples_X, n_features_X, tree)             # <<<<<<<<<<<<<<
  *         else:
  * 
  */
-      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 168, __pyx_L1_error)
+      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 162, __pyx_L1_error)
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":167
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":161
  *     for tree in trees:
  *         if X_is_sparse:
  *             X_leaf_array = _apply_sparse_csr(X_data, X_indices, X_indptr,             # <<<<<<<<<<<<<<
  *                                              n_samples_X, n_features_X, tree)
  *         else:
  */
-      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_sparse_csr(__pyx_v_X_data, __pyx_v_X_indices, __pyx_v_X_indptr, __pyx_v_n_samples_X, __pyx_v_n_features_X, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 167, __pyx_L1_error)
+      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_sparse_csr(__pyx_v_X_data, __pyx_v_X_indices, __pyx_v_X_indptr, __pyx_v_n_samples_X, __pyx_v_n_features_X, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 161, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       {
         __Pyx_BufFmt_StackElem __pyx_stack[1];
@@ -6888,12 +6888,12 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
           __pyx_t_17 = __pyx_t_18 = __pyx_t_19 = 0;
         }
         __pyx_pybuffernd_X_leaf_array.diminfo[0].strides = __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_X_leaf_array.diminfo[0].shape = __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.shape[0];
-        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 167, __pyx_L1_error)
+        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 161, __pyx_L1_error)
       }
       __Pyx_XDECREF_SET(__pyx_v_X_leaf_array, ((PyArrayObject *)__pyx_t_6));
       __pyx_t_6 = 0;
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":166
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":160
  *     trees = [KernelTree(tree) for tree in trees]
  *     for tree in trees:
  *         if X_is_sparse:             # <<<<<<<<<<<<<<
@@ -6903,7 +6903,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
       goto __pyx_L11;
     }
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":171
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":165
  *         else:
  * 
  *             X_leaf_array = _apply_dense(X, tree)             # <<<<<<<<<<<<<<
@@ -6911,8 +6911,8 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  *             Y_leaf_array = _apply_sparse_csr(Y_data, Y_indices, Y_indptr,
  */
     /*else*/ {
-      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 171, __pyx_L1_error)
-      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_dense(__pyx_v_X, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 171, __pyx_L1_error)
+      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 165, __pyx_L1_error)
+      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_dense(__pyx_v_X, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 165, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       {
         __Pyx_BufFmt_StackElem __pyx_stack[1];
@@ -6929,40 +6929,40 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
           __pyx_t_19 = __pyx_t_18 = __pyx_t_17 = 0;
         }
         __pyx_pybuffernd_X_leaf_array.diminfo[0].strides = __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_X_leaf_array.diminfo[0].shape = __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.shape[0];
-        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 171, __pyx_L1_error)
+        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 165, __pyx_L1_error)
       }
       __Pyx_XDECREF_SET(__pyx_v_X_leaf_array, ((PyArrayObject *)__pyx_t_6));
       __pyx_t_6 = 0;
     }
     __pyx_L11:;
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":172
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":166
  * 
  *             X_leaf_array = _apply_dense(X, tree)
  *         if Y_is_sparse:             # <<<<<<<<<<<<<<
  *             Y_leaf_array = _apply_sparse_csr(Y_data, Y_indices, Y_indptr,
  *                                              n_samples_Y, n_features_Y, tree)
  */
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_Y_is_sparse); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(1, 172, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_Y_is_sparse); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(1, 166, __pyx_L1_error)
     if (__pyx_t_16) {
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":174
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":168
  *         if Y_is_sparse:
  *             Y_leaf_array = _apply_sparse_csr(Y_data, Y_indices, Y_indptr,
  *                                              n_samples_Y, n_features_Y, tree)             # <<<<<<<<<<<<<<
  *         else:
  *             Y_leaf_array = _apply_dense(Y, tree)
  */
-      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 174, __pyx_L1_error)
+      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 168, __pyx_L1_error)
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":173
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":167
  *             X_leaf_array = _apply_dense(X, tree)
  *         if Y_is_sparse:
  *             Y_leaf_array = _apply_sparse_csr(Y_data, Y_indices, Y_indptr,             # <<<<<<<<<<<<<<
  *                                              n_samples_Y, n_features_Y, tree)
  *         else:
  */
-      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_sparse_csr(__pyx_v_Y_data, __pyx_v_Y_indices, __pyx_v_Y_indptr, __pyx_v_n_samples_Y, __pyx_v_n_features_Y, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 173, __pyx_L1_error)
+      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_sparse_csr(__pyx_v_Y_data, __pyx_v_Y_indices, __pyx_v_Y_indptr, __pyx_v_n_samples_Y, __pyx_v_n_features_Y, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 167, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       {
         __Pyx_BufFmt_StackElem __pyx_stack[1];
@@ -6979,12 +6979,12 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
           __pyx_t_17 = __pyx_t_18 = __pyx_t_19 = 0;
         }
         __pyx_pybuffernd_Y_leaf_array.diminfo[0].strides = __pyx_pybuffernd_Y_leaf_array.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_Y_leaf_array.diminfo[0].shape = __pyx_pybuffernd_Y_leaf_array.rcbuffer->pybuffer.shape[0];
-        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 173, __pyx_L1_error)
+        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 167, __pyx_L1_error)
       }
       __Pyx_XDECREF_SET(__pyx_v_Y_leaf_array, ((PyArrayObject *)__pyx_t_6));
       __pyx_t_6 = 0;
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":172
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":166
  * 
  *             X_leaf_array = _apply_dense(X, tree)
  *         if Y_is_sparse:             # <<<<<<<<<<<<<<
@@ -6994,7 +6994,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
       goto __pyx_L12;
     }
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":176
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":170
  *                                              n_samples_Y, n_features_Y, tree)
  *         else:
  *             Y_leaf_array = _apply_dense(Y, tree)             # <<<<<<<<<<<<<<
@@ -7002,8 +7002,8 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  *         j = 0
  */
     /*else*/ {
-      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 176, __pyx_L1_error)
-      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_dense(__pyx_v_Y, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 176, __pyx_L1_error)
+      if (!(likely(((__pyx_v_tree) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_tree, __pyx_ptype_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree))))) __PYX_ERR(1, 170, __pyx_L1_error)
+      __pyx_t_6 = ((PyObject *)__pyx_f_11adeft_indra_17anomaly_detection_12_tree_kernel__apply_dense(__pyx_v_Y, ((struct __pyx_obj_11adeft_indra_17anomaly_detection_12_tree_kernel_KernelTree *)__pyx_v_tree))); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 170, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       {
         __Pyx_BufFmt_StackElem __pyx_stack[1];
@@ -7020,14 +7020,14 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
           __pyx_t_19 = __pyx_t_18 = __pyx_t_17 = 0;
         }
         __pyx_pybuffernd_Y_leaf_array.diminfo[0].strides = __pyx_pybuffernd_Y_leaf_array.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_Y_leaf_array.diminfo[0].shape = __pyx_pybuffernd_Y_leaf_array.rcbuffer->pybuffer.shape[0];
-        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 176, __pyx_L1_error)
+        if (unlikely(__pyx_t_14 < 0)) __PYX_ERR(1, 170, __pyx_L1_error)
       }
       __Pyx_XDECREF_SET(__pyx_v_Y_leaf_array, ((PyArrayObject *)__pyx_t_6));
       __pyx_t_6 = 0;
     }
     __pyx_L12:;
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":177
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":171
  *         else:
  *             Y_leaf_array = _apply_dense(Y, tree)
  *         i = 0             # <<<<<<<<<<<<<<
@@ -7036,7 +7036,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  */
     __pyx_v_i = 0;
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":178
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":172
  *             Y_leaf_array = _apply_dense(Y, tree)
  *         i = 0
  *         j = 0             # <<<<<<<<<<<<<<
@@ -7045,45 +7045,45 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
  */
     __pyx_v_j = 0;
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":179
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":173
  *         i = 0
  *         j = 0
  *         for i in range(len(X_leaf_array)):             # <<<<<<<<<<<<<<
  *             for j in range(len(Y_leaf_array)):
- *                 out[i, j] += (X_leaf_array[i] == X_leaf_array[j])
+ *                 out[i, j] += (X_leaf_array[i] == Y_leaf_array[j])
  */
-    __pyx_t_20 = PyObject_Length(((PyObject *)__pyx_v_X_leaf_array)); if (unlikely(__pyx_t_20 == ((Py_ssize_t)-1))) __PYX_ERR(1, 179, __pyx_L1_error)
+    __pyx_t_20 = PyObject_Length(((PyObject *)__pyx_v_X_leaf_array)); if (unlikely(__pyx_t_20 == ((Py_ssize_t)-1))) __PYX_ERR(1, 173, __pyx_L1_error)
     __pyx_t_21 = __pyx_t_20;
     for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_21; __pyx_t_14+=1) {
       __pyx_v_i = __pyx_t_14;
 
-      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":180
+      /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":174
  *         j = 0
  *         for i in range(len(X_leaf_array)):
  *             for j in range(len(Y_leaf_array)):             # <<<<<<<<<<<<<<
- *                 out[i, j] += (X_leaf_array[i] == X_leaf_array[j])
+ *                 out[i, j] += (X_leaf_array[i] == Y_leaf_array[j])
  *     return out/len(trees)
  */
-      __pyx_t_22 = PyObject_Length(((PyObject *)__pyx_v_Y_leaf_array)); if (unlikely(__pyx_t_22 == ((Py_ssize_t)-1))) __PYX_ERR(1, 180, __pyx_L1_error)
+      __pyx_t_22 = PyObject_Length(((PyObject *)__pyx_v_Y_leaf_array)); if (unlikely(__pyx_t_22 == ((Py_ssize_t)-1))) __PYX_ERR(1, 174, __pyx_L1_error)
       __pyx_t_23 = __pyx_t_22;
       for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_23; __pyx_t_24+=1) {
         __pyx_v_j = __pyx_t_24;
 
-        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":181
+        /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":175
  *         for i in range(len(X_leaf_array)):
  *             for j in range(len(Y_leaf_array)):
- *                 out[i, j] += (X_leaf_array[i] == X_leaf_array[j])             # <<<<<<<<<<<<<<
+ *                 out[i, j] += (X_leaf_array[i] == Y_leaf_array[j])             # <<<<<<<<<<<<<<
  *     return out/len(trees)
  */
         __pyx_t_25 = __pyx_v_i;
         __pyx_t_26 = __pyx_v_j;
         __pyx_t_27 = __pyx_v_i;
         __pyx_t_28 = __pyx_v_j;
-        *__Pyx_BufPtrStrided2d(__pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t *, __pyx_pybuffernd_out.rcbuffer->pybuffer.buf, __pyx_t_27, __pyx_pybuffernd_out.diminfo[0].strides, __pyx_t_28, __pyx_pybuffernd_out.diminfo[1].strides) += ((*__Pyx_BufPtrStrided1d(__pyx_t_7sklearn_4tree_5_tree_SIZE_t *, __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_X_leaf_array.diminfo[0].strides)) == (*__Pyx_BufPtrStrided1d(__pyx_t_7sklearn_4tree_5_tree_SIZE_t *, __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_X_leaf_array.diminfo[0].strides)));
+        *__Pyx_BufPtrStrided2d(__pyx_t_11adeft_indra_17anomaly_detection_12_tree_kernel_DTYPE_t *, __pyx_pybuffernd_out.rcbuffer->pybuffer.buf, __pyx_t_27, __pyx_pybuffernd_out.diminfo[0].strides, __pyx_t_28, __pyx_pybuffernd_out.diminfo[1].strides) += ((*__Pyx_BufPtrStrided1d(__pyx_t_7sklearn_4tree_5_tree_SIZE_t *, __pyx_pybuffernd_X_leaf_array.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_X_leaf_array.diminfo[0].strides)) == (*__Pyx_BufPtrStrided1d(__pyx_t_7sklearn_4tree_5_tree_SIZE_t *, __pyx_pybuffernd_Y_leaf_array.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_Y_leaf_array.diminfo[0].strides)));
       }
     }
 
-    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":165
+    /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":159
  *     Y_is_sparse = issparse(Y)
  *     trees = [KernelTree(tree) for tree in trees]
  *     for tree in trees:             # <<<<<<<<<<<<<<
@@ -7093,23 +7093,23 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_12_tree_kernel_tree_
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":182
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":176
  *             for j in range(len(Y_leaf_array)):
- *                 out[i, j] += (X_leaf_array[i] == X_leaf_array[j])
+ *                 out[i, j] += (X_leaf_array[i] == Y_leaf_array[j])
  *     return out/len(trees)             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = PyObject_Length(__pyx_v_trees); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 182, __pyx_L1_error)
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 182, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_trees); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 176, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyNumber_Divide(((PyObject *)__pyx_v_out), __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 182, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyNumber_Divide(((PyObject *)__pyx_v_out), __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_6;
   __pyx_t_6 = 0;
   goto __pyx_L0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":131
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":125
  * 
  * 
  * @cython.boundscheck(False)             # <<<<<<<<<<<<<<
@@ -23172,7 +23172,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 2, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 37, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 56, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 51, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(2, 966, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(0, 151, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 154, __pyx_L1_error)
@@ -23258,17 +23258,17 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__12);
   __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_setstate_cython, 3, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 3, __pyx_L1_error)
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":131
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":125
  * 
  * 
  * @cython.boundscheck(False)             # <<<<<<<<<<<<<<
  * @cython.wraparound(False)
  * def tree_kernel(X, Y, trees):
  */
-  __pyx_tuple__14 = PyTuple_Pack(29, __pyx_n_s_X, __pyx_n_s_Y, __pyx_n_s_trees, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_n_samples_X, __pyx_n_s_n_features_X, __pyx_n_s_n_samples_Y, __pyx_n_s_n_features_Y, __pyx_n_s_n_trees, __pyx_n_s_out, __pyx_n_s_X_data_ndarray, __pyx_n_s_X_indices_ndarray, __pyx_n_s_X_indptr_ndarray, __pyx_n_s_X_data, __pyx_n_s_X_indices, __pyx_n_s_X_indptr, __pyx_n_s_Y_data_ndarray, __pyx_n_s_Y_indices_ndarray, __pyx_n_s_Y_indptr_ndarray, __pyx_n_s_Y_data, __pyx_n_s_Y_indices, __pyx_n_s_Y_indptr, __pyx_n_s_X_leaf_array, __pyx_n_s_Y_leaf_array, __pyx_n_s_X_is_sparse, __pyx_n_s_Y_is_sparse, __pyx_n_s_tree, __pyx_n_s_tree); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(1, 131, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(29, __pyx_n_s_X, __pyx_n_s_Y, __pyx_n_s_trees, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_n_samples_X, __pyx_n_s_n_features_X, __pyx_n_s_n_samples_Y, __pyx_n_s_n_features_Y, __pyx_n_s_n_trees, __pyx_n_s_out, __pyx_n_s_X_data_ndarray, __pyx_n_s_X_indices_ndarray, __pyx_n_s_X_indptr_ndarray, __pyx_n_s_X_data, __pyx_n_s_X_indices, __pyx_n_s_X_indptr, __pyx_n_s_Y_data_ndarray, __pyx_n_s_Y_indices_ndarray, __pyx_n_s_Y_indptr_ndarray, __pyx_n_s_Y_data, __pyx_n_s_Y_indices, __pyx_n_s_Y_indptr, __pyx_n_s_X_leaf_array, __pyx_n_s_Y_leaf_array, __pyx_n_s_X_is_sparse, __pyx_n_s_Y_is_sparse, __pyx_n_s_tree, __pyx_n_s_tree); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(1, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
-  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 29, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_anomaly_detection__t_2, __pyx_n_s_tree_kernel, 131, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(1, 131, __pyx_L1_error)
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 29, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_anomaly_detection__t_2, __pyx_n_s_tree_kernel, 125, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(1, 125, __pyx_L1_error)
 
   /* "View.MemoryView":300
  *         return self.name
@@ -24230,16 +24230,16 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_setstate_cython, __pyx_t_1) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":131
+  /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":125
  * 
  * 
  * @cython.boundscheck(False)             # <<<<<<<<<<<<<<
  * @cython.wraparound(False)
  * def tree_kernel(X, Y, trees):
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_17anomaly_detection_12_tree_kernel_1tree_kernel, 0, __pyx_n_s_tree_kernel, NULL, __pyx_n_s_adeft_indra_anomaly_detection__t, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 131, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_17anomaly_detection_12_tree_kernel_1tree_kernel, 0, __pyx_n_s_tree_kernel, NULL, __pyx_n_s_adeft_indra_anomaly_detection__t, __pyx_d, ((PyObject *)__pyx_codeobj__15)); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_tree_kernel, __pyx_t_1) < 0) __PYX_ERR(1, 131, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_tree_kernel, __pyx_t_1) < 0) __PYX_ERR(1, 125, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "adeft_indra/anomaly_detection/_tree_kernel.pyx":1
