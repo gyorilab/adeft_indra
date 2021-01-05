@@ -32,6 +32,7 @@ extensions = [
               define_macros=defs),
     Extension('adeft_indra.anomaly_detection._tree_kernel',
               ['adeft_indra/anomaly_detection/_tree_kernel' + ext],
+              include_dirs=[inc_path],
               define_macros=defs)
     ]
 
