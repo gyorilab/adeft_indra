@@ -40,7 +40,7 @@ def nontrivial_subsets(iterable):
 
 
 def evaluation_wrapper(args):
-    model_name, nu, max_features, rng = args
+    model_name, nu, max_features, rng, n_jobs = args
     params = {'nu': nu, 'max_features': max_features}
     if manager.in_table(model_name, json.dumps(params)):
         with lock:
@@ -51,7 +51,7 @@ def evaluation_wrapper(args):
     manager.add_row([model_name, json.dumps(params), json.dumps(results)])
 
 
-def evaluate_anomaly_detection(model_name, nu, max_features, rng):
+def evaluate_anomaly_detection(model_name, nu, max_features, rng, n_jobs):
     ad = load_disambiguator(reverse_model_map[model_name])
     model_name = escape_filename(':'.join(sorted(ad.shortforms)))
     params = {'nu': nu, 'max_features': max_features}
@@ -68,11 +68,10 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng):
     labeler = AdeftLabeler(ad.grounding_dict)
     corpus = labeler.build_from_texts((text, pmid) for pmid, text
                                       in text_dict.items())
-
+    text_dict = None
     entity_pmid_map = defaultdict(list)
     for text, label, pmid in corpus:
         entity_pmid_map[label].append(pmid)
-
     grounded_entities = [(entity, len(entity_pmid_map[entity]))
                          for entity in entity_pmid_map
                          if entity != 'ungrounded']
@@ -82,60 +81,84 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng):
     grounded_entities = [g[0] for g in grounded_entities[0:6]]
     results = defaultdict(dict)
     for train_entities in nontrivial_subsets(grounded_entities):
+        print(train_entities)
         baseline = [(text, label, pmid)
                     for text, label, pmid in corpus if label
                     in train_entities]
         if not baseline:
             continue
         texts, labels, pmids = zip(*baseline)
+        texts, labels, pmids = list(texts), list(labels), list(pmids)
+        baseline = None
         pipeline = Pipeline([('tfidf',
                               AdeftTfidfVectorizer(max_features=max_features,
                                                    stop_words=stop_words)),
                              ('forest_oc_svm',
                               ForestOneClassSVM(nu=nu,
                                                 cache_size=1000,
-                                                n_estimators=1000, n_jobs=8,
+                                                n_estimators=1000, n_jobs=1,
                                                 random_state=rng))])
-        anomalous = [(text, label, pmid) for text, label, pmid in corpus
-                     if label not in train_entities]
+        anomalous = ((text, label, pmid) for text, label, pmid in corpus
+                     if label not in train_entities)
         anomalous_texts, anomalous_labels, anomalous_pmids = zip(*anomalous)
-        train_splits = StratifiedKFold(n_splits=5, random_state=561,
-                                       shuffle=True).split(texts, labels)
-        splits = ((train, np.concatenate((test,
-                                          np.arange(len(texts),
-                                                    len(texts) +
-                                                    len(anomalous_texts)))))
-                  for train, test in train_splits)
-        X = np.array(texts + anomalous_texts)
-        true_labels = np.array(labels + anomalous_labels)
-        all_pmids = np.array(pmids + anomalous_pmids)
-        y = np.array([1.0]*len(texts) + [-1.0]*len(anomalous_texts))
+        anomalous_texts = list(anomalous_texts)
+        anomalous_labels = list(anomalous_labels)
+        anomalous_pmids = list(anomalous_pmids)
+        rng2 = np.random.RandomState(561)
+        rng2.shuffle(texts)
+        rng2 = np.random.RandomState(561)
+        rng2.shuffle(labels)
+        rng2 = np.random.RandomState(561)
+        rng2.shuffle(pmids)
+        rng2 = None
+        train_splits = StratifiedKFold(n_splits=5).split(texts, labels)
+        Xin = np.array(texts)
+        Xout = np.array(anomalous_texts)
+        texts = None
+        anomalous_texts = None
+        true_labels_in = np.array(labels)
+        true_labels_out = np.array(anomalous_labels)
+        pmids_in = np.array(pmids)
+        pmids_out = np.array(anomalous_pmids)
+        labels = None
+        anomalous_labels = None
+        pmids = None
+        anomalous_pmids = None
         folds_dict = {}
         sens_list = []
         spec_list = []
         j_list = []
         acc_list = []
-        for i, (train, test) in enumerate(splits):
-            X_train = X[train]
-            true_label_train = true_labels[train]
-            pmids_train = all_pmids[train]
-
-            X_test = X[test]
-            y_test = y[test]
-            true_label_test = true_labels[test]
-            pmids_test = all_pmids[test]
-
-            pipeline.fit(X_train, true_label_train)
-            preds = pipeline.predict(X_test)
-            sens = sensitivity_score(y_test, preds, pos_label=-1)
-            spec = specificity_score(y_test, preds, pos_label=-1)
-            acc = accuracy_score(y_test, preds)
-            train_dict = {'pmids': pmids_train.tolist(),
-                          'true_label': true_label_train.tolist()}
-            test_dict = {'pmids': pmids_test.tolist(), 'true_label':
-                         true_label_test.tolist(),
-                         'prediction':  preds.tolist(),
-                         'true': y_test.tolist()}
+        for i, (train, test) in enumerate(train_splits):
+            pipeline.fit(Xin[train[0]:train[-1]+1],
+                         true_labels_in[train[0]:train[-1]+1])
+            preds_in = pipeline.predict(Xin[test[0]:test[-1]+1])
+            preds_out = pipeline.predict(Xout)
+            pipeline.estimator_ = None
+            sens = \
+                sensitivity_score(np.hstack((np.full(len(preds_in), 1.0),
+                                            np.full(len(preds_out), -1.0))),
+                                  np.hstack((preds_in, preds_out)),
+                                  pos_label=-1)
+            spec = \
+                specificity_score(np.hstack((np.full(len(preds_in), 1.0),
+                                             np.full(len(preds_out), -1.0))),
+                                  np.hstack((preds_in, preds_out)),
+                                  pos_label=-1)
+            acc = \
+                accuracy_score(np.hstack((np.full(len(preds_in), 1.0),
+                                         np.full(len(preds_out), -1.0))),
+                               np.hstack((preds_in, preds_out)))
+            train_dict = {'pmids': pmids_in[train[0]:train[-1]+1].tolist(),
+                          'true_label':
+                          true_labels_in[train[0]:train[-1]+1].tolist()}
+            test_dict = {'pmids': pmids_in[test[0]:test[-1]+1].tolist() +
+                         pmids_out.tolist(),
+                         'true_label':
+                         true_labels_in[test[0]:test[-1]+1].tolist() +
+                         true_labels_out.tolist(),
+                         'prediction':  preds_in.tolist() + preds_out.tolist(),
+                         'true': [1.0]*len(preds_in) + [-1.0]*len(preds_out)}
             scores_dict = {'specificity': spec, 'sensitivity': sens,
                            'youdens_j_score': spec + sens - 1,
                            'accuracy': acc}
@@ -168,18 +191,49 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng):
     return results
 
 
-
 if __name__ == '__main__':
+
+    model_data_counts = []
+    for model_name in set(available_shortforms.values()):
+        ad = load_disambiguator(reverse_model_map[model_name])
+        stats = ad.classifier.stats
+        total_count = sum(stats['label_distribution'].values)
+        model_data_counts.append((model_name, total_count))
+    model_data_counts.sort(key=lambda x: -x[1])
+
+    batch1 = [x[0] for x in model_data_counts[50:]]
+    batch2 = [x[0] for x in model_data_counts[5:50]]
+    batch3 = [x[0] for x in model_data_counts[0:5]]
     main_rng = np.random.RandomState(1729)
 
     nu_list = [0.1, 0.2, 0.4]
     mf_list = [100, 1000, 10000]
     cases = []
-    for model_name in set(available_shortforms.values()):
+
+    for model_name in batch1:
         for nu in nu_list:
             for mf in mf_list:
                 rng = np.random.RandomState(main_rng.randint(2**32))
-                cases.append((model_name, nu, mf, rng))
+                cases.append((model_name, nu, mf, rng, 1))
+    main_rng.shuffle(cases)
 
     with Pool(64) as pool:
+        pool.map(evaluation_wrapper, cases, chunksize=1)
+
+    for model_name in batch2:
+        for nu in nu_list:
+            for mf in mf_list:
+                rng = np.random.RandomState(main_rng.randint(2**32))
+                cases.append((model_name, nu, mf, rng, 2))
+    main_rng.shuffle(cases)
+    with Pool(32) as pool:
+        pool.map(evaluation_wrapper, cases, chunksize=1)
+
+    for model_name in batch2:
+        for nu in nu_list:
+            for mf in mf_list:
+                rng = np.random.RandomState(main_rng.randint(2**32))
+                cases.append((model_name, nu, mf, rng, 4))
+    main_rng.shuffle(cases)
+    with Pool(16) as pool:
         pool.map(evaluation_wrapper, cases, chunksize=1)
