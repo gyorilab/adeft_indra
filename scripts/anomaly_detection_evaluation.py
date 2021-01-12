@@ -41,18 +41,21 @@ def nontrivial_subsets(iterable):
 
 def evaluation_wrapper(args):
     model_name, nu, max_features, rng = args
-    return evaluate_anomaly_detection(model_name, nu, max_features, rng)
-
-
-def evaluate_anomaly_detection(model_name, nu, max_features, rng):
-    ad = load_disambiguator(reverse_model_map[model_name])
-    model_name = escape_filename(':'.join(sorted(ad.shortforms)))
     params = {'nu': nu, 'max_features': max_features}
     if manager.in_table(model_name, json.dumps(params)):
         with lock:
             print(f'Results for {model_name}, {params} have already'
                   ' been computed')
         return
+    results = evaluate_anomaly_detection(model_name, nu, max_features, rng)
+    manager.add_row([model_name, json.dumps(params), json.dumps(results)])
+
+
+def evaluate_anomaly_detection(model_name, nu, max_features, rng):
+    ad = load_disambiguator(reverse_model_map[model_name])
+    model_name = escape_filename(':'.join(sorted(ad.shortforms)))
+    params = {'nu': nu, 'max_features': max_features}
+
     with lock:
         print(f'Working on {model_name} with params {params}')
     stop_words = set(english_stopwords) | set(ad.shortforms)
@@ -76,12 +79,14 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng):
     grounded_entities = [(entity, length) for entity, length in
                          grounded_entities if length >= 10]
     grounded_entities.sort(key=lambda x: -x[1])
-    grounded_entities = grounded_entities[0:6]
+    grounded_entities = [g[0] for g in grounded_entities[0:6]]
     results = defaultdict(dict)
     for train_entities in nontrivial_subsets(grounded_entities):
         baseline = [(text, label, pmid)
                     for text, label, pmid in corpus if label
                     in train_entities]
+        if not baseline:
+            continue
         texts, labels, pmids = zip(*baseline)
         pipeline = Pipeline([('tfidf',
                               AdeftTfidfVectorizer(max_features=max_features,
@@ -160,7 +165,8 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng):
         results[json.dumps(train_entities)] = {'folds': folds_dict,
                                                'results': aggregate_scores,
                                                'params': params}
-    manager.add_row([model_name, json.dumps(params), json.dumps(results)])
+    return results
+
 
 
 if __name__ == '__main__':
@@ -175,5 +181,5 @@ if __name__ == '__main__':
                 rng = np.random.RandomState(main_rng.randint(2**32))
                 cases.append((model_name, nu, mf, rng))
 
-    with Pool(8) as pool:
+    with Pool(64) as pool:
         pool.map(evaluation_wrapper, cases, chunksize=1)
