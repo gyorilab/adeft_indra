@@ -1,4 +1,5 @@
 import cython
+import numpy as np
 from libc.math cimport pow as cpow
 from libc.math cimport fabs, exp, log, log1p, pi, sqrt
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
@@ -137,7 +138,9 @@ cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,
                        prevalence_cdf, num_samples)
 
 
-def prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
-                   num_samples=10000):
-    return _prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
-                           num_samples)
+def prevalence_cdf_points(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+                          num_samples=10000):
+    vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+                                        num_samples) for theta in
+                        np.arange(0, 1 + step_size, step_size)), dtype=float)
+    return vals
