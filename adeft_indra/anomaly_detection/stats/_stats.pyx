@@ -139,7 +139,7 @@ cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,
 
 
 def prevalence_cdf_points(theta, n, t, sens_a, sens_b, spec_a, spec_b,
-                          num_samples=10000):
+                          num_samples=10000, step_size=0.01):
     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
                                         num_samples) for theta in
                         np.arange(0, 1 + step_size, step_size)), dtype=float)
