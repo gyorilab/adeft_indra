@@ -137,5 +137,7 @@ cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,
                        prevalence_cdf, num_samples)
 
 
-def prevalence_cdf(theta, int, t, sens_a, sens_b, spec_a, spec_b,
-                   num_samples=10000)
+def prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+                   num_samples=10000):
+    return _prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+                           num_samples)
