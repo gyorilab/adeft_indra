@@ -135,7 +135,7 @@ cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,
                             double sens_b, double spec_a, double spec_b,
                             int num_samples):
     return beta_sample(theta, n, t, sens_a, sens_b, spec_a, spec_b,
-                       prevalence_cdf, num_samples)
+                       prevalence_cdf_known_sens_spec, num_samples)
 
 
 def prevalence_cdf_points(theta, n, t, sens_a, sens_b, spec_a, spec_b,
