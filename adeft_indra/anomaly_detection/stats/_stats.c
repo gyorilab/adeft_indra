@@ -1394,6 +1394,8 @@ struct __pyx_t_5scipy_8optimize_15cython_optimize_6_zeros_zeros_full_output {
   double root;
 };
 struct __pyx_opt_args_11adeft_indra_17anomaly_detection_5stats_6_stats_K;
+struct __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params;
+typedef struct __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params;
 
 /* "adeft_indra/anomaly_detection/stats/_stats.pyx":59
  * 
@@ -1407,14 +1409,23 @@ struct __pyx_opt_args_11adeft_indra_17anomaly_detection_5stats_6_stats_K {
   double tol;
 };
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":84
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":137
  * 
  * 
- * ctypedef double (*prevalence_function)(double, int, int, double, double)             # <<<<<<<<<<<<<<
- * 
- * 
+ * ctypedef struct inverse_cdf_params:             # <<<<<<<<<<<<<<
+ *     int n
+ *     int t
  */
-typedef double (*__pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_function)(double, int, int, double, double);
+struct __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params {
+  int n;
+  int t;
+  int num_samples;
+  double sens_a;
+  double sens_b;
+  double spec_a;
+  double spec_b;
+  double val;
+};
 
 /* "numpy/random/bit_generator.pxd":14
  *     ctypedef bitgen bitgen_t
@@ -1463,12 +1474,12 @@ struct __pyx_obj_5numpy_6random_13bit_generator_SeedlessSequence {
 };
 
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":141
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
  * 
  * 
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
  */
 struct __pyx_obj_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points {
   PyObject_HEAD
@@ -1483,12 +1494,12 @@ struct __pyx_obj_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_st
 };
 
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
 struct __pyx_obj_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr {
   PyObject_HEAD
@@ -1706,61 +1717,6 @@ static void __Pyx_WriteUnraisable(const char *name, int clineno,
                                   int lineno, const char *filename,
                                   int full_traceback, int nogil);
 
-/* TupleAndListFromArray.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyList_FromArray(PyObject *const *src, Py_ssize_t n);
-static CYTHON_INLINE PyObject* __Pyx_PyTuple_FromArray(PyObject *const *src, Py_ssize_t n);
-#endif
-
-/* IncludeStringH.proto */
-#include <string.h>
-
-/* BytesEquals.proto */
-static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* UnicodeEquals.proto */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* fastcall.proto */
-#define __Pyx_Arg_VARARGS(args, i) PyTuple_GET_ITEM(args, i)
-#define __Pyx_NumKwargs_VARARGS(kwds) PyDict_Size(kwds)
-#define __Pyx_KwValues_VARARGS(args, nargs) NULL
-#define __Pyx_GetKwValue_VARARGS(kw, kwvalues, s) __Pyx_PyDict_GetItemStrWithError(kw, s)
-#define __Pyx_KwargsAsDict_VARARGS(kw, kwvalues) PyDict_Copy(kw)
-#if CYTHON_METH_FASTCALL
-    #define __Pyx_Arg_FASTCALL(args, i) args[i]
-    #define __Pyx_NumKwargs_FASTCALL(kwds) PyTuple_GET_SIZE(kwds)
-    #define __Pyx_KwValues_FASTCALL(args, nargs) (&args[nargs])
-    static CYTHON_INLINE PyObject * __Pyx_GetKwValue_FASTCALL(PyObject *kwnames, PyObject *const *kwvalues, PyObject *s);
-    #define __Pyx_KwargsAsDict_FASTCALL(kw, kwvalues) _PyStack_AsDict(kwvalues, kw)
-#else
-    #define __Pyx_Arg_FASTCALL __Pyx_Arg_VARARGS
-    #define __Pyx_NumKwargs_FASTCALL __Pyx_NumKwargs_VARARGS
-    #define __Pyx_KwValues_FASTCALL __Pyx_KwValues_VARARGS
-    #define __Pyx_GetKwValue_FASTCALL __Pyx_GetKwValue_VARARGS
-    #define __Pyx_KwargsAsDict_FASTCALL __Pyx_KwargsAsDict_VARARGS
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-#define __Pyx_ArgsSlice_VARARGS(args, start, stop) __Pyx_PyTuple_FromArray(&__Pyx_Arg_VARARGS(args, start), stop - start)
-#define __Pyx_ArgsSlice_FASTCALL(args, start, stop) __Pyx_PyTuple_FromArray(&__Pyx_Arg_FASTCALL(args, start), stop - start)
-#else
-#define __Pyx_ArgsSlice_VARARGS(args, start, stop) PyTuple_GetSlice(args, start, stop)
-#define __Pyx_ArgsSlice_FASTCALL(args, start, stop) PyTuple_GetSlice(args, start, stop)
-#endif
-
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
-
-/* RaiseDoubleKeywords.proto */
-static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
-
-/* ParseKeywords.proto */
-static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject *const *kwvalues,
-    PyObject **argnames[],
-    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,
-    const char* function_name);
-
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
 #define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
@@ -1821,6 +1777,61 @@ static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyOb
 #define __Pyx_PyObject_LookupSpecial(o,n) __Pyx_PyObject_GetAttrStr(o,n)
 #endif
 
+/* TupleAndListFromArray.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyList_FromArray(PyObject *const *src, Py_ssize_t n);
+static CYTHON_INLINE PyObject* __Pyx_PyTuple_FromArray(PyObject *const *src, Py_ssize_t n);
+#endif
+
+/* IncludeStringH.proto */
+#include <string.h>
+
+/* BytesEquals.proto */
+static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* UnicodeEquals.proto */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* fastcall.proto */
+#define __Pyx_Arg_VARARGS(args, i) PyTuple_GET_ITEM(args, i)
+#define __Pyx_NumKwargs_VARARGS(kwds) PyDict_Size(kwds)
+#define __Pyx_KwValues_VARARGS(args, nargs) NULL
+#define __Pyx_GetKwValue_VARARGS(kw, kwvalues, s) __Pyx_PyDict_GetItemStrWithError(kw, s)
+#define __Pyx_KwargsAsDict_VARARGS(kw, kwvalues) PyDict_Copy(kw)
+#if CYTHON_METH_FASTCALL
+    #define __Pyx_Arg_FASTCALL(args, i) args[i]
+    #define __Pyx_NumKwargs_FASTCALL(kwds) PyTuple_GET_SIZE(kwds)
+    #define __Pyx_KwValues_FASTCALL(args, nargs) (&args[nargs])
+    static CYTHON_INLINE PyObject * __Pyx_GetKwValue_FASTCALL(PyObject *kwnames, PyObject *const *kwvalues, PyObject *s);
+    #define __Pyx_KwargsAsDict_FASTCALL(kw, kwvalues) _PyStack_AsDict(kwvalues, kw)
+#else
+    #define __Pyx_Arg_FASTCALL __Pyx_Arg_VARARGS
+    #define __Pyx_NumKwargs_FASTCALL __Pyx_NumKwargs_VARARGS
+    #define __Pyx_KwValues_FASTCALL __Pyx_KwValues_VARARGS
+    #define __Pyx_GetKwValue_FASTCALL __Pyx_GetKwValue_VARARGS
+    #define __Pyx_KwargsAsDict_FASTCALL __Pyx_KwargsAsDict_VARARGS
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_ArgsSlice_VARARGS(args, start, stop) __Pyx_PyTuple_FromArray(&__Pyx_Arg_VARARGS(args, start), stop - start)
+#define __Pyx_ArgsSlice_FASTCALL(args, start, stop) __Pyx_PyTuple_FromArray(&__Pyx_Arg_FASTCALL(args, start), stop - start)
+#else
+#define __Pyx_ArgsSlice_VARARGS(args, start, stop) PyTuple_GetSlice(args, start, stop)
+#define __Pyx_ArgsSlice_FASTCALL(args, start, stop) PyTuple_GetSlice(args, start, stop)
+#endif
+
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject *const *kwvalues,
+    PyObject **argnames[],
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,
+    const char* function_name);
+
 /* PyIntBinop.proto */
 #if !CYTHON_COMPILING_IN_PYPY
 static PyObject* __Pyx_PyInt_AddCObj(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
@@ -1842,6 +1853,22 @@ static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb);
 
 /* pep479.proto */
 static void __Pyx_Generator_Replace_StopIteration(int in_async_gen);
+
+/* PyIntBinop.proto */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_TrueDivideObjC(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
+#else
+#define __Pyx_PyInt_TrueDivideObjC(op1, op2, intval, inplace, zerodivision_check)\
+    (inplace ? PyNumber_InPlaceTrueDivide(op1, op2) : PyNumber_TrueDivide(op1, op2))
+#endif
+
+/* PyIntBinop.proto */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_SubtractCObj(PyObject *op1, PyObject *op2, long intval, int inplace, int zerodivision_check);
+#else
+#define __Pyx_PyInt_SubtractCObj(op1, op2, intval, inplace, zerodivision_check)\
+    (inplace ? PyNumber_InPlaceSubtract(op1, op2) : PyNumber_Subtract(op1, op2))
+#endif
 
 /* GetTopmostException.proto */
 #if CYTHON_USE_EXC_INFO_STACK
@@ -2387,9 +2414,10 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_D(double,
 static CYTHON_INLINE double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_coefficient(int, double, double, double); /*proto*/
 static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_K(double, double, double, struct __pyx_opt_args_11adeft_indra_17anomaly_detection_5stats_6_stats_K *__pyx_optional_args); /*proto*/
 static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc(float, float, float); /*proto*/
-static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_sample(double, int, int, double, double, double, double, __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_function, int); /*proto*/
-static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_known_sens_spec(double, int, int, double, double); /*proto*/
-static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats__prevalence_cdf(double, int, int, double, double, double, double, int); /*proto*/
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_exact(double, int, int, double, double); /*proto*/
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf(double, int, int, double, double, double, double, int); /*proto*/
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_f(double, void *); /*proto*/
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf(double, int, int, double, double, double, double, int); /*proto*/
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
 #define __Pyx_MODULE_NAME "adeft_indra.anomaly_detection.stats._stats"
@@ -2402,14 +2430,11 @@ static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ImportError;
 /* #### Code section: string_decls ### */
-static const char __pyx_k_a[] = "a";
-static const char __pyx_k_b[] = "b";
 static const char __pyx_k_n[] = "n";
 static const char __pyx_k_t[] = "t";
-static const char __pyx_k_x[] = "x";
 static const char __pyx_k__5[] = "*";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k__11[] = "?";
+static const char __pyx_k__12[] = "?";
 static const char __pyx_k_inf[] = "inf";
 static const char __pyx_k_args[] = "args";
 static const char __pyx_k_exit[] = "__exit__";
@@ -2421,6 +2446,7 @@ static const char __pyx_k_spec[] = "__spec__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_vals[] = "vals";
 static const char __pyx_k_PCG64[] = "PCG64";
+static const char __pyx_k_alpha[] = "alpha";
 static const char __pyx_k_close[] = "close";
 static const char __pyx_k_dtype[] = "dtype";
 static const char __pyx_k_enter[] = "__enter__";
@@ -2438,7 +2464,6 @@ static const char __pyx_k_genexpr[] = "genexpr";
 static const char __pyx_k_fromiter[] = "fromiter";
 static const char __pyx_k_step_size[] = "step_size";
 static const char __pyx_k_ValueError[] = "ValueError";
-static const char __pyx_k_py_betainc[] = "py_betainc";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_num_samples[] = "num_samples";
@@ -2447,6 +2472,7 @@ static const char __pyx_k_is_coroutine[] = "_is_coroutine";
 static const char __pyx_k_numpy_random[] = "numpy.random";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_equal_tailed_interval[] = "equal_tailed_interval";
 static const char __pyx_k_prevalence_cdf_points[] = "prevalence_cdf_points";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_Invalid_pointer_to_anon_func_sta[] = "Invalid pointer to anon_func_state";
@@ -2459,20 +2485,20 @@ static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_kp_u_Invalid_pointer_to_anon_func_sta;
 static PyObject *__pyx_n_s_PCG64;
 static PyObject *__pyx_n_s_ValueError;
-static PyObject *__pyx_n_s__11;
+static PyObject *__pyx_n_s__12;
 static PyObject *__pyx_n_s__5;
-static PyObject *__pyx_n_s_a;
 static PyObject *__pyx_n_s_adeft_indra_anomaly_detection_st;
 static PyObject *__pyx_kp_s_adeft_indra_anomaly_detection_st_2;
+static PyObject *__pyx_n_s_alpha;
 static PyObject *__pyx_n_s_arange;
 static PyObject *__pyx_n_s_args;
 static PyObject *__pyx_n_s_asyncio_coroutines;
-static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_capsule;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_close;
 static PyObject *__pyx_n_s_dtype;
 static PyObject *__pyx_n_s_enter;
+static PyObject *__pyx_n_s_equal_tailed_interval;
 static PyObject *__pyx_n_s_exit;
 static PyObject *__pyx_n_s_fromiter;
 static PyObject *__pyx_n_s_genexpr;
@@ -2492,7 +2518,6 @@ static PyObject *__pyx_kp_u_numpy_core_umath_failed_to_impor;
 static PyObject *__pyx_n_s_numpy_random;
 static PyObject *__pyx_n_s_prevalence_cdf_points;
 static PyObject *__pyx_n_s_prevalence_cdf_points_locals_gen;
-static PyObject *__pyx_n_s_py_betainc;
 static PyObject *__pyx_n_s_pyx_vtable;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_send;
@@ -2506,18 +2531,19 @@ static PyObject *__pyx_n_s_t;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_throw;
 static PyObject *__pyx_n_s_vals;
-static PyObject *__pyx_n_s_x;
 #endif
 /* #### Code section: decls ### */
-static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_py_betainc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_a, PyObject *__pyx_v_b, PyObject *__pyx_v_x); /* proto */
 static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_genexpr(PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prevalence_cdf_points(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n, PyObject *__pyx_v_t, PyObject *__pyx_v_sens_a, PyObject *__pyx_v_sens_b, PyObject *__pyx_v_spec_a, PyObject *__pyx_v_spec_b, PyObject *__pyx_v_num_samples, PyObject *__pyx_v_step_size); /* proto */
+static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_points(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n, PyObject *__pyx_v_t, PyObject *__pyx_v_sens_a, PyObject *__pyx_v_sens_b, PyObject *__pyx_v_spec_a, PyObject *__pyx_v_spec_b, PyObject *__pyx_v_num_samples, PyObject *__pyx_v_step_size); /* proto */
+static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2equal_tailed_interval(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n, PyObject *__pyx_v_t, PyObject *__pyx_v_sens_a, PyObject *__pyx_v_sens_b, PyObject *__pyx_v_spec_a, PyObject *__pyx_v_spec_b, PyObject *__pyx_v_alpha, PyObject *__pyx_v_num_samples); /* proto */
 static PyObject *__pyx_tp_new_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 #if !CYTHON_COMPILING_IN_LIMITED_API
 static PyObject *__pyx_float_0_01;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
+static PyObject *__pyx_int_2;
+static PyObject *__pyx_int_1000;
 static PyObject *__pyx_int_10000;
 #endif
 #if !CYTHON_COMPILING_IN_LIMITED_API
@@ -2527,9 +2553,10 @@ static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__4;
 static PyObject *__pyx_tuple__6;
 static PyObject *__pyx_tuple__8;
-static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__9;
+static PyObject *__pyx_tuple__11;
 static PyObject *__pyx_codeobj__7;
-static PyObject *__pyx_codeobj__9;
+static PyObject *__pyx_codeobj__10;
 #endif
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
@@ -2564,20 +2591,20 @@ typedef struct {
   PyObject *__pyx_kp_u_Invalid_pointer_to_anon_func_sta;
   PyObject *__pyx_n_s_PCG64;
   PyObject *__pyx_n_s_ValueError;
-  PyObject *__pyx_n_s__11;
+  PyObject *__pyx_n_s__12;
   PyObject *__pyx_n_s__5;
-  PyObject *__pyx_n_s_a;
   PyObject *__pyx_n_s_adeft_indra_anomaly_detection_st;
   PyObject *__pyx_kp_s_adeft_indra_anomaly_detection_st_2;
+  PyObject *__pyx_n_s_alpha;
   PyObject *__pyx_n_s_arange;
   PyObject *__pyx_n_s_args;
   PyObject *__pyx_n_s_asyncio_coroutines;
-  PyObject *__pyx_n_s_b;
   PyObject *__pyx_n_s_capsule;
   PyObject *__pyx_n_s_cline_in_traceback;
   PyObject *__pyx_n_s_close;
   PyObject *__pyx_n_s_dtype;
   PyObject *__pyx_n_s_enter;
+  PyObject *__pyx_n_s_equal_tailed_interval;
   PyObject *__pyx_n_s_exit;
   PyObject *__pyx_n_s_fromiter;
   PyObject *__pyx_n_s_genexpr;
@@ -2597,7 +2624,6 @@ typedef struct {
   PyObject *__pyx_n_s_numpy_random;
   PyObject *__pyx_n_s_prevalence_cdf_points;
   PyObject *__pyx_n_s_prevalence_cdf_points_locals_gen;
-  PyObject *__pyx_n_s_py_betainc;
   PyObject *__pyx_n_s_pyx_vtable;
   PyObject *__pyx_n_s_range;
   PyObject *__pyx_n_s_send;
@@ -2611,10 +2637,11 @@ typedef struct {
   PyObject *__pyx_n_s_test;
   PyObject *__pyx_n_s_throw;
   PyObject *__pyx_n_s_vals;
-  PyObject *__pyx_n_s_x;
   PyObject *__pyx_float_0_01;
   PyObject *__pyx_int_0;
   PyObject *__pyx_int_1;
+  PyObject *__pyx_int_2;
+  PyObject *__pyx_int_1000;
   PyObject *__pyx_int_10000;
   PyObject *__pyx_tuple_;
   PyObject *__pyx_tuple__2;
@@ -2622,9 +2649,10 @@ typedef struct {
   PyObject *__pyx_tuple__4;
   PyObject *__pyx_tuple__6;
   PyObject *__pyx_tuple__8;
-  PyObject *__pyx_tuple__10;
+  PyObject *__pyx_tuple__9;
+  PyObject *__pyx_tuple__11;
   PyObject *__pyx_codeobj__7;
-  PyObject *__pyx_codeobj__9;
+  PyObject *__pyx_codeobj__10;
 } __pyx_mstate;
 
 #ifdef __cplusplus
@@ -2675,20 +2703,20 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_kp_u_Invalid_pointer_to_anon_func_sta);
   Py_CLEAR(clear_module_state->__pyx_n_s_PCG64);
   Py_CLEAR(clear_module_state->__pyx_n_s_ValueError);
-  Py_CLEAR(clear_module_state->__pyx_n_s__11);
+  Py_CLEAR(clear_module_state->__pyx_n_s__12);
   Py_CLEAR(clear_module_state->__pyx_n_s__5);
-  Py_CLEAR(clear_module_state->__pyx_n_s_a);
   Py_CLEAR(clear_module_state->__pyx_n_s_adeft_indra_anomaly_detection_st);
   Py_CLEAR(clear_module_state->__pyx_kp_s_adeft_indra_anomaly_detection_st_2);
+  Py_CLEAR(clear_module_state->__pyx_n_s_alpha);
   Py_CLEAR(clear_module_state->__pyx_n_s_arange);
   Py_CLEAR(clear_module_state->__pyx_n_s_args);
   Py_CLEAR(clear_module_state->__pyx_n_s_asyncio_coroutines);
-  Py_CLEAR(clear_module_state->__pyx_n_s_b);
   Py_CLEAR(clear_module_state->__pyx_n_s_capsule);
   Py_CLEAR(clear_module_state->__pyx_n_s_cline_in_traceback);
   Py_CLEAR(clear_module_state->__pyx_n_s_close);
   Py_CLEAR(clear_module_state->__pyx_n_s_dtype);
   Py_CLEAR(clear_module_state->__pyx_n_s_enter);
+  Py_CLEAR(clear_module_state->__pyx_n_s_equal_tailed_interval);
   Py_CLEAR(clear_module_state->__pyx_n_s_exit);
   Py_CLEAR(clear_module_state->__pyx_n_s_fromiter);
   Py_CLEAR(clear_module_state->__pyx_n_s_genexpr);
@@ -2708,7 +2736,6 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_numpy_random);
   Py_CLEAR(clear_module_state->__pyx_n_s_prevalence_cdf_points);
   Py_CLEAR(clear_module_state->__pyx_n_s_prevalence_cdf_points_locals_gen);
-  Py_CLEAR(clear_module_state->__pyx_n_s_py_betainc);
   Py_CLEAR(clear_module_state->__pyx_n_s_pyx_vtable);
   Py_CLEAR(clear_module_state->__pyx_n_s_range);
   Py_CLEAR(clear_module_state->__pyx_n_s_send);
@@ -2722,10 +2749,11 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_test);
   Py_CLEAR(clear_module_state->__pyx_n_s_throw);
   Py_CLEAR(clear_module_state->__pyx_n_s_vals);
-  Py_CLEAR(clear_module_state->__pyx_n_s_x);
   Py_CLEAR(clear_module_state->__pyx_float_0_01);
   Py_CLEAR(clear_module_state->__pyx_int_0);
   Py_CLEAR(clear_module_state->__pyx_int_1);
+  Py_CLEAR(clear_module_state->__pyx_int_2);
+  Py_CLEAR(clear_module_state->__pyx_int_1000);
   Py_CLEAR(clear_module_state->__pyx_int_10000);
   Py_CLEAR(clear_module_state->__pyx_tuple_);
   Py_CLEAR(clear_module_state->__pyx_tuple__2);
@@ -2733,9 +2761,10 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__4);
   Py_CLEAR(clear_module_state->__pyx_tuple__6);
   Py_CLEAR(clear_module_state->__pyx_tuple__8);
-  Py_CLEAR(clear_module_state->__pyx_tuple__10);
+  Py_CLEAR(clear_module_state->__pyx_tuple__9);
+  Py_CLEAR(clear_module_state->__pyx_tuple__11);
   Py_CLEAR(clear_module_state->__pyx_codeobj__7);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__9);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__10);
   return 0;
 }
 #endif
@@ -2773,20 +2802,20 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_kp_u_Invalid_pointer_to_anon_func_sta);
   Py_VISIT(traverse_module_state->__pyx_n_s_PCG64);
   Py_VISIT(traverse_module_state->__pyx_n_s_ValueError);
-  Py_VISIT(traverse_module_state->__pyx_n_s__11);
+  Py_VISIT(traverse_module_state->__pyx_n_s__12);
   Py_VISIT(traverse_module_state->__pyx_n_s__5);
-  Py_VISIT(traverse_module_state->__pyx_n_s_a);
   Py_VISIT(traverse_module_state->__pyx_n_s_adeft_indra_anomaly_detection_st);
   Py_VISIT(traverse_module_state->__pyx_kp_s_adeft_indra_anomaly_detection_st_2);
+  Py_VISIT(traverse_module_state->__pyx_n_s_alpha);
   Py_VISIT(traverse_module_state->__pyx_n_s_arange);
   Py_VISIT(traverse_module_state->__pyx_n_s_args);
   Py_VISIT(traverse_module_state->__pyx_n_s_asyncio_coroutines);
-  Py_VISIT(traverse_module_state->__pyx_n_s_b);
   Py_VISIT(traverse_module_state->__pyx_n_s_capsule);
   Py_VISIT(traverse_module_state->__pyx_n_s_cline_in_traceback);
   Py_VISIT(traverse_module_state->__pyx_n_s_close);
   Py_VISIT(traverse_module_state->__pyx_n_s_dtype);
   Py_VISIT(traverse_module_state->__pyx_n_s_enter);
+  Py_VISIT(traverse_module_state->__pyx_n_s_equal_tailed_interval);
   Py_VISIT(traverse_module_state->__pyx_n_s_exit);
   Py_VISIT(traverse_module_state->__pyx_n_s_fromiter);
   Py_VISIT(traverse_module_state->__pyx_n_s_genexpr);
@@ -2806,7 +2835,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_numpy_random);
   Py_VISIT(traverse_module_state->__pyx_n_s_prevalence_cdf_points);
   Py_VISIT(traverse_module_state->__pyx_n_s_prevalence_cdf_points_locals_gen);
-  Py_VISIT(traverse_module_state->__pyx_n_s_py_betainc);
   Py_VISIT(traverse_module_state->__pyx_n_s_pyx_vtable);
   Py_VISIT(traverse_module_state->__pyx_n_s_range);
   Py_VISIT(traverse_module_state->__pyx_n_s_send);
@@ -2820,10 +2848,11 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_test);
   Py_VISIT(traverse_module_state->__pyx_n_s_throw);
   Py_VISIT(traverse_module_state->__pyx_n_s_vals);
-  Py_VISIT(traverse_module_state->__pyx_n_s_x);
   Py_VISIT(traverse_module_state->__pyx_float_0_01);
   Py_VISIT(traverse_module_state->__pyx_int_0);
   Py_VISIT(traverse_module_state->__pyx_int_1);
+  Py_VISIT(traverse_module_state->__pyx_int_2);
+  Py_VISIT(traverse_module_state->__pyx_int_1000);
   Py_VISIT(traverse_module_state->__pyx_int_10000);
   Py_VISIT(traverse_module_state->__pyx_tuple_);
   Py_VISIT(traverse_module_state->__pyx_tuple__2);
@@ -2831,9 +2860,10 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__4);
   Py_VISIT(traverse_module_state->__pyx_tuple__6);
   Py_VISIT(traverse_module_state->__pyx_tuple__8);
-  Py_VISIT(traverse_module_state->__pyx_tuple__10);
+  Py_VISIT(traverse_module_state->__pyx_tuple__9);
+  Py_VISIT(traverse_module_state->__pyx_tuple__11);
   Py_VISIT(traverse_module_state->__pyx_codeobj__7);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__9);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__10);
   return 0;
 }
 #endif
@@ -2868,20 +2898,20 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_kp_u_Invalid_pointer_to_anon_func_sta __pyx_mstate_global->__pyx_kp_u_Invalid_pointer_to_anon_func_sta
 #define __pyx_n_s_PCG64 __pyx_mstate_global->__pyx_n_s_PCG64
 #define __pyx_n_s_ValueError __pyx_mstate_global->__pyx_n_s_ValueError
-#define __pyx_n_s__11 __pyx_mstate_global->__pyx_n_s__11
+#define __pyx_n_s__12 __pyx_mstate_global->__pyx_n_s__12
 #define __pyx_n_s__5 __pyx_mstate_global->__pyx_n_s__5
-#define __pyx_n_s_a __pyx_mstate_global->__pyx_n_s_a
 #define __pyx_n_s_adeft_indra_anomaly_detection_st __pyx_mstate_global->__pyx_n_s_adeft_indra_anomaly_detection_st
 #define __pyx_kp_s_adeft_indra_anomaly_detection_st_2 __pyx_mstate_global->__pyx_kp_s_adeft_indra_anomaly_detection_st_2
+#define __pyx_n_s_alpha __pyx_mstate_global->__pyx_n_s_alpha
 #define __pyx_n_s_arange __pyx_mstate_global->__pyx_n_s_arange
 #define __pyx_n_s_args __pyx_mstate_global->__pyx_n_s_args
 #define __pyx_n_s_asyncio_coroutines __pyx_mstate_global->__pyx_n_s_asyncio_coroutines
-#define __pyx_n_s_b __pyx_mstate_global->__pyx_n_s_b
 #define __pyx_n_s_capsule __pyx_mstate_global->__pyx_n_s_capsule
 #define __pyx_n_s_cline_in_traceback __pyx_mstate_global->__pyx_n_s_cline_in_traceback
 #define __pyx_n_s_close __pyx_mstate_global->__pyx_n_s_close
 #define __pyx_n_s_dtype __pyx_mstate_global->__pyx_n_s_dtype
 #define __pyx_n_s_enter __pyx_mstate_global->__pyx_n_s_enter
+#define __pyx_n_s_equal_tailed_interval __pyx_mstate_global->__pyx_n_s_equal_tailed_interval
 #define __pyx_n_s_exit __pyx_mstate_global->__pyx_n_s_exit
 #define __pyx_n_s_fromiter __pyx_mstate_global->__pyx_n_s_fromiter
 #define __pyx_n_s_genexpr __pyx_mstate_global->__pyx_n_s_genexpr
@@ -2901,7 +2931,6 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_numpy_random __pyx_mstate_global->__pyx_n_s_numpy_random
 #define __pyx_n_s_prevalence_cdf_points __pyx_mstate_global->__pyx_n_s_prevalence_cdf_points
 #define __pyx_n_s_prevalence_cdf_points_locals_gen __pyx_mstate_global->__pyx_n_s_prevalence_cdf_points_locals_gen
-#define __pyx_n_s_py_betainc __pyx_mstate_global->__pyx_n_s_py_betainc
 #define __pyx_n_s_pyx_vtable __pyx_mstate_global->__pyx_n_s_pyx_vtable
 #define __pyx_n_s_range __pyx_mstate_global->__pyx_n_s_range
 #define __pyx_n_s_send __pyx_mstate_global->__pyx_n_s_send
@@ -2915,10 +2944,11 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_test __pyx_mstate_global->__pyx_n_s_test
 #define __pyx_n_s_throw __pyx_mstate_global->__pyx_n_s_throw
 #define __pyx_n_s_vals __pyx_mstate_global->__pyx_n_s_vals
-#define __pyx_n_s_x __pyx_mstate_global->__pyx_n_s_x
 #define __pyx_float_0_01 __pyx_mstate_global->__pyx_float_0_01
 #define __pyx_int_0 __pyx_mstate_global->__pyx_int_0
 #define __pyx_int_1 __pyx_mstate_global->__pyx_int_1
+#define __pyx_int_2 __pyx_mstate_global->__pyx_int_2
+#define __pyx_int_1000 __pyx_mstate_global->__pyx_int_1000
 #define __pyx_int_10000 __pyx_mstate_global->__pyx_int_10000
 #define __pyx_tuple_ __pyx_mstate_global->__pyx_tuple_
 #define __pyx_tuple__2 __pyx_mstate_global->__pyx_tuple__2
@@ -2926,9 +2956,10 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__4 __pyx_mstate_global->__pyx_tuple__4
 #define __pyx_tuple__6 __pyx_mstate_global->__pyx_tuple__6
 #define __pyx_tuple__8 __pyx_mstate_global->__pyx_tuple__8
-#define __pyx_tuple__10 __pyx_mstate_global->__pyx_tuple__10
+#define __pyx_tuple__9 __pyx_mstate_global->__pyx_tuple__9
+#define __pyx_tuple__11 __pyx_mstate_global->__pyx_tuple__11
 #define __pyx_codeobj__7 __pyx_mstate_global->__pyx_codeobj__7
-#define __pyx_codeobj__9 __pyx_mstate_global->__pyx_codeobj__9
+#define __pyx_codeobj__10 __pyx_mstate_global->__pyx_codeobj__10
 #endif
 /* #### Code section: module_code ### */
 
@@ -3429,7 +3460,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc(f
  *     else:
  *         return D(p, q, x)/p * K(p, q, x)             # <<<<<<<<<<<<<<
  * 
- * def py_betainc(a, b, x):
+ * 
  */
   /*else*/ {
     __pyx_r = ((__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_D(__pyx_v_p, __pyx_v_q, __pyx_v_x) / ((double)__pyx_v_p)) * __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_K(__pyx_v_p, __pyx_v_q, __pyx_v_x, NULL));
@@ -3450,170 +3481,128 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc(f
   return __pyx_r;
 }
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":80
- *         return D(p, q, x)/p * K(p, q, x)
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":81
  * 
- * def py_betainc(a, b, x):             # <<<<<<<<<<<<<<
- *     return betainc(a, b, x)
  * 
+ * cdef double prevalence_cdf_exact(double theta, int n, int t,             # <<<<<<<<<<<<<<
+ *                                  double sensitivity,
+ *                                  double specificity):
  */
 
-/* Python wrapper */
-static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_1py_betainc(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_1py_betainc = {"py_betainc", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_1py_betainc, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_1py_betainc(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  PyObject *__pyx_v_a = 0;
-  PyObject *__pyx_v_b = 0;
-  PyObject *__pyx_v_x = 0;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_exact(double __pyx_v_theta, int __pyx_v_n, int __pyx_v_t, double __pyx_v_sensitivity, double __pyx_v_specificity) {
+  double __pyx_v_c1;
+  double __pyx_v_c2;
+  double __pyx_v_numerator;
+  double __pyx_v_denominator;
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  double __pyx_t_1;
+  double __pyx_t_2;
+  int __pyx_t_3;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("py_betainc (wrapper)", 0);
-  {
-    #if CYTHON_COMPILING_IN_LIMITED_API
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_a,&__pyx_n_s_b,&__pyx_n_s_x,0};
-    #else
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_a,&__pyx_n_s_b,&__pyx_n_s_x,0};
-    #endif
-    PyObject* values[3] = {0,0,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_a)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_b)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("py_betainc", 1, 3, 3, 1); __PYX_ERR(0, 80, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_x)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("py_betainc", 1, 3, 3, 2); __PYX_ERR(0, 80, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "py_betainc") < 0)) __PYX_ERR(0, 80, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 3)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-    }
-    __pyx_v_a = values[0];
-    __pyx_v_b = values[1];
-    __pyx_v_x = values[2];
+  __Pyx_RefNannySetupContext("prevalence_cdf_exact", 0);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":85
+ *                                  double specificity):
+ *     cdef double c1, c2, numerator, denominator
+ *     c1, c2 = 1 - specificity, sensitivity + specificity - 1             # <<<<<<<<<<<<<<
+ *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
+ *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
+ */
+  __pyx_t_1 = (1.0 - __pyx_v_specificity);
+  __pyx_t_2 = ((__pyx_v_sensitivity + __pyx_v_specificity) - 1.0);
+  __pyx_v_c1 = __pyx_t_1;
+  __pyx_v_c2 = __pyx_t_2;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":86
+ *     cdef double c1, c2, numerator, denominator
+ *     c1, c2 = 1 - specificity, sensitivity + specificity - 1
+ *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))             # <<<<<<<<<<<<<<
+ *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
+ *     if denominator == 0:
+ */
+  __pyx_v_numerator = (__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + (__pyx_v_c2 * __pyx_v_theta))) - __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":87
+ *     c1, c2 = 1 - specificity, sensitivity + specificity - 1
+ *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
+ *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)             # <<<<<<<<<<<<<<
+ *     if denominator == 0:
+ *         return theta
+ */
+  __pyx_v_denominator = (__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + __pyx_v_c2)) - __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":88
+ *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
+ *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
+ *     if denominator == 0:             # <<<<<<<<<<<<<<
+ *         return theta
+ *     return numerator/denominator
+ */
+  __pyx_t_3 = ((__pyx_v_denominator == 0.0) != 0);
+  if (__pyx_t_3) {
+
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":89
+ *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
+ *     if denominator == 0:
+ *         return theta             # <<<<<<<<<<<<<<
+ *     return numerator/denominator
+ * 
+ */
+    __pyx_r = __pyx_v_theta;
+    goto __pyx_L0;
+
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":88
+ *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
+ *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
+ *     if denominator == 0:             # <<<<<<<<<<<<<<
+ *         return theta
+ *     return numerator/denominator
+ */
   }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("py_betainc", 1, 3, 3, __pyx_nargs); __PYX_ERR(0, 80, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("adeft_indra.anomaly_detection.stats._stats.py_betainc", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_py_betainc(__pyx_self, __pyx_v_a, __pyx_v_b, __pyx_v_x);
 
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_py_betainc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_a, PyObject *__pyx_v_b, PyObject *__pyx_v_x) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  float __pyx_t_1;
-  float __pyx_t_2;
-  float __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("py_betainc", 0);
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":90
+ *     if denominator == 0:
+ *         return theta
+ *     return numerator/denominator             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  if (unlikely(__pyx_v_denominator == 0)) {
+    PyErr_SetString(PyExc_ZeroDivisionError, "float division");
+    __PYX_ERR(0, 90, __pyx_L1_error)
+  }
+  __pyx_r = (__pyx_v_numerator / __pyx_v_denominator);
+  goto __pyx_L0;
 
   /* "adeft_indra/anomaly_detection/stats/_stats.pyx":81
  * 
- * def py_betainc(a, b, x):
- *     return betainc(a, b, x)             # <<<<<<<<<<<<<<
  * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_PyFloat_AsFloat(__pyx_v_a); if (unlikely((__pyx_t_1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 81, __pyx_L1_error)
-  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_v_b); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 81, __pyx_L1_error)
-  __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_v_x); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 81, __pyx_L1_error)
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc(__pyx_t_1, __pyx_t_2, __pyx_t_3)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 81, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
-  goto __pyx_L0;
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":80
- *         return D(p, q, x)/p * K(p, q, x)
- * 
- * def py_betainc(a, b, x):             # <<<<<<<<<<<<<<
- *     return betainc(a, b, x)
- * 
+ * cdef double prevalence_cdf_exact(double theta, int n, int t,             # <<<<<<<<<<<<<<
+ *                                  double sensitivity,
+ *                                  double specificity):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("adeft_indra.anomaly_detection.stats._stats.py_betainc", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
+  __Pyx_WriteUnraisable("adeft_indra.anomaly_detection.stats._stats.prevalence_cdf_exact", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":87
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":93
  * 
  * 
- * cdef double beta_sample(double theta, int n, int t,             # <<<<<<<<<<<<<<
- *                         double sens_a, double sens_b,
- *                         double spec_a, double spec_b,
+ * cdef double prevalence_cdf(double theta, int n, int t,             # <<<<<<<<<<<<<<
+ *                            double sens_a, double sens_b,
+ *                            double spec_a, double spec_b,
  */
 
-static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_sample(double __pyx_v_theta, int __pyx_v_n, int __pyx_v_t, double __pyx_v_sens_a, double __pyx_v_sens_b, double __pyx_v_spec_a, double __pyx_v_spec_b, __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_function __pyx_v_func, int __pyx_v_num_samples) {
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf(double __pyx_v_theta, int __pyx_v_n, int __pyx_v_t, double __pyx_v_sens_a, double __pyx_v_sens_b, double __pyx_v_spec_a, double __pyx_v_spec_b, int __pyx_v_num_samples) {
   int __pyx_v_i;
   bitgen_t *__pyx_v_rng;
   char const *__pyx_v_capsule_name;
@@ -3640,9 +3629,9 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("beta_sample", 0);
+  __Pyx_RefNannySetupContext("prevalence_cdf", 0);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":94
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":99
  *     cdef int i
  *     cdef bitgen_t *rng
  *     cdef const char *capsule_name = "BitGenerator"             # <<<<<<<<<<<<<<
@@ -3651,7 +3640,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   __pyx_v_capsule_name = ((char const *)"BitGenerator");
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":99
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":104
  *     cdef double *spec_array
  * 
  *     sens_array = <double *> PyMem_Malloc(num_samples * sizeof(double))             # <<<<<<<<<<<<<<
@@ -3660,7 +3649,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   __pyx_v_sens_array = ((double *)PyMem_Malloc((__pyx_v_num_samples * (sizeof(double)))));
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":100
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":105
  * 
  *     sens_array = <double *> PyMem_Malloc(num_samples * sizeof(double))
  *     spec_array = <double *> PyMem_Malloc(num_samples * sizeof(double))             # <<<<<<<<<<<<<<
@@ -3669,14 +3658,14 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   __pyx_v_spec_array = ((double *)PyMem_Malloc((__pyx_v_num_samples * (sizeof(double)))));
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":102
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":107
  *     spec_array = <double *> PyMem_Malloc(num_samples * sizeof(double))
  * 
  *     x = PCG64()             # <<<<<<<<<<<<<<
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_PCG64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 102, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_PCG64); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   __pyx_t_4 = 0;
@@ -3694,26 +3683,26 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
     PyObject *__pyx_callargs[1] = {__pyx_t_3, };
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_2, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 102, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
   __pyx_v_x = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":103
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":108
  * 
  *     x = PCG64()
  *     capsule = x.capsule             # <<<<<<<<<<<<<<
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_capsule); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_capsule); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_capsule = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":104
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":109
  *     x = PCG64()
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):             # <<<<<<<<<<<<<<
@@ -3723,20 +3712,20 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
   __pyx_t_5 = ((!(PyCapsule_IsValid(__pyx_v_capsule, __pyx_v_capsule_name) != 0)) != 0);
   if (unlikely(__pyx_t_5)) {
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":105
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":110
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")             # <<<<<<<<<<<<<<
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)
  * 
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_Raise(__pyx_t_1, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 105, __pyx_L1_error)
+    __PYX_ERR(0, 110, __pyx_L1_error)
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":104
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":109
  *     x = PCG64()
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):             # <<<<<<<<<<<<<<
@@ -3745,17 +3734,17 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   }
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":106
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":111
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)             # <<<<<<<<<<<<<<
  * 
  *     i = 0
  */
-  __pyx_t_6 = PyCapsule_GetPointer(__pyx_v_capsule, __pyx_v_capsule_name); if (unlikely(__pyx_t_6 == ((void *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
+  __pyx_t_6 = PyCapsule_GetPointer(__pyx_v_capsule, __pyx_v_capsule_name); if (unlikely(__pyx_t_6 == ((void *)NULL) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L1_error)
   __pyx_v_rng = ((bitgen_t *)__pyx_t_6);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":108
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":113
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)
  * 
  *     i = 0             # <<<<<<<<<<<<<<
@@ -3764,7 +3753,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   __pyx_v_i = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":109
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":114
  * 
  *     i = 0
  *     with x.lock, nogil:             # <<<<<<<<<<<<<<
@@ -3772,11 +3761,11 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  *             sens_array[i] = random_beta(rng, sens_a, sens_b)
  */
   /*with:*/ {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_lock); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_n_s_lock); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_exit); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 109, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_exit); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 114, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_enter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L4_error)
+    __pyx_t_3 = __Pyx_PyObject_LookupSpecial(__pyx_t_1, __pyx_n_s_enter); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 114, __pyx_L4_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_8 = NULL;
     __pyx_t_4 = 0;
@@ -3794,7 +3783,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
       PyObject *__pyx_callargs[1] = {__pyx_t_8, };
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_4, 0+__pyx_t_4);
       __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 109, __pyx_L4_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L4_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
@@ -3812,7 +3801,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
               #endif
               /*try:*/ {
 
-                /* "adeft_indra/anomaly_detection/stats/_stats.pyx":110
+                /* "adeft_indra/anomaly_detection/stats/_stats.pyx":115
  *     i = 0
  *     with x.lock, nogil:
  *         for i in range(num_samples):             # <<<<<<<<<<<<<<
@@ -3824,7 +3813,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
                 for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
                   __pyx_v_i = __pyx_t_13;
 
-                  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":111
+                  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":116
  *     with x.lock, nogil:
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, sens_a, sens_b)             # <<<<<<<<<<<<<<
@@ -3833,7 +3822,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
                   (__pyx_v_sens_array[__pyx_v_i]) = random_beta(__pyx_v_rng, __pyx_v_sens_a, __pyx_v_sens_b);
 
-                  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":112
+                  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":117
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, sens_a, sens_b)
  *             spec_array[i] = random_beta(rng, spec_a, spec_b)             # <<<<<<<<<<<<<<
@@ -3844,7 +3833,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
                 }
               }
 
-              /* "adeft_indra/anomaly_detection/stats/_stats.pyx":109
+              /* "adeft_indra/anomaly_detection/stats/_stats.pyx":114
  * 
  *     i = 0
  *     with x.lock, nogil:             # <<<<<<<<<<<<<<
@@ -3870,7 +3859,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
         if (__pyx_t_7) {
           __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_tuple__2, NULL);
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 109, __pyx_L1_error)
+          if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 114, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_11);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         }
@@ -3885,7 +3874,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
     __pyx_L19:;
   }
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":113
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":118
  *             sens_array[i] = random_beta(rng, sens_a, sens_b)
  *             spec_array[i] = random_beta(rng, spec_a, spec_b)
  *     result = 0             # <<<<<<<<<<<<<<
@@ -3894,48 +3883,48 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   __pyx_v_result = 0.0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":114
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":119
  *             spec_array[i] = random_beta(rng, spec_a, spec_b)
  *     result = 0
  *     i = 0             # <<<<<<<<<<<<<<
  *     for i in range(num_samples):
- *         result += func(theta, n, t, sens_array[i], spec_array[i])
+ *         result += prevalence_cdf_exact(theta, n, t, sens_array[i],
  */
   __pyx_v_i = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":115
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":120
  *     result = 0
  *     i = 0
  *     for i in range(num_samples):             # <<<<<<<<<<<<<<
- *         result += func(theta, n, t, sens_array[i], spec_array[i])
- *     PyMem_Free(sens_array)
+ *         result += prevalence_cdf_exact(theta, n, t, sens_array[i],
+ *                                        spec_array[i])
  */
   __pyx_t_4 = __pyx_v_num_samples;
   __pyx_t_12 = __pyx_t_4;
   for (__pyx_t_13 = 0; __pyx_t_13 < __pyx_t_12; __pyx_t_13+=1) {
     __pyx_v_i = __pyx_t_13;
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":116
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":121
  *     i = 0
  *     for i in range(num_samples):
- *         result += func(theta, n, t, sens_array[i], spec_array[i])             # <<<<<<<<<<<<<<
+ *         result += prevalence_cdf_exact(theta, n, t, sens_array[i],             # <<<<<<<<<<<<<<
+ *                                        spec_array[i])
  *     PyMem_Free(sens_array)
- *     PyMem_Free(spec_array)
  */
-    __pyx_v_result = (__pyx_v_result + __pyx_v_func(__pyx_v_theta, __pyx_v_n, __pyx_v_t, (__pyx_v_sens_array[__pyx_v_i]), (__pyx_v_spec_array[__pyx_v_i])));
+    __pyx_v_result = (__pyx_v_result + __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_exact(__pyx_v_theta, __pyx_v_n, __pyx_v_t, (__pyx_v_sens_array[__pyx_v_i]), (__pyx_v_spec_array[__pyx_v_i])));
   }
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":117
- *     for i in range(num_samples):
- *         result += func(theta, n, t, sens_array[i], spec_array[i])
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":123
+ *         result += prevalence_cdf_exact(theta, n, t, sens_array[i],
+ *                                        spec_array[i])
  *     PyMem_Free(sens_array)             # <<<<<<<<<<<<<<
  *     PyMem_Free(spec_array)
  *     return result/num_samples
  */
   PyMem_Free(__pyx_v_sens_array);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":118
- *         result += func(theta, n, t, sens_array[i], spec_array[i])
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":124
+ *                                        spec_array[i])
  *     PyMem_Free(sens_array)
  *     PyMem_Free(spec_array)             # <<<<<<<<<<<<<<
  *     return result/num_samples
@@ -3943,7 +3932,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   PyMem_Free(__pyx_v_spec_array);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":119
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":125
  *     PyMem_Free(sens_array)
  *     PyMem_Free(spec_array)
  *     return result/num_samples             # <<<<<<<<<<<<<<
@@ -3952,17 +3941,17 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
  */
   if (unlikely(__pyx_v_num_samples == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 119, __pyx_L1_error)
+    __PYX_ERR(0, 125, __pyx_L1_error)
   }
   __pyx_r = (__pyx_v_result / ((double)__pyx_v_num_samples));
   goto __pyx_L0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":87
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":93
  * 
  * 
- * cdef double beta_sample(double theta, int n, int t,             # <<<<<<<<<<<<<<
- *                         double sens_a, double sens_b,
- *                         double spec_a, double spec_b,
+ * cdef double prevalence_cdf(double theta, int n, int t,             # <<<<<<<<<<<<<<
+ *                            double sens_a, double sens_b,
+ *                            double spec_a, double spec_b,
  */
 
   /* function exit code */
@@ -3971,7 +3960,7 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_WriteUnraisable("adeft_indra.anomaly_detection.stats._stats.beta_sample", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("adeft_indra.anomaly_detection.stats._stats.prevalence_cdf", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_x);
@@ -3980,174 +3969,24 @@ static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_samp
   return __pyx_r;
 }
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":122
- * 
- * 
- * cdef double prevalence_cdf_known_sens_spec(double theta, int n, int t,             # <<<<<<<<<<<<<<
- *                                            double sensitivity,
- *                                            double specificity):
- */
-
-static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_known_sens_spec(double __pyx_v_theta, int __pyx_v_n, int __pyx_v_t, double __pyx_v_sensitivity, double __pyx_v_specificity) {
-  double __pyx_v_c1;
-  double __pyx_v_c2;
-  double __pyx_v_numerator;
-  double __pyx_v_denominator;
-  double __pyx_r;
-  __Pyx_RefNannyDeclarations
-  double __pyx_t_1;
-  double __pyx_t_2;
-  int __pyx_t_3;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("prevalence_cdf_known_sens_spec", 0);
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":126
- *                                            double specificity):
- *     cdef double c1, c2, numerator, denominator
- *     c1, c2 = 1 - specificity, sensitivity + specificity - 1             # <<<<<<<<<<<<<<
- *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
- *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
- */
-  __pyx_t_1 = (1.0 - __pyx_v_specificity);
-  __pyx_t_2 = ((__pyx_v_sensitivity + __pyx_v_specificity) - 1.0);
-  __pyx_v_c1 = __pyx_t_1;
-  __pyx_v_c2 = __pyx_t_2;
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":127
- *     cdef double c1, c2, numerator, denominator
- *     c1, c2 = 1 - specificity, sensitivity + specificity - 1
- *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))             # <<<<<<<<<<<<<<
- *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
- *     if denominator == 0:
- */
-  __pyx_v_numerator = (__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + (__pyx_v_c2 * __pyx_v_theta))) - __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
- *     c1, c2 = 1 - specificity, sensitivity + specificity - 1
- *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
- *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)             # <<<<<<<<<<<<<<
- *     if denominator == 0:
- *         return theta
- */
-  __pyx_v_denominator = (__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), (__pyx_v_c1 + __pyx_v_c2)) - __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_betainc((__pyx_v_t + 1), ((__pyx_v_n - __pyx_v_t) + 1), __pyx_v_c1));
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":129
- *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
- *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
- *     if denominator == 0:             # <<<<<<<<<<<<<<
- *         return theta
- *     return numerator/denominator
- */
-  __pyx_t_3 = ((__pyx_v_denominator == 0.0) != 0);
-  if (__pyx_t_3) {
-
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
- *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
- *     if denominator == 0:
- *         return theta             # <<<<<<<<<<<<<<
- *     return numerator/denominator
- * 
- */
-    __pyx_r = __pyx_v_theta;
-    goto __pyx_L0;
-
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":129
- *     numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
- *     denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
- *     if denominator == 0:             # <<<<<<<<<<<<<<
- *         return theta
- *     return numerator/denominator
- */
-  }
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":131
- *     if denominator == 0:
- *         return theta
- *     return numerator/denominator             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  if (unlikely(__pyx_v_denominator == 0)) {
-    PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-    __PYX_ERR(0, 131, __pyx_L1_error)
-  }
-  __pyx_r = (__pyx_v_numerator / __pyx_v_denominator);
-  goto __pyx_L0;
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":122
- * 
- * 
- * cdef double prevalence_cdf_known_sens_spec(double theta, int n, int t,             # <<<<<<<<<<<<<<
- *                                            double sensitivity,
- *                                            double specificity):
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_WriteUnraisable("adeft_indra.anomaly_detection.stats._stats.prevalence_cdf_known_sens_spec", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":134
- * 
- * 
- * cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,             # <<<<<<<<<<<<<<
- *                             double sens_b, double spec_a, double spec_b,
- *                             int num_samples):
- */
-
-static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats__prevalence_cdf(double __pyx_v_theta, int __pyx_v_n, int __pyx_v_t, double __pyx_v_sens_a, double __pyx_v_sens_b, double __pyx_v_spec_a, double __pyx_v_spec_b, int __pyx_v_num_samples) {
-  double __pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("_prevalence_cdf", 0);
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":137
- *                             double sens_b, double spec_a, double spec_b,
- *                             int num_samples):
- *     return beta_sample(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                        prevalence_cdf_known_sens_spec, num_samples)
- * 
- */
-  __pyx_r = __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_beta_sample(__pyx_v_theta, __pyx_v_n, __pyx_v_t, __pyx_v_sens_a, __pyx_v_sens_b, __pyx_v_spec_a, __pyx_v_spec_b, __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_known_sens_spec, __pyx_v_num_samples);
-  goto __pyx_L0;
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":134
- * 
- * 
- * cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,             # <<<<<<<<<<<<<<
- *                             double sens_b, double spec_a, double spec_b,
- *                             int num_samples):
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":141
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
  * 
  * 
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_3prevalence_cdf_points(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_1prevalence_cdf_points(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_3prevalence_cdf_points = {"prevalence_cdf_points", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_3prevalence_cdf_points, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_3prevalence_cdf_points(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_1prevalence_cdf_points = {"prevalence_cdf_points", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_1prevalence_cdf_points, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_1prevalence_cdf_points(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -4179,7 +4018,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_n,&__pyx_n_s_t,&__pyx_n_s_sens_a,&__pyx_n_s_sens_b,&__pyx_n_s_spec_a,&__pyx_n_s_spec_b,&__pyx_n_s_num_samples,&__pyx_n_s_step_size,0};
     #endif
     PyObject* values[8] = {0,0,0,0,0,0,0,0};
-    values[6] = ((PyObject *)((PyObject *)__pyx_int_10000));
+    values[6] = ((PyObject *)((PyObject *)__pyx_int_1000));
     values[7] = ((PyObject *)((PyObject*)__pyx_float_0_01));
     if (__pyx_kwds) {
       Py_ssize_t kw_args;
@@ -4207,61 +4046,61 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       switch (__pyx_nargs) {
         case  0:
         if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_n)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_t)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 1); __PYX_ERR(0, 141, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 1); __PYX_ERR(0, 128, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sens_a)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 2); __PYX_ERR(0, 141, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 2); __PYX_ERR(0, 128, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sens_b)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 3); __PYX_ERR(0, 141, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 3); __PYX_ERR(0, 128, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_spec_a)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 4); __PYX_ERR(0, 141, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 4); __PYX_ERR(0, 128, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_spec_b)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 5); __PYX_ERR(0, 141, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, 5); __PYX_ERR(0, 128, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_num_samples);
           if (value) { values[6] = value; kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (kw_args > 0) {
           PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_step_size);
           if (value) { values[7] = value; kw_args--; }
-          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "prevalence_cdf_points") < 0)) __PYX_ERR(0, 141, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "prevalence_cdf_points") < 0)) __PYX_ERR(0, 128, __pyx_L3_error)
       }
     } else {
       switch (__pyx_nargs) {
@@ -4290,13 +4129,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, __pyx_nargs); __PYX_ERR(0, 141, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("prevalence_cdf_points", 0, 6, 8, __pyx_nargs); __PYX_ERR(0, 128, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("adeft_indra.anomaly_detection.stats._stats.prevalence_cdf_points", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prevalence_cdf_points(__pyx_self, __pyx_v_n, __pyx_v_t, __pyx_v_sens_a, __pyx_v_sens_b, __pyx_v_spec_a, __pyx_v_spec_b, __pyx_v_num_samples, __pyx_v_step_size);
+  __pyx_r = __pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_points(__pyx_self, __pyx_v_n, __pyx_v_t, __pyx_v_sens_a, __pyx_v_sens_b, __pyx_v_spec_a, __pyx_v_spec_b, __pyx_v_num_samples, __pyx_v_step_size);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
@@ -4304,12 +4143,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 }
 static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_2generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
 
 static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_genexpr(PyObject *__pyx_self) {
@@ -4324,7 +4163,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 143, __pyx_L1_error)
+    __PYX_ERR(0, 130, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -4332,7 +4171,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
   __Pyx_INCREF((PyObject *)__pyx_cur_scope->__pyx_outer_scope);
   __Pyx_GIVEREF((PyObject *)__pyx_cur_scope->__pyx_outer_scope);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_2generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_genexpr, __pyx_n_s_prevalence_cdf_points_locals_gen, __pyx_n_s_adeft_indra_anomaly_detection_st); if (unlikely(!gen)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_2generator, NULL, (PyObject *) __pyx_cur_scope, __pyx_n_s_genexpr, __pyx_n_s_prevalence_cdf_points_locals_gen, __pyx_n_s_adeft_indra_anomaly_detection_st); if (unlikely(!gen)) __PYX_ERR(0, 130, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -4379,23 +4218,24 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
     return NULL;
   }
   __pyx_L3_first_run:;
-  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 143, __pyx_L1_error)
+  if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 130, __pyx_L1_error)
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":145
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)             # <<<<<<<<<<<<<<
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":132
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),             # <<<<<<<<<<<<<<
+ *                        dtype=float)
  *     return vals
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_arange); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_arange); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_step_size)) { __Pyx_RaiseClosureNameError("step_size"); __PYX_ERR(0, 145, __pyx_L1_error) }
-  __pyx_t_2 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_cur_scope->__pyx_outer_scope->__pyx_v_step_size, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 145, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_step_size)) { __Pyx_RaiseClosureNameError("step_size"); __PYX_ERR(0, 132, __pyx_L1_error) }
+  __pyx_t_2 = __Pyx_PyInt_AddCObj(__pyx_int_1, __pyx_cur_scope->__pyx_outer_scope->__pyx_v_step_size, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_step_size)) { __Pyx_RaiseClosureNameError("step_size"); __PYX_ERR(0, 145, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_step_size)) { __Pyx_RaiseClosureNameError("step_size"); __PYX_ERR(0, 132, __pyx_L1_error) }
   __pyx_t_4 = NULL;
   __pyx_t_5 = 0;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -4413,7 +4253,7 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
     __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+1-__pyx_t_5, 3+__pyx_t_5);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
@@ -4421,9 +4261,9 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
     __pyx_t_3 = __pyx_t_1; __Pyx_INCREF(__pyx_t_3); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_7 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyObject_GetIterNextFunc(__pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 132, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
@@ -4431,17 +4271,17 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_1); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 145, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_1); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_1); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 145, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_6); __Pyx_INCREF(__pyx_t_1); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -4451,7 +4291,7 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 145, __pyx_L1_error)
+          else __PYX_ERR(0, 132, __pyx_L1_error)
         }
         break;
       }
@@ -4462,45 +4302,45 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
     __Pyx_GIVEREF(__pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
-    __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_v_theta); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_n)) { __Pyx_RaiseClosureNameError("n"); __PYX_ERR(0, 143, __pyx_L1_error) }
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_n); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_t)) { __Pyx_RaiseClosureNameError("t"); __PYX_ERR(0, 143, __pyx_L1_error) }
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_t); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_a)) { __Pyx_RaiseClosureNameError("sens_a"); __PYX_ERR(0, 143, __pyx_L1_error) }
-    __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_a); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_b)) { __Pyx_RaiseClosureNameError("sens_b"); __PYX_ERR(0, 143, __pyx_L1_error) }
-    __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_b); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_a)) { __Pyx_RaiseClosureNameError("spec_a"); __PYX_ERR(0, 143, __pyx_L1_error) }
-    __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_a); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_b)) { __Pyx_RaiseClosureNameError("spec_b"); __PYX_ERR(0, 143, __pyx_L1_error) }
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_b); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_v_theta); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_n)) { __Pyx_RaiseClosureNameError("n"); __PYX_ERR(0, 130, __pyx_L1_error) }
+    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_n); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_t)) { __Pyx_RaiseClosureNameError("t"); __PYX_ERR(0, 130, __pyx_L1_error) }
+    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_t); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_a)) { __Pyx_RaiseClosureNameError("sens_a"); __PYX_ERR(0, 130, __pyx_L1_error) }
+    __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_a); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_b)) { __Pyx_RaiseClosureNameError("sens_b"); __PYX_ERR(0, 130, __pyx_L1_error) }
+    __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_sens_b); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":144
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
- *                                         num_samples) for theta in             # <<<<<<<<<<<<<<
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
- *     return vals
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":131
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
+ *                                        spec_a, spec_b, num_samples)             # <<<<<<<<<<<<<<
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
+ *                        dtype=float)
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_num_samples)) { __Pyx_RaiseClosureNameError("num_samples"); __PYX_ERR(0, 144, __pyx_L1_error) }
-    __pyx_t_14 = __Pyx_PyInt_As_int(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_num_samples); if (unlikely((__pyx_t_14 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 144, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_a)) { __Pyx_RaiseClosureNameError("spec_a"); __PYX_ERR(0, 131, __pyx_L1_error) }
+    __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_a); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_b)) { __Pyx_RaiseClosureNameError("spec_b"); __PYX_ERR(0, 131, __pyx_L1_error) }
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_spec_b); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_outer_scope->__pyx_v_num_samples)) { __Pyx_RaiseClosureNameError("num_samples"); __PYX_ERR(0, 131, __pyx_L1_error) }
+    __pyx_t_14 = __Pyx_PyInt_As_int(__pyx_cur_scope->__pyx_outer_scope->__pyx_v_num_samples); if (unlikely((__pyx_t_14 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 131, __pyx_L1_error)
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
-    __pyx_t_1 = PyFloat_FromDouble(__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats__prevalence_cdf(__pyx_t_8, __pyx_t_5, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble(__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf(__pyx_t_8, __pyx_t_5, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_r = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -4520,25 +4360,25 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
     __Pyx_XGOTREF(__pyx_t_3);
     __pyx_t_6 = __pyx_cur_scope->__pyx_t_1;
     __pyx_t_7 = __pyx_cur_scope->__pyx_t_2;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 143, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 130, __pyx_L1_error)
 
-    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":144
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
- *                                         num_samples) for theta in             # <<<<<<<<<<<<<<
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+    /* "adeft_indra/anomaly_detection/stats/_stats.pyx":132
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),             # <<<<<<<<<<<<<<
+ *                        dtype=float)
  *     return vals
  */
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
 
   /* function exit code */
@@ -4562,15 +4402,15 @@ static PyObject *__pyx_gb_11adeft_indra_17anomaly_detection_5stats_6_stats_21pre
   return __pyx_r;
 }
 
-/* "adeft_indra/anomaly_detection/stats/_stats.pyx":141
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
  * 
  * 
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
  */
 
-static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prevalence_cdf_points(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n, PyObject *__pyx_v_t, PyObject *__pyx_v_sens_a, PyObject *__pyx_v_sens_b, PyObject *__pyx_v_spec_a, PyObject *__pyx_v_spec_b, PyObject *__pyx_v_num_samples, PyObject *__pyx_v_step_size) {
+static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf_points(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n, PyObject *__pyx_v_t, PyObject *__pyx_v_sens_a, PyObject *__pyx_v_sens_b, PyObject *__pyx_v_spec_a, PyObject *__pyx_v_spec_b, PyObject *__pyx_v_num_samples, PyObject *__pyx_v_step_size) {
   struct __pyx_obj_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points *__pyx_cur_scope;
   PyObject *__pyx_v_vals = NULL;
   PyObject *__pyx_r = NULL;
@@ -4587,7 +4427,7 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prev
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 141, __pyx_L1_error)
+    __PYX_ERR(0, 128, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -4616,44 +4456,45 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prev
   __Pyx_INCREF(__pyx_cur_scope->__pyx_v_step_size);
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_step_size);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fromiter); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fromiter); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_genexpr(((PyObject*)__pyx_cur_scope)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_1 = __pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_21prevalence_cdf_points_genexpr(((PyObject*)__pyx_cur_scope)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":145
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)             # <<<<<<<<<<<<<<
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":133
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
+ *                        dtype=float)             # <<<<<<<<<<<<<<
  *     return vals
+ * 
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 145, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 133, __pyx_L1_error)
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":143
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":130
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,             # <<<<<<<<<<<<<<
+ *                                        spec_a, spec_b, num_samples)
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
  */
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -4661,22 +4502,24 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prev
   __pyx_v_vals = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":146
- *                                         num_samples) for theta in
- *                         np.arange(0, 1 + step_size, step_size)), dtype=float)
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":134
+ *                         for theta in np.arange(0, 1 + step_size, step_size)),
+ *                        dtype=float)
  *     return vals             # <<<<<<<<<<<<<<
+ * 
+ * 
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_vals);
   __pyx_r = __pyx_v_vals;
   goto __pyx_L0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":141
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
  * 
  * 
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
  */
 
   /* function exit code */
@@ -4690,6 +4533,518 @@ static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2prev
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_vals);
   __Pyx_DECREF((PyObject *)__pyx_cur_scope);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":149
+ * 
+ * @cython.cdivision(True)
+ * cdef double f(double theta, void *args):             # <<<<<<<<<<<<<<
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+ *     return prevalence_cdf(theta, params.n, params.t,
+ */
+
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_f(double __pyx_v_theta, void *__pyx_v_args) {
+  __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params *__pyx_v_params;
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("f", 0);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":150
+ * @cython.cdivision(True)
+ * cdef double f(double theta, void *args):
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args             # <<<<<<<<<<<<<<
+ *     return prevalence_cdf(theta, params.n, params.t,
+ *                           params.sens_a, params.sens_b,
+ */
+  __pyx_v_params = ((__pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params *)__pyx_v_args);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":154
+ *                           params.sens_a, params.sens_b,
+ *                           params.spec_a, params.spec_b,
+ *                           params.num_samples) - params.val             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = (__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_prevalence_cdf(__pyx_v_theta, __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens_a, __pyx_v_params->sens_b, __pyx_v_params->spec_a, __pyx_v_params->spec_b, __pyx_v_params->num_samples) - __pyx_v_params->val);
+  goto __pyx_L0;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":149
+ * 
+ * @cython.cdivision(True)
+ * cdef double f(double theta, void *args):             # <<<<<<<<<<<<<<
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+ *     return prevalence_cdf(theta, params.n, params.t,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":157
+ * 
+ * 
+ * cdef double inverse_cdf(double x, int n, int t, double sens_a, double sens_b,             # <<<<<<<<<<<<<<
+ *                         double spec_a, double spec_b,
+ *                         int num_samples):
+ */
+
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf(double __pyx_v_x, int __pyx_v_n, int __pyx_v_t, double __pyx_v_sens_a, double __pyx_v_sens_b, double __pyx_v_spec_a, double __pyx_v_spec_b, int __pyx_v_num_samples) {
+  __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params __pyx_v_args;
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  double __pyx_t_3;
+  double __pyx_t_4;
+  __Pyx_RefNannySetupContext("inverse_cdf", 0);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":161
+ *                         int num_samples):
+ *     cdef inverse_cdf_params args
+ *     args.n, args.t = n, t             # <<<<<<<<<<<<<<
+ *     args.sens_a, args.sens_b = sens_a, sens_b
+ *     args.spec_a, args.spec_b = spec_a, spec_b
+ */
+  __pyx_t_1 = __pyx_v_n;
+  __pyx_t_2 = __pyx_v_t;
+  __pyx_v_args.n = __pyx_t_1;
+  __pyx_v_args.t = __pyx_t_2;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":162
+ *     cdef inverse_cdf_params args
+ *     args.n, args.t = n, t
+ *     args.sens_a, args.sens_b = sens_a, sens_b             # <<<<<<<<<<<<<<
+ *     args.spec_a, args.spec_b = spec_a, spec_b
+ *     args.val, args.num_samples = x, num_samples
+ */
+  __pyx_t_3 = __pyx_v_sens_a;
+  __pyx_t_4 = __pyx_v_sens_b;
+  __pyx_v_args.sens_a = __pyx_t_3;
+  __pyx_v_args.sens_b = __pyx_t_4;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":163
+ *     args.n, args.t = n, t
+ *     args.sens_a, args.sens_b = sens_a, sens_b
+ *     args.spec_a, args.spec_b = spec_a, spec_b             # <<<<<<<<<<<<<<
+ *     args.val, args.num_samples = x, num_samples
+ *     return brentq(f, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
+ */
+  __pyx_t_4 = __pyx_v_spec_a;
+  __pyx_t_3 = __pyx_v_spec_b;
+  __pyx_v_args.spec_a = __pyx_t_4;
+  __pyx_v_args.spec_b = __pyx_t_3;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":164
+ *     args.sens_a, args.sens_b = sens_a, sens_b
+ *     args.spec_a, args.spec_b = spec_a, spec_b
+ *     args.val, args.num_samples = x, num_samples             # <<<<<<<<<<<<<<
+ *     return brentq(f, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
+ * 
+ */
+  __pyx_t_3 = __pyx_v_x;
+  __pyx_t_2 = __pyx_v_num_samples;
+  __pyx_v_args.val = __pyx_t_3;
+  __pyx_v_args.num_samples = __pyx_t_2;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":165
+ *     args.spec_a, args.spec_b = spec_a, spec_b
+ *     args.val, args.num_samples = x, num_samples
+ *     return brentq(f, 0, 1, &args, 1e-3, 1e-3, 100, NULL)             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = __pyx_f_5scipy_8optimize_15cython_optimize_6_zeros_brentq(__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_f, 0.0, 1.0, (&__pyx_v_args), 1e-3, 1e-3, 0x64, NULL);
+  goto __pyx_L0;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":157
+ * 
+ * 
+ * cdef double inverse_cdf(double x, int n, int t, double sens_a, double sens_b,             # <<<<<<<<<<<<<<
+ *                         double spec_a, double spec_b,
+ *                         int num_samples):
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":168
+ * 
+ * 
+ * cdef double interval_size(double x, void *args):             # <<<<<<<<<<<<<<
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+ *     cdef double left, right
+ */
+
+static double __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_interval_size(double __pyx_v_x, void *__pyx_v_args) {
+  __pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params *__pyx_v_params;
+  double __pyx_v_left;
+  double __pyx_v_right;
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("interval_size", 0);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":169
+ * 
+ * cdef double interval_size(double x, void *args):
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args             # <<<<<<<<<<<<<<
+ *     cdef double left, right
+ *     left = inverse_cdf(x, params.n, params.t,
+ */
+  __pyx_v_params = ((__pyx_t_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf_params *)__pyx_v_args);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":171
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+ *     cdef double left, right
+ *     left = inverse_cdf(x, params.n, params.t,             # <<<<<<<<<<<<<<
+ *                        params.sens_a, params.sens_b,
+ *                        params.spec_a, params.spec_b,
+ */
+  __pyx_v_left = __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf(__pyx_v_x, __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens_a, __pyx_v_params->sens_b, __pyx_v_params->spec_a, __pyx_v_params->spec_b, __pyx_v_params->num_samples);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":175
+ *                        params.spec_a, params.spec_b,
+ *                        params.num_samples)
+ *     right = inverse_cdf(x + params.val, params.n, params.t,             # <<<<<<<<<<<<<<
+ *                         params.sens_a, params.sens_b,
+ *                         params.spec_a, params.spec_b,
+ */
+  __pyx_v_right = __pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf((__pyx_v_x + __pyx_v_params->val), __pyx_v_params->n, __pyx_v_params->t, __pyx_v_params->sens_a, __pyx_v_params->sens_b, __pyx_v_params->spec_a, __pyx_v_params->spec_b, __pyx_v_params->num_samples);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":179
+ *                         params.spec_a, params.spec_b,
+ *                         params.num_samples)
+ *     return right - left             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = (__pyx_v_right - __pyx_v_left);
+  goto __pyx_L0;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":168
+ * 
+ * 
+ * cdef double interval_size(double x, void *args):             # <<<<<<<<<<<<<<
+ *     cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+ *     cdef double left, right
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "adeft_indra/anomaly_detection/stats/_stats.pyx":182
+ * 
+ * 
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_3equal_tailed_interval(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+static PyMethodDef __pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_3equal_tailed_interval = {"equal_tailed_interval", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_3equal_tailed_interval, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_11adeft_indra_17anomaly_detection_5stats_6_stats_3equal_tailed_interval(PyObject *__pyx_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_n = 0;
+  PyObject *__pyx_v_t = 0;
+  PyObject *__pyx_v_sens_a = 0;
+  PyObject *__pyx_v_sens_b = 0;
+  PyObject *__pyx_v_spec_a = 0;
+  PyObject *__pyx_v_spec_b = 0;
+  PyObject *__pyx_v_alpha = 0;
+  PyObject *__pyx_v_num_samples = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("equal_tailed_interval (wrapper)", 0);
+  {
+    #if CYTHON_COMPILING_IN_LIMITED_API
+    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_n,&__pyx_n_s_t,&__pyx_n_s_sens_a,&__pyx_n_s_sens_b,&__pyx_n_s_spec_a,&__pyx_n_s_spec_b,&__pyx_n_s_alpha,&__pyx_n_s_num_samples,0};
+    #else
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_n,&__pyx_n_s_t,&__pyx_n_s_sens_a,&__pyx_n_s_sens_b,&__pyx_n_s_spec_a,&__pyx_n_s_spec_b,&__pyx_n_s_alpha,&__pyx_n_s_num_samples,0};
+    #endif
+    PyObject* values[8] = {0,0,0,0,0,0,0,0};
+    values[7] = ((PyObject *)((PyObject *)__pyx_int_10000));
+    if (__pyx_kwds) {
+      Py_ssize_t kw_args;
+      switch (__pyx_nargs) {
+        case  8: values[7] = __Pyx_Arg_FASTCALL(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
+        case  7: values[6] = __Pyx_Arg_FASTCALL(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = __Pyx_Arg_FASTCALL(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
+      switch (__pyx_nargs) {
+        case  0:
+        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_n)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_t)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, 1); __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sens_a)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, 2); __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_sens_b)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, 3); __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_spec_a)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, 4); __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_spec_b)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, 5); __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  6:
+        if (likely((values[6] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_alpha)) != 0)) kw_args--;
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        else {
+          __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, 6); __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  7:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_num_samples);
+          if (value) { values[7] = value; kw_args--; }
+          else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        const Py_ssize_t kwd_pos_args = __pyx_nargs;
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "equal_tailed_interval") < 0)) __PYX_ERR(0, 182, __pyx_L3_error)
+      }
+    } else {
+      switch (__pyx_nargs) {
+        case  8: values[7] = __Pyx_Arg_FASTCALL(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
+        case  7: values[6] = __Pyx_Arg_FASTCALL(__pyx_args, 6);
+        values[5] = __Pyx_Arg_FASTCALL(__pyx_args, 5);
+        values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
+        values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
+        values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
+        values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
+        values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_n = values[0];
+    __pyx_v_t = values[1];
+    __pyx_v_sens_a = values[2];
+    __pyx_v_sens_b = values[3];
+    __pyx_v_spec_a = values[4];
+    __pyx_v_spec_b = values[5];
+    __pyx_v_alpha = values[6];
+    __pyx_v_num_samples = values[7];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("equal_tailed_interval", 0, 7, 8, __pyx_nargs); __PYX_ERR(0, 182, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("adeft_indra.anomaly_detection.stats._stats.equal_tailed_interval", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2equal_tailed_interval(__pyx_self, __pyx_v_n, __pyx_v_t, __pyx_v_sens_a, __pyx_v_sens_b, __pyx_v_spec_a, __pyx_v_spec_b, __pyx_v_alpha, __pyx_v_num_samples);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_11adeft_indra_17anomaly_detection_5stats_6_stats_2equal_tailed_interval(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_n, PyObject *__pyx_v_t, PyObject *__pyx_v_sens_a, PyObject *__pyx_v_sens_b, PyObject *__pyx_v_spec_a, PyObject *__pyx_v_spec_b, PyObject *__pyx_v_alpha, PyObject *__pyx_v_num_samples) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  double __pyx_t_2;
+  int __pyx_t_3;
+  int __pyx_t_4;
+  double __pyx_t_5;
+  double __pyx_t_6;
+  double __pyx_t_7;
+  double __pyx_t_8;
+  int __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("equal_tailed_interval", 0);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":184
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                         num_samples),
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_alpha, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_n); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_t); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_v_sens_a); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_v_sens_b); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_7 = __pyx_PyFloat_AsDouble(__pyx_v_spec_a); if (unlikely((__pyx_t_7 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+  __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_v_spec_b); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":185
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                         num_samples),             # <<<<<<<<<<<<<<
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                         num_samples))
+ */
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_num_samples); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 185, __pyx_L1_error)
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":184
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                         num_samples),
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf(__pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":186
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                         num_samples),
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                         num_samples))
+ * 
+ */
+  __pyx_t_10 = __Pyx_PyInt_TrueDivideObjC(__pyx_v_alpha, __pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = __Pyx_PyInt_SubtractCObj(__pyx_int_1, __pyx_t_10, 1, 0, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_8 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_n); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_t); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_7 = __pyx_PyFloat_AsDouble(__pyx_v_sens_a); if (unlikely((__pyx_t_7 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_6 = __pyx_PyFloat_AsDouble(__pyx_v_sens_b); if (unlikely((__pyx_t_6 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_v_spec_a); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_spec_b); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 186, __pyx_L1_error)
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":187
+ *                         num_samples),
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                         num_samples))             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_num_samples); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 187, __pyx_L1_error)
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":186
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                         num_samples),
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                         num_samples))
+ * 
+ */
+  __pyx_t_11 = PyFloat_FromDouble(__pyx_f_11adeft_indra_17anomaly_detection_5stats_6_stats_inverse_cdf(__pyx_t_8, __pyx_t_9, __pyx_t_4, __pyx_t_7, __pyx_t_6, __pyx_t_5, __pyx_t_2, __pyx_t_3)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":184
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                         num_samples),
+ *             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 184, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_11);
+  PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_11);
+  __pyx_t_1 = 0;
+  __pyx_t_11 = 0;
+  __pyx_r = __pyx_t_10;
+  __pyx_t_10 = 0;
+  goto __pyx_L0;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":182
+ * 
+ * 
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_AddTraceback("adeft_indra.anomaly_detection.stats._stats.equal_tailed_interval", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -6309,20 +6664,20 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_Invalid_pointer_to_anon_func_sta, sizeof(__pyx_k_Invalid_pointer_to_anon_func_sta), 0, 1, 0, 0},
   {0, __pyx_k_PCG64, sizeof(__pyx_k_PCG64), 0, 0, 1, 1},
   {0, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
-  {0, __pyx_k__11, sizeof(__pyx_k__11), 0, 0, 1, 1},
+  {0, __pyx_k__12, sizeof(__pyx_k__12), 0, 0, 1, 1},
   {0, __pyx_k__5, sizeof(__pyx_k__5), 0, 0, 1, 1},
-  {0, __pyx_k_a, sizeof(__pyx_k_a), 0, 0, 1, 1},
   {0, __pyx_k_adeft_indra_anomaly_detection_st, sizeof(__pyx_k_adeft_indra_anomaly_detection_st), 0, 0, 1, 1},
   {0, __pyx_k_adeft_indra_anomaly_detection_st_2, sizeof(__pyx_k_adeft_indra_anomaly_detection_st_2), 0, 0, 1, 0},
+  {0, __pyx_k_alpha, sizeof(__pyx_k_alpha), 0, 0, 1, 1},
   {0, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
   {0, __pyx_k_args, sizeof(__pyx_k_args), 0, 0, 1, 1},
   {0, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
-  {0, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
   {0, __pyx_k_capsule, sizeof(__pyx_k_capsule), 0, 0, 1, 1},
   {0, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {0, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
   {0, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
   {0, __pyx_k_enter, sizeof(__pyx_k_enter), 0, 0, 1, 1},
+  {0, __pyx_k_equal_tailed_interval, sizeof(__pyx_k_equal_tailed_interval), 0, 0, 1, 1},
   {0, __pyx_k_exit, sizeof(__pyx_k_exit), 0, 0, 1, 1},
   {0, __pyx_k_fromiter, sizeof(__pyx_k_fromiter), 0, 0, 1, 1},
   {0, __pyx_k_genexpr, sizeof(__pyx_k_genexpr), 0, 0, 1, 1},
@@ -6342,7 +6697,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_numpy_random, sizeof(__pyx_k_numpy_random), 0, 0, 1, 1},
   {0, __pyx_k_prevalence_cdf_points, sizeof(__pyx_k_prevalence_cdf_points), 0, 0, 1, 1},
   {0, __pyx_k_prevalence_cdf_points_locals_gen, sizeof(__pyx_k_prevalence_cdf_points_locals_gen), 0, 0, 1, 1},
-  {0, __pyx_k_py_betainc, sizeof(__pyx_k_py_betainc), 0, 0, 1, 1},
   {0, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
   {0, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {0, __pyx_k_send, sizeof(__pyx_k_send), 0, 0, 1, 1},
@@ -6356,26 +6710,25 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, __pyx_k_throw, sizeof(__pyx_k_throw), 0, 0, 1, 1},
   {0, __pyx_k_vals, sizeof(__pyx_k_vals), 0, 0, 1, 1},
-  {0, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
   #else
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
   {&__pyx_kp_u_Invalid_pointer_to_anon_func_sta, __pyx_k_Invalid_pointer_to_anon_func_sta, sizeof(__pyx_k_Invalid_pointer_to_anon_func_sta), 0, 1, 0, 0},
   {&__pyx_n_s_PCG64, __pyx_k_PCG64, sizeof(__pyx_k_PCG64), 0, 0, 1, 1},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
-  {&__pyx_n_s__11, __pyx_k__11, sizeof(__pyx_k__11), 0, 0, 1, 1},
+  {&__pyx_n_s__12, __pyx_k__12, sizeof(__pyx_k__12), 0, 0, 1, 1},
   {&__pyx_n_s__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 0, 1, 1},
-  {&__pyx_n_s_a, __pyx_k_a, sizeof(__pyx_k_a), 0, 0, 1, 1},
   {&__pyx_n_s_adeft_indra_anomaly_detection_st, __pyx_k_adeft_indra_anomaly_detection_st, sizeof(__pyx_k_adeft_indra_anomaly_detection_st), 0, 0, 1, 1},
   {&__pyx_kp_s_adeft_indra_anomaly_detection_st_2, __pyx_k_adeft_indra_anomaly_detection_st_2, sizeof(__pyx_k_adeft_indra_anomaly_detection_st_2), 0, 0, 1, 0},
+  {&__pyx_n_s_alpha, __pyx_k_alpha, sizeof(__pyx_k_alpha), 0, 0, 1, 1},
   {&__pyx_n_s_arange, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
   {&__pyx_n_s_args, __pyx_k_args, sizeof(__pyx_k_args), 0, 0, 1, 1},
   {&__pyx_n_s_asyncio_coroutines, __pyx_k_asyncio_coroutines, sizeof(__pyx_k_asyncio_coroutines), 0, 0, 1, 1},
-  {&__pyx_n_s_b, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
   {&__pyx_n_s_capsule, __pyx_k_capsule, sizeof(__pyx_k_capsule), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_close, __pyx_k_close, sizeof(__pyx_k_close), 0, 0, 1, 1},
   {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
   {&__pyx_n_s_enter, __pyx_k_enter, sizeof(__pyx_k_enter), 0, 0, 1, 1},
+  {&__pyx_n_s_equal_tailed_interval, __pyx_k_equal_tailed_interval, sizeof(__pyx_k_equal_tailed_interval), 0, 0, 1, 1},
   {&__pyx_n_s_exit, __pyx_k_exit, sizeof(__pyx_k_exit), 0, 0, 1, 1},
   {&__pyx_n_s_fromiter, __pyx_k_fromiter, sizeof(__pyx_k_fromiter), 0, 0, 1, 1},
   {&__pyx_n_s_genexpr, __pyx_k_genexpr, sizeof(__pyx_k_genexpr), 0, 0, 1, 1},
@@ -6395,7 +6748,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_numpy_random, __pyx_k_numpy_random, sizeof(__pyx_k_numpy_random), 0, 0, 1, 1},
   {&__pyx_n_s_prevalence_cdf_points, __pyx_k_prevalence_cdf_points, sizeof(__pyx_k_prevalence_cdf_points), 0, 0, 1, 1},
   {&__pyx_n_s_prevalence_cdf_points_locals_gen, __pyx_k_prevalence_cdf_points_locals_gen, sizeof(__pyx_k_prevalence_cdf_points_locals_gen), 0, 0, 1, 1},
-  {&__pyx_n_s_py_betainc, __pyx_k_py_betainc, sizeof(__pyx_k_py_betainc), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_send, __pyx_k_send, sizeof(__pyx_k_send), 0, 0, 1, 1},
@@ -6409,14 +6761,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_throw, __pyx_k_throw, sizeof(__pyx_k_throw), 0, 0, 1, 1},
   {&__pyx_n_s_vals, __pyx_k_vals, sizeof(__pyx_k_vals), 0, 0, 1, 1},
-  {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
   #endif
   {0, 0, 0, 0, 0, 0, 0}
 };
 /* #### Code section: cached_builtins ### */
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 105, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 115, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 966, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -6428,25 +6779,25 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":105
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":110
  *     capsule = x.capsule
  *     if not PyCapsule_IsValid(capsule, capsule_name):
  *         raise ValueError("Invalid pointer to anon_func_state")             # <<<<<<<<<<<<<<
  *     rng = <bitgen_t *> PyCapsule_GetPointer(capsule, capsule_name)
  * 
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_Invalid_pointer_to_anon_func_sta); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 105, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_Invalid_pointer_to_anon_func_sta); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":109
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":114
  * 
  *     i = 0
  *     with x.lock, nogil:             # <<<<<<<<<<<<<<
  *         for i in range(num_samples):
  *             sens_array[i] = random_beta(rng, sens_a, sens_b)
  */
-  __pyx_tuple__2 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(3, Py_None, Py_None, Py_None); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 114, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -6472,32 +6823,35 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":80
- *         return D(p, q, x)/p * K(p, q, x)
- * 
- * def py_betainc(a, b, x):             # <<<<<<<<<<<<<<
- *     return betainc(a, b, x)
- * 
- */
-  __pyx_tuple__6 = PyTuple_Pack(3, __pyx_n_s_a, __pyx_n_s_b, __pyx_n_s_x); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
-  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(3, 0, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_anomaly_detection_st_2, __pyx_n_s_py_betainc, 80, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 80, __pyx_L1_error)
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":141
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
  * 
  * 
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
  */
-  __pyx_tuple__8 = PyTuple_Pack(11, __pyx_n_s_n, __pyx_n_s_t, __pyx_n_s_sens_a, __pyx_n_s_sens_b, __pyx_n_s_spec_a, __pyx_n_s_spec_b, __pyx_n_s_num_samples, __pyx_n_s_step_size, __pyx_n_s_vals, __pyx_n_s_genexpr, __pyx_n_s_genexpr); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(11, __pyx_n_s_n, __pyx_n_s_t, __pyx_n_s_sens_a, __pyx_n_s_sens_b, __pyx_n_s_spec_a, __pyx_n_s_spec_b, __pyx_n_s_num_samples, __pyx_n_s_step_size, __pyx_n_s_vals, __pyx_n_s_genexpr, __pyx_n_s_genexpr); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 128, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(8, 0, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_anomaly_detection_st_2, __pyx_n_s_prevalence_cdf_points, 128, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 128, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(2, ((PyObject *)__pyx_int_1000), ((PyObject*)__pyx_float_0_01)); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(8, 0, 0, 11, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_anomaly_detection_st_2, __pyx_n_s_prevalence_cdf_points, 141, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 141, __pyx_L1_error)
-  __pyx_tuple__10 = PyTuple_Pack(2, ((PyObject *)__pyx_int_10000), ((PyObject*)__pyx_float_0_01)); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 141, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":182
+ * 
+ * 
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+  __pyx_tuple__9 = PyTuple_Pack(8, __pyx_n_s_n, __pyx_n_s_t, __pyx_n_s_sens_a, __pyx_n_s_sens_b, __pyx_n_s_spec_a, __pyx_n_s_spec_b, __pyx_n_s_alpha, __pyx_n_s_num_samples); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(8, 0, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_adeft_indra_anomaly_detection_st_2, __pyx_n_s_equal_tailed_interval, 182, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, ((PyObject *)__pyx_int_10000)); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -6512,20 +6866,20 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitString(__pyx_string_tab[1], &__pyx_kp_u_Invalid_pointer_to_anon_func_sta) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[2], &__pyx_n_s_PCG64) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[3], &__pyx_n_s_ValueError) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[4], &__pyx_n_s__11) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[4], &__pyx_n_s__12) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[5], &__pyx_n_s__5) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[6], &__pyx_n_s_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[7], &__pyx_n_s_adeft_indra_anomaly_detection_st) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[8], &__pyx_kp_s_adeft_indra_anomaly_detection_st_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[6], &__pyx_n_s_adeft_indra_anomaly_detection_st) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[7], &__pyx_kp_s_adeft_indra_anomaly_detection_st_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[8], &__pyx_n_s_alpha) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[9], &__pyx_n_s_arange) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[10], &__pyx_n_s_args) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[11], &__pyx_n_s_asyncio_coroutines) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[12], &__pyx_n_s_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[13], &__pyx_n_s_capsule) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[14], &__pyx_n_s_cline_in_traceback) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[15], &__pyx_n_s_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[16], &__pyx_n_s_dtype) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[17], &__pyx_n_s_enter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[12], &__pyx_n_s_capsule) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[13], &__pyx_n_s_cline_in_traceback) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[14], &__pyx_n_s_close) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[15], &__pyx_n_s_dtype) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[16], &__pyx_n_s_enter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[17], &__pyx_n_s_equal_tailed_interval) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[18], &__pyx_n_s_exit) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[19], &__pyx_n_s_fromiter) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[20], &__pyx_n_s_genexpr) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
@@ -6545,21 +6899,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitString(__pyx_string_tab[34], &__pyx_n_s_numpy_random) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[35], &__pyx_n_s_prevalence_cdf_points) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   if (__Pyx_InitString(__pyx_string_tab[36], &__pyx_n_s_prevalence_cdf_points_locals_gen) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[37], &__pyx_n_s_py_betainc) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[38], &__pyx_n_s_pyx_vtable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[39], &__pyx_n_s_range) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[40], &__pyx_n_s_send) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[41], &__pyx_n_s_sens_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[42], &__pyx_n_s_sens_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[43], &__pyx_n_s_spec) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[44], &__pyx_n_s_spec_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[45], &__pyx_n_s_spec_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[46], &__pyx_n_s_step_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[47], &__pyx_n_s_t) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[48], &__pyx_n_s_test) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[49], &__pyx_n_s_throw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[50], &__pyx_n_s_vals) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  if (__Pyx_InitString(__pyx_string_tab[51], &__pyx_n_s_x) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[37], &__pyx_n_s_pyx_vtable) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[38], &__pyx_n_s_range) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[39], &__pyx_n_s_send) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[40], &__pyx_n_s_sens_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[41], &__pyx_n_s_sens_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[42], &__pyx_n_s_spec) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[43], &__pyx_n_s_spec_a) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[44], &__pyx_n_s_spec_b) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[45], &__pyx_n_s_step_size) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[46], &__pyx_n_s_t) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[47], &__pyx_n_s_test) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[48], &__pyx_n_s_throw) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  if (__Pyx_InitString(__pyx_string_tab[49], &__pyx_n_s_vals) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
@@ -6567,6 +6919,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   __pyx_float_0_01 = PyFloat_FromDouble(0.01); if (unlikely(!__pyx_float_0_01)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_1000 = PyInt_FromLong(1000); if (unlikely(!__pyx_int_1000)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_10000 = PyInt_FromLong(10000L); if (unlikely(!__pyx_int_10000)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -6614,9 +6968,9 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
   #if CYTHON_COMPILING_IN_LIMITED_API
-  __pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points = PyType_FromSpec(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points_spec); if (unlikely(!__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points = PyType_FromSpec(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points_spec); if (unlikely(!__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points)) __PYX_ERR(0, 128, __pyx_L1_error)
   #else
-  if (PyType_Ready(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
   #if PY_MAJOR_VERSION < 3
   __pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points.tp_print = 0;
   #endif
@@ -6630,9 +6984,9 @@ static int __Pyx_modinit_type_init_code(void) {
   __pyx_ptype_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points = &__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct__prevalence_cdf_points;
   #endif
   #if CYTHON_COMPILING_IN_LIMITED_API
-  __pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr = PyType_FromSpec(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr_spec); if (unlikely(!__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr)) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr = PyType_FromSpec(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr_spec); if (unlikely(!__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr)) __PYX_ERR(0, 130, __pyx_L1_error)
   #else
-  if (PyType_Ready(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr) < 0) __PYX_ERR(0, 143, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr) < 0) __PYX_ERR(0, 130, __pyx_L1_error)
   #if PY_MAJOR_VERSION < 3
   __pyx_type_11adeft_indra_17anomaly_detection_5stats_6_stats___pyx_scope_struct_1_genexpr.tp_print = 0;
   #endif
@@ -7041,29 +7395,30 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":80
- *         return D(p, q, x)/p * K(p, q, x)
- * 
- * def py_betainc(a, b, x):             # <<<<<<<<<<<<<<
- *     return betainc(a, b, x)
- * 
- */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_1py_betainc, 0, __pyx_n_s_py_betainc, NULL, __pyx_n_s_adeft_indra_anomaly_detection_st, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_py_betainc, __pyx_t_2) < 0) __PYX_ERR(0, 80, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":141
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":128
  * 
  * 
  * def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
- *                           num_samples=10000, step_size=0.01):
- *     vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
+ *                           num_samples=1000, step_size=0.01):
+ *     vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_3prevalence_cdf_points, 0, __pyx_n_s_prevalence_cdf_points, NULL, __pyx_n_s_adeft_indra_anomaly_detection_st, __pyx_d, ((PyObject *)__pyx_codeobj__9)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_1prevalence_cdf_points, 0, __pyx_n_s_prevalence_cdf_points, NULL, __pyx_n_s_adeft_indra_anomaly_detection_st, __pyx_d, ((PyObject *)__pyx_codeobj__7)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__10);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_prevalence_cdf_points, __pyx_t_2) < 0) __PYX_ERR(0, 141, __pyx_L1_error)
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__8);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_prevalence_cdf_points, __pyx_t_2) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "adeft_indra/anomaly_detection/stats/_stats.pyx":182
+ * 
+ * 
+ * def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,             # <<<<<<<<<<<<<<
+ *                           alpha, num_samples=10000):
+ *     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+ */
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_11adeft_indra_17anomaly_detection_5stats_6_stats_3equal_tailed_interval, 0, __pyx_n_s_equal_tailed_interval, NULL, __pyx_n_s_adeft_indra_anomaly_detection_st, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_tuple__11);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_equal_tailed_interval, __pyx_t_2) < 0) __PYX_ERR(0, 182, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "adeft_indra/anomaly_detection/stats/_stats.pyx":1
@@ -7550,6 +7905,258 @@ static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
 #endif
 }
 
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
+
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#elif CYTHON_COMPILING_IN_LIMITED_API
+    if (unlikely(!__pyx_m)) {
+        return NULL;
+    }
+    result = PyObject_GetAttr(__pyx_m, name);
+    if (likely(result)) {
+        return result;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
+
+/* RaiseException */
+#if PY_MAJOR_VERSION < 3
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
+                        CYTHON_UNUSED PyObject *cause) {
+    __Pyx_PyThreadState_declare
+    Py_XINCREF(type);
+    if (!value || value == Py_None)
+        value = NULL;
+    else
+        Py_INCREF(value);
+    if (!tb || tb == Py_None)
+        tb = NULL;
+    else {
+        Py_INCREF(tb);
+        if (!PyTraceBack_Check(tb)) {
+            PyErr_SetString(PyExc_TypeError,
+                "raise: arg 3 must be a traceback or None");
+            goto raise_error;
+        }
+    }
+    if (PyType_Check(type)) {
+#if CYTHON_COMPILING_IN_PYPY
+        if (!value) {
+            Py_INCREF(Py_None);
+            value = Py_None;
+        }
+#endif
+        PyErr_NormalizeException(&type, &value, &tb);
+    } else {
+        if (value) {
+            PyErr_SetString(PyExc_TypeError,
+                "instance exception may not have a separate value");
+            goto raise_error;
+        }
+        value = type;
+        type = (PyObject*) Py_TYPE(type);
+        Py_INCREF(type);
+        if (!PyType_IsSubtype((PyTypeObject *)type, (PyTypeObject *)PyExc_BaseException)) {
+            PyErr_SetString(PyExc_TypeError,
+                "raise: exception class must be a subclass of BaseException");
+            goto raise_error;
+        }
+    }
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrRestore(type, value, tb);
+    return;
+raise_error:
+    Py_XDECREF(value);
+    Py_XDECREF(type);
+    Py_XDECREF(tb);
+    return;
+}
+#else
+static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause) {
+    PyObject* owned_instance = NULL;
+    if (tb == Py_None) {
+        tb = 0;
+    } else if (tb && !PyTraceBack_Check(tb)) {
+        PyErr_SetString(PyExc_TypeError,
+            "raise: arg 3 must be a traceback or None");
+        goto bad;
+    }
+    if (value == Py_None)
+        value = 0;
+    if (PyExceptionInstance_Check(type)) {
+        if (value) {
+            PyErr_SetString(PyExc_TypeError,
+                "instance exception may not have a separate value");
+            goto bad;
+        }
+        value = type;
+        type = (PyObject*) Py_TYPE(value);
+    } else if (PyExceptionClass_Check(type)) {
+        PyObject *instance_class = NULL;
+        if (value && PyExceptionInstance_Check(value)) {
+            instance_class = (PyObject*) Py_TYPE(value);
+            if (instance_class != type) {
+                int is_subclass = PyObject_IsSubclass(instance_class, type);
+                if (!is_subclass) {
+                    instance_class = NULL;
+                } else if (unlikely(is_subclass == -1)) {
+                    goto bad;
+                } else {
+                    type = instance_class;
+                }
+            }
+        }
+        if (!instance_class) {
+            PyObject *args;
+            if (!value)
+                args = PyTuple_New(0);
+            else if (PyTuple_Check(value)) {
+                Py_INCREF(value);
+                args = value;
+            } else
+                args = PyTuple_Pack(1, value);
+            if (!args)
+                goto bad;
+            owned_instance = PyObject_Call(type, args, NULL);
+            Py_DECREF(args);
+            if (!owned_instance)
+                goto bad;
+            value = owned_instance;
+            if (!PyExceptionInstance_Check(value)) {
+                PyErr_Format(PyExc_TypeError,
+                             "calling %R should have returned an instance of "
+                             "BaseException, not %R",
+                             type, Py_TYPE(value));
+                goto bad;
+            }
+        }
+    } else {
+        PyErr_SetString(PyExc_TypeError,
+            "raise: exception class must be a subclass of BaseException");
+        goto bad;
+    }
+    if (cause) {
+        PyObject *fixed_cause;
+        if (cause == Py_None) {
+            fixed_cause = NULL;
+        } else if (PyExceptionClass_Check(cause)) {
+            fixed_cause = PyObject_CallObject(cause, NULL);
+            if (fixed_cause == NULL)
+                goto bad;
+        } else if (PyExceptionInstance_Check(cause)) {
+            fixed_cause = cause;
+            Py_INCREF(fixed_cause);
+        } else {
+            PyErr_SetString(PyExc_TypeError,
+                            "exception causes must derive from "
+                            "BaseException");
+            goto bad;
+        }
+        PyException_SetCause(value, fixed_cause);
+    }
+    PyErr_SetObject(type, value);
+    if (tb) {
+#if CYTHON_COMPILING_IN_PYPY ||  CYTHON_COMPILING_IN_LIMITED_API
+        PyObject *tmp_type, *tmp_value, *tmp_tb;
+        PyErr_Fetch(&tmp_type, &tmp_value, &tmp_tb);
+        Py_INCREF(tb);
+        PyErr_Restore(tmp_type, tmp_value, tb);
+        Py_XDECREF(tmp_tb);
+#else
+        PyThreadState *tstate = __Pyx_PyThreadState_Current;
+        PyObject* tmp_tb = tstate->curexc_traceback;
+        if (tb != tmp_tb) {
+            Py_INCREF(tb);
+            tstate->curexc_traceback = tb;
+            Py_XDECREF(tmp_tb);
+        }
+#endif
+    }
+bad:
+    Py_XDECREF(owned_instance);
+    return;
+}
+#endif
+
+/* PyObjectLookupSpecial */
+#if CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyObject* attr_name, int with_error) {
+    PyObject *res;
+    PyTypeObject *tp = Py_TYPE(obj);
+#if PY_MAJOR_VERSION < 3
+    if (unlikely(PyInstance_Check(obj)))
+        return with_error ? __Pyx_PyObject_GetAttrStr(obj, attr_name) : __Pyx_PyObject_GetAttrStrNoError(obj, attr_name);
+#endif
+    res = _PyType_Lookup(tp, attr_name);
+    if (likely(res)) {
+        descrgetfunc f = Py_TYPE(res)->tp_descr_get;
+        if (!f) {
+            Py_INCREF(res);
+        } else {
+            res = f(res, obj, (PyObject *)tp);
+        }
+    } else if (with_error) {
+        PyErr_SetObject(PyExc_AttributeError, attr_name);
+    }
+    return res;
+}
+#endif
+
 /* TupleAndListFromArray */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE void __Pyx_copy_object_array(PyObject *const *CYTHON_RESTRICT src, PyObject** CYTHON_RESTRICT dest, Py_ssize_t length) {
@@ -7913,258 +8520,6 @@ bad:
     return -1;
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
-    }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
-
-/* GetModuleGlobalName */
-#if CYTHON_USE_DICT_VERSIONS
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
-#else
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
-#endif
-{
-    PyObject *result;
-#if !CYTHON_AVOID_BORROWED_REFS
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    } else if (unlikely(PyErr_Occurred())) {
-        return NULL;
-    }
-#elif CYTHON_COMPILING_IN_LIMITED_API
-    if (unlikely(!__pyx_m)) {
-        return NULL;
-    }
-    result = PyObject_GetAttr(__pyx_m, name);
-    if (likely(result)) {
-        return result;
-    }
-#else
-    result = PyDict_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-#endif
-#else
-    result = PyObject_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-    PyErr_Clear();
-#endif
-    return __Pyx_GetBuiltinName(name);
-}
-
-/* RaiseException */
-#if PY_MAJOR_VERSION < 3
-static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
-                        CYTHON_UNUSED PyObject *cause) {
-    __Pyx_PyThreadState_declare
-    Py_XINCREF(type);
-    if (!value || value == Py_None)
-        value = NULL;
-    else
-        Py_INCREF(value);
-    if (!tb || tb == Py_None)
-        tb = NULL;
-    else {
-        Py_INCREF(tb);
-        if (!PyTraceBack_Check(tb)) {
-            PyErr_SetString(PyExc_TypeError,
-                "raise: arg 3 must be a traceback or None");
-            goto raise_error;
-        }
-    }
-    if (PyType_Check(type)) {
-#if CYTHON_COMPILING_IN_PYPY
-        if (!value) {
-            Py_INCREF(Py_None);
-            value = Py_None;
-        }
-#endif
-        PyErr_NormalizeException(&type, &value, &tb);
-    } else {
-        if (value) {
-            PyErr_SetString(PyExc_TypeError,
-                "instance exception may not have a separate value");
-            goto raise_error;
-        }
-        value = type;
-        type = (PyObject*) Py_TYPE(type);
-        Py_INCREF(type);
-        if (!PyType_IsSubtype((PyTypeObject *)type, (PyTypeObject *)PyExc_BaseException)) {
-            PyErr_SetString(PyExc_TypeError,
-                "raise: exception class must be a subclass of BaseException");
-            goto raise_error;
-        }
-    }
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrRestore(type, value, tb);
-    return;
-raise_error:
-    Py_XDECREF(value);
-    Py_XDECREF(type);
-    Py_XDECREF(tb);
-    return;
-}
-#else
-static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause) {
-    PyObject* owned_instance = NULL;
-    if (tb == Py_None) {
-        tb = 0;
-    } else if (tb && !PyTraceBack_Check(tb)) {
-        PyErr_SetString(PyExc_TypeError,
-            "raise: arg 3 must be a traceback or None");
-        goto bad;
-    }
-    if (value == Py_None)
-        value = 0;
-    if (PyExceptionInstance_Check(type)) {
-        if (value) {
-            PyErr_SetString(PyExc_TypeError,
-                "instance exception may not have a separate value");
-            goto bad;
-        }
-        value = type;
-        type = (PyObject*) Py_TYPE(value);
-    } else if (PyExceptionClass_Check(type)) {
-        PyObject *instance_class = NULL;
-        if (value && PyExceptionInstance_Check(value)) {
-            instance_class = (PyObject*) Py_TYPE(value);
-            if (instance_class != type) {
-                int is_subclass = PyObject_IsSubclass(instance_class, type);
-                if (!is_subclass) {
-                    instance_class = NULL;
-                } else if (unlikely(is_subclass == -1)) {
-                    goto bad;
-                } else {
-                    type = instance_class;
-                }
-            }
-        }
-        if (!instance_class) {
-            PyObject *args;
-            if (!value)
-                args = PyTuple_New(0);
-            else if (PyTuple_Check(value)) {
-                Py_INCREF(value);
-                args = value;
-            } else
-                args = PyTuple_Pack(1, value);
-            if (!args)
-                goto bad;
-            owned_instance = PyObject_Call(type, args, NULL);
-            Py_DECREF(args);
-            if (!owned_instance)
-                goto bad;
-            value = owned_instance;
-            if (!PyExceptionInstance_Check(value)) {
-                PyErr_Format(PyExc_TypeError,
-                             "calling %R should have returned an instance of "
-                             "BaseException, not %R",
-                             type, Py_TYPE(value));
-                goto bad;
-            }
-        }
-    } else {
-        PyErr_SetString(PyExc_TypeError,
-            "raise: exception class must be a subclass of BaseException");
-        goto bad;
-    }
-    if (cause) {
-        PyObject *fixed_cause;
-        if (cause == Py_None) {
-            fixed_cause = NULL;
-        } else if (PyExceptionClass_Check(cause)) {
-            fixed_cause = PyObject_CallObject(cause, NULL);
-            if (fixed_cause == NULL)
-                goto bad;
-        } else if (PyExceptionInstance_Check(cause)) {
-            fixed_cause = cause;
-            Py_INCREF(fixed_cause);
-        } else {
-            PyErr_SetString(PyExc_TypeError,
-                            "exception causes must derive from "
-                            "BaseException");
-            goto bad;
-        }
-        PyException_SetCause(value, fixed_cause);
-    }
-    PyErr_SetObject(type, value);
-    if (tb) {
-#if CYTHON_COMPILING_IN_PYPY ||  CYTHON_COMPILING_IN_LIMITED_API
-        PyObject *tmp_type, *tmp_value, *tmp_tb;
-        PyErr_Fetch(&tmp_type, &tmp_value, &tmp_tb);
-        Py_INCREF(tb);
-        PyErr_Restore(tmp_type, tmp_value, tb);
-        Py_XDECREF(tmp_tb);
-#else
-        PyThreadState *tstate = __Pyx_PyThreadState_Current;
-        PyObject* tmp_tb = tstate->curexc_traceback;
-        if (tb != tmp_tb) {
-            Py_INCREF(tb);
-            tstate->curexc_traceback = tb;
-            Py_XDECREF(tmp_tb);
-        }
-#endif
-    }
-bad:
-    Py_XDECREF(owned_instance);
-    return;
-}
-#endif
-
-/* PyObjectLookupSpecial */
-#if CYTHON_USE_PYTYPE_LOOKUP && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx__PyObject_LookupSpecial(PyObject* obj, PyObject* attr_name, int with_error) {
-    PyObject *res;
-    PyTypeObject *tp = Py_TYPE(obj);
-#if PY_MAJOR_VERSION < 3
-    if (unlikely(PyInstance_Check(obj)))
-        return with_error ? __Pyx_PyObject_GetAttrStr(obj, attr_name) : __Pyx_PyObject_GetAttrStrNoError(obj, attr_name);
-#endif
-    res = _PyType_Lookup(tp, attr_name);
-    if (likely(res)) {
-        descrgetfunc f = Py_TYPE(res)->tp_descr_get;
-        if (!f) {
-            Py_INCREF(res);
-        } else {
-            res = f(res, obj, (PyObject *)tp);
-        }
-    } else if (with_error) {
-        PyErr_SetObject(PyExc_AttributeError, attr_name);
-    }
-    return res;
-}
-#endif
-
 /* PyIntBinop */
 #if !CYTHON_COMPILING_IN_PYPY
 static PyObject* __Pyx_PyInt_AddCObj(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, int inplace, int zerodivision_check) {
@@ -8404,6 +8759,232 @@ static void __Pyx_Generator_Replace_StopIteration(CYTHON_UNUSED int in_async_gen
         #endif
         "generator raised StopIteration");
 }
+
+/* PyIntBinop */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_TrueDivideObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, int inplace, int zerodivision_check) {
+    (void)inplace; (void)zerodivision_check;
+    #if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_CheckExact(op1))) {
+        const long b = intval;
+        long a = PyInt_AS_LONG(op1);
+        
+            if (8 * sizeof(long) <= 53 || likely(labs(a) <= ((PY_LONG_LONG)1 << 53))) {
+                return PyFloat_FromDouble((double)a / (double)b);
+            }
+            return PyInt_Type.tp_as_number->nb_true_divide(op1, op2);
+    }
+    #endif
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        const long b = intval;
+        long a, x;
+        const digit* digits = ((PyLongObject*)op1)->ob_digit;
+        const Py_ssize_t size = Py_SIZE(op1);
+        if (unlikely(size == 0)) {
+        }
+        if (likely(__Pyx_sst_abs(size) <= 1)) {
+            a = likely(size) ? digits[0] : 0;
+            if (size == -1) a = -a;
+        } else {
+            switch (size) {
+                case -2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT && 1 * PyLong_SHIFT < 53) {
+                        a = -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT && 1 * PyLong_SHIFT < 53) {
+                        a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    }
+                    CYTHON_FALLTHROUGH;
+                case -3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT && 2 * PyLong_SHIFT < 53) {
+                        a = -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT && 2 * PyLong_SHIFT < 53) {
+                        a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    }
+                    CYTHON_FALLTHROUGH;
+                case -4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT && 3 * PyLong_SHIFT < 53) {
+                        a = -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT && 3 * PyLong_SHIFT < 53) {
+                        a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    }
+                    CYTHON_FALLTHROUGH;
+                default: return PyLong_Type.tp_as_number->nb_true_divide(op1, op2);
+            }
+        }
+                if ((8 * sizeof(long) <= 53 || likely(labs(a) <= ((PY_LONG_LONG)1 << 53)))
+                        || __Pyx_sst_abs(size) <= 52 / PyLong_SHIFT) {
+                    return PyFloat_FromDouble((double)a / (double)b);
+                }
+                return PyLong_Type.tp_as_number->nb_true_divide(op1, op2);
+            return PyLong_FromLong(x);
+        
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        const long b = intval;
+#if CYTHON_COMPILING_IN_LIMITED_API
+        double a = __pyx_PyFloat_AsDouble(op1);
+#else
+        double a = PyFloat_AS_DOUBLE(op1);
+#endif
+            double result;
+            
+            PyFPE_START_PROTECT("divide", return NULL)
+            result = ((double)a) / (double)b;
+            PyFPE_END_PROTECT(result)
+            return PyFloat_FromDouble(result);
+    }
+    return (inplace ? PyNumber_InPlaceTrueDivide : PyNumber_TrueDivide)(op1, op2);
+}
+#endif
+
+/* PyIntBinop */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_SubtractCObj(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, int inplace, int zerodivision_check) {
+    (void)inplace; (void)zerodivision_check;
+    #if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_CheckExact(op2))) {
+        const long a = intval;
+        long x;
+        long b = PyInt_AS_LONG(op2);
+        
+            x = (long)((unsigned long)a - b);
+            if (likely((x^a) >= 0 || (x^~b) >= 0))
+                return PyInt_FromLong(x);
+            return PyLong_Type.tp_as_number->nb_subtract(op1, op2);
+    }
+    #endif
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op2))) {
+        const long a = intval;
+        long b, x;
+#ifdef HAVE_LONG_LONG
+        const PY_LONG_LONG lla = intval;
+        PY_LONG_LONG llb, llx;
+#endif
+        const digit* digits = ((PyLongObject*)op2)->ob_digit;
+        const Py_ssize_t size = Py_SIZE(op2);
+        if (unlikely(size == 0)) {
+            return __Pyx_NewRef(op1);
+        }
+        if (likely(__Pyx_sst_abs(size) <= 1)) {
+            b = likely(size) ? digits[0] : 0;
+            if (size == -1) b = -b;
+        } else {
+            switch (size) {
+                case -2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        b = -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    #ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                        llb = -(PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+                    #endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        b = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    #ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                        llb = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+                    #endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case -3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        b = -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    #ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                        llb = -(PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+                    #endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        b = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    #ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                        llb = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+                    #endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case -4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                        b = -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    #ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                        llb = -(PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+                    #endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                case 4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                        b = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+                    #ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                        llb = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+                    #endif
+                    }
+                    CYTHON_FALLTHROUGH;
+                default: return PyLong_Type.tp_as_number->nb_subtract(op1, op2);
+            }
+        }
+                x = a - b;
+            return PyLong_FromLong(x);
+#ifdef HAVE_LONG_LONG
+        long_long:
+                llx = lla - llb;
+            return PyLong_FromLongLong(llx);
+#endif
+        
+        
+    }
+    #endif
+    if (PyFloat_CheckExact(op2)) {
+        const long a = intval;
+#if CYTHON_COMPILING_IN_LIMITED_API
+        double b = __pyx_PyFloat_AsDouble(op2);
+#else
+        double b = PyFloat_AS_DOUBLE(op2);
+#endif
+            double result;
+            
+            PyFPE_START_PROTECT("subtract", return NULL)
+            result = ((double)a) - (double)b;
+            PyFPE_END_PROTECT(result)
+            return PyFloat_FromDouble(result);
+    }
+    return (inplace ? PyNumber_InPlaceSubtract : PyNumber_Subtract)(op1, op2);
+}
+#endif
 
 /* GetTopmostException */
 #if CYTHON_USE_EXC_INFO_STACK
@@ -10522,7 +11103,7 @@ __Pyx_PyType_GetName(PyTypeObject* tp)
                                                __pyx_n_s_name);
     if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
         PyErr_Clear();
-        Py_XSETREF(name, __Pyx_NewRef(__pyx_n_s__11));
+        Py_XSETREF(name, __Pyx_NewRef(__pyx_n_s__12));
     }
     return name;
 }
