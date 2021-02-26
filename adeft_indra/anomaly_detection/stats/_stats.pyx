@@ -77,18 +77,23 @@ cdef double betainc(float p, float q, float x):
     else:
         return D(p, q, x)/p * K(p, q, x)
 
-def py_betainc(a, b, x):
-    return betainc(a, b, x)
+
+cdef double prevalence_cdf_exact(double theta, int n, int t,
+                                 double sensitivity,
+                                 double specificity):
+    cdef double c1, c2, numerator, denominator
+    c1, c2 = 1 - specificity, sensitivity + specificity - 1
+    numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
+    denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
+    if denominator == 0:
+        return theta
+    return numerator/denominator
 
 
-ctypedef double (*prevalence_function)(double, int, int, double, double)
-
-
-cdef double beta_sample(double theta, int n, int t,
-                        double sens_a, double sens_b,
-                        double spec_a, double spec_b,
-                        prevalence_function func,
-                        int num_samples):
+cdef double prevalence_cdf(double theta, int n, int t,
+                           double sens_a, double sens_b,
+                           double spec_a, double spec_b,
+                           int num_samples):
     cdef int i
     cdef bitgen_t *rng
     cdef const char *capsule_name = "BitGenerator"
@@ -113,34 +118,70 @@ cdef double beta_sample(double theta, int n, int t,
     result = 0
     i = 0
     for i in range(num_samples):
-        result += func(theta, n, t, sens_array[i], spec_array[i])
+        result += prevalence_cdf_exact(theta, n, t, sens_array[i],
+                                       spec_array[i])
     PyMem_Free(sens_array)
     PyMem_Free(spec_array)
     return result/num_samples
 
 
-cdef double prevalence_cdf_known_sens_spec(double theta, int n, int t,
-                                           double sensitivity,
-                                           double specificity):
-    cdef double c1, c2, numerator, denominator
-    c1, c2 = 1 - specificity, sensitivity + specificity - 1
-    numerator = (betainc(t+1, n-t+1, c1 + c2*theta) - betainc(t+1, n-t+1, c1))
-    denominator = betainc(t+1, n-t+1, c1 + c2) - betainc(t+1, n-t+1, c1)
-    if denominator == 0:
-        return theta
-    return numerator/denominator
-
-
-cdef double _prevalence_cdf(double theta, int n, int t, double sens_a,
-                            double sens_b, double spec_a, double spec_b,
-                            int num_samples):
-    return beta_sample(theta, n, t, sens_a, sens_b, spec_a, spec_b,
-                       prevalence_cdf_known_sens_spec, num_samples)
-
-
 def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
-                          num_samples=10000, step_size=0.01):
-    vals = np.fromiter((_prevalence_cdf(theta, n, t, sens_a, sens_b, spec_a, spec_b,
-                                        num_samples) for theta in
-                        np.arange(0, 1 + step_size, step_size)), dtype=float)
+                          num_samples=1000, step_size=0.01):
+    vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
+                                       spec_a, spec_b, num_samples)
+                        for theta in np.arange(0, 1 + step_size, step_size)),
+                       dtype=float)
     return vals
+
+
+ctypedef struct inverse_cdf_params:
+    int n
+    int t
+    int num_samples
+    double sens_a
+    double sens_b
+    double spec_a
+    double spec_b
+    double val
+
+
+@cython.cdivision(True)
+cdef double f(double theta, void *args):
+    cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+    return prevalence_cdf(theta, params.n, params.t,
+                          params.sens_a, params.sens_b,
+                          params.spec_a, params.spec_b,
+                          params.num_samples) - params.val
+
+
+cdef double inverse_cdf(double x, int n, int t, double sens_a, double sens_b,
+                        double spec_a, double spec_b,
+                        int num_samples):
+    cdef inverse_cdf_params args
+    args.n, args.t = n, t
+    args.sens_a, args.sens_b = sens_a, sens_b
+    args.spec_a, args.spec_b = spec_a, spec_b
+    args.val, args.num_samples = x, num_samples
+    return brentq(f, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
+
+
+cdef double interval_size(double x, void *args):
+    cdef inverse_cdf_params *params = <inverse_cdf_params *> args
+    cdef double left, right
+    left = inverse_cdf(x, params.n, params.t,
+                       params.sens_a, params.sens_b,
+                       params.spec_a, params.spec_b,
+                       params.num_samples)
+    right = inverse_cdf(x + params.val, params.n, params.t,
+                        params.sens_a, params.sens_b,
+                        params.spec_a, params.spec_b,
+                        params.num_samples)
+    return right - left
+
+
+def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,
+                          alpha, num_samples=10000):
+    return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+                        num_samples),
+            inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
+                        num_samples))
