@@ -179,6 +179,15 @@ cdef double interval_size(double x, void *args):
     return right - left
 
 
+ctypedef double (*function_1d)(double, void*)
+
+
+cdef golden_section_search(function_1d func, double left, double right,
+                           double tol, void *args):
+    cdef double phi = (1 + sqrt(5))/2
+    return 0
+
+
 def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,
                           alpha, num_samples=10000):
     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
