@@ -125,15 +125,6 @@ cdef double prevalence_cdf(double theta, int n, int t,
     return result/num_samples
 
 
-def prevalence_cdf_points(n, t, sens_a, sens_b, spec_a, spec_b,
-                          num_samples=1000, step_size=0.01):
-    vals = np.fromiter((prevalence_cdf(theta, n, t, sens_a, sens_b,
-                                       spec_a, spec_b, num_samples)
-                        for theta in np.arange(0, 1 + step_size, step_size)),
-                       dtype=float)
-    return vals
-
-
 ctypedef struct inverse_cdf_params:
     int n
     int t
@@ -165,7 +156,7 @@ cdef double inverse_cdf(double x, int n, int t, double sens_a, double sens_b,
     return brentq(f, 0, 1, &args, 1e-3, 1e-3, 100, NULL)
 
 
-cdef double interval_size(double x, void *args):
+cdef double interval_width(double x, void *args):
     cdef inverse_cdf_params *params = <inverse_cdf_params *> args
     cdef double left, right
     left = inverse_cdf(x, params.n, params.t,
@@ -182,14 +173,60 @@ cdef double interval_size(double x, void *args):
 ctypedef double (*function_1d)(double, void*)
 
 
-cdef golden_section_search(function_1d func, double left, double right,
-                           double tol, void *args):
-    cdef double phi = (1 + sqrt(5))/2
-    return 0
+cdef (double, double) golden_section_search(function_1d func, double left,
+                                            double right, double x_tol,
+                                            double y_tol,
+                                            void *args):
+    """Returns a minimum obtained by func over the interval (left, right)
 
+    Returns the minimum value of f(x), contrary to the typical practice
+    of returning the value x at which the minimum is obtained. Guaranteed
+    to be a global minimum if f is unimodal.
+    """
+    cdef double x1, x2, x3, x4
+    cdef double func_at_x2, func_at_x3
+    cdef double inv_phi = (sqrt(5) - 1) / 2
+
+    x1, x4 = left, right
+    x2, x3 = x4 - (x4 - x1) * inv_phi, x1 + (x4 - x1) * inv_phi
+    func_at_x2, func_at_x3 = func(x2, args), func(x3, args)
+    while True:
+        if func_at_x2 < func_at_x3:
+            x3, x4 = x2, x3
+            if fabs(x4 - x1) < x_tol and fabs(func_at_x2 - func_at_x3) < y_tol:
+                return x2, func_at_x2
+            func_at_x3 = func_at_x2
+            x2 = x4 - (x4 - x1) * inv_phi
+            func_at_x2 = func(x2, args)
+        else:
+            x1, x2 = x2, x3
+            if fabs(x4 - x1) < x_tol and fabs(func_at_x2 - func_at_x3) < y_tol:
+                return x3, func_at_x3
+            func_at_x2 = func_at_x3
+            x3 = x1 + (x4 - x1) * inv_phi
+            func_at_x3 = func(x3, args)
+
+
+def highest_density_interval(n, t, sens_a, sens_b, spec_a, spec_b,
+                             alpha, num_samples=5000):
+    cdef double left, right
+    cdef double argmin, min_
+    cdef inverse_cdf_params args
+    args.n, args.t = n, t
+    args.sens_a, args.sens_b = sens_a, sens_b
+    args.spec_a, args.spec_b = spec_a, spec_b
+    args.val, args.num_samples = 1 - alpha, num_samples
+
+    argmin_width, min_width = golden_section_search(interval_width, 0, alpha,
+                                                    0.001, 0.01, &args)
+    left = inverse_cdf(argmin_width, n, t, sens_a, sens_b, spec_a, spec_b,
+                       num_samples)
+    right = left + min_width
+    return (max(0.0, left), min(right, 1.0))
+    
 
 def equal_tailed_interval(n, t, sens_a, sens_b, spec_a, spec_b,
-                          alpha, num_samples=10000):
+                          alpha, num_samples=5000):
     return (inverse_cdf(alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
                         num_samples),
             inverse_cdf(1 - alpha/2, n, t, sens_a, sens_b, spec_a, spec_b,
