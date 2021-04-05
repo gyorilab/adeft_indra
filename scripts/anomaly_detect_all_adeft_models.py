@@ -1,4 +1,6 @@
+import json
 import random
+import numpy as np
 from multiprocessing import Lock
 from multiprocessing import Pool
 from collections import defaultdict
@@ -26,7 +28,8 @@ from adeft_indra.anomaly_detection.models import ForestOneClassSVM
 
 
 lock = Lock()
-ADResultsManager('ad_all_adeft')
+rng = np.random.RandomState(1729)
+manager = ADResultsManager('ad_all_adeft')
 
 
 def get_training_data_for_model(disambiguator):
@@ -47,7 +50,7 @@ def get_training_data_for_model(disambiguator):
         additional_entities = metadata['additional_entities']
     if isinstance(metadata, dict) and 'unambiguous_agent_texts' in metadata:
         unambiguous_agent_texts = metadata['unambiguous_agent_texts']
-        agent_text_pmid_map = defaultdict(list)
+    agent_text_pmid_map = defaultdict(list)
     for text, label, id_ in corpus:
         agent_text_pmid_map[label].append(id_)
 
@@ -83,12 +86,21 @@ def get_training_data_for_model(disambiguator):
     return corpus, unlabeled
 
 
-def anomaly_detect_adeft_model(shortform, mf_a, mf_b, nu,
+def anomaly_detect_adeft_model(disambiguator, mf_a, mf_b, nu,
                                n_estimators, rng):
-    ad = load_disambiguator(shortform)
+    ad = disambiguator
     corpus, unlabeled = get_training_data_for_model(ad)
-    texts, labels, pmids = zip(*corpus)
+
     stop_words = english_stopwords
+    label_map = defaultdict(int)
+    for text, label, pmid in corpus:
+        label_map[label] += 1
+    # Only include labels with at least 10 training data points
+    label_map = {label: value for label, value in label_map.items()
+                 if value >= 10}
+    corpus = [(text, label, pmid) for text, label, pmid in corpus
+              if label in label_map]
+    texts, labels, pmids = zip(*corpus)
     max_features = mf_a + mf_b * len(ad.labels)
     pipeline = Pipeline([('tfidf',
                           AdeftTfidfVectorizer(max_features=max_features,
@@ -106,6 +118,28 @@ def anomaly_detect_adeft_model(shortform, mf_a, mf_b, nu,
                             scoring=scorer, cv=folds)
     pipeline.fit(texts, labels)
     out_texts, out_pmids = zip(*unlabeled)
-    preds = pipeline.predict(out_texts)
-    results = {'pmids': out_pmids, 'preds': preds, 'scores': scores}
+    preds = pipeline.predict(out_texts).tolist()
+    results = {'pmids': out_pmids, 'preds': preds,
+               'scores': scores['test_spec'].tolist(),
+               'labels': label_map}
     return results
+
+
+def evaluation_wrapper(shortform):
+    with lock:
+        print(f'Running anomaly detection for model for {shortform}.')
+    ad = load_disambiguator(shortform)
+    results = anomaly_detect_adeft_model(ad, 5, 30, 0.225, 1000, rng)
+    manager.add_row([shortform, "0", json.dumps(results)])
+    with lock:
+        print(f'Added results for model for {shortform}')
+
+
+if __name__ == '__main__':
+    reduced_shortforms = list({value:
+                               key for key, value
+                               in available_shortforms.items()}.values())
+    n_jobs = 32
+    with Pool(n_jobs) as pool:
+        pool.map(evaluation_wrapper, reduced_shortforms,
+                 chunksize=1)

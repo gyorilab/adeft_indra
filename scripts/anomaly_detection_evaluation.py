@@ -1,4 +1,5 @@
 import json
+import math
 import numpy as np
 from itertools import chain
 from itertools import combinations
@@ -7,10 +8,8 @@ from multiprocessing import Pool
 from collections import defaultdict
 from sklearn.svm import OneClassSVM
 from sklearn.pipeline import Pipeline
+from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 from adeft import available_shortforms
 from adeft.nlp import english_stopwords
@@ -28,7 +27,7 @@ from adeft_indra.anomaly_detection.models import ForestOneClassSVM
 
 
 lock = Lock()
-manager = ADResultsManager('anomaly_detection_evaluation')
+manager = ADResultsManager('ad_nested_crossval')
 reverse_model_map = {value: key for
                      key, value in available_shortforms.items()}
 
@@ -39,23 +38,84 @@ def nontrivial_subsets(iterable):
                                for r in range(1, len(s)+1))
 
 
+class SubsetSampler(object):
+    def __init__(self, iterable, random_state):
+        self.arr = list(iterable)
+        self.sample_size = 0
+        self.current_index = 0
+        if isinstance(random_state, int):
+            self.rng = np.random.RandomState(random_state)
+        else:
+            self.rng = random_state
+        self.rng.shuffle(self.arr)
+
+    def _reset(self):
+        self.rng.shuffle(self.arr)
+        self.current_index == 0
+
+    def _sample_one(self):
+        if self.current_index == len(self.arr):
+            self._reset()
+        result = self.arr[self.current_index]
+        self.current_index += 1
+        return result
+
+    def sample(self, k):
+        if k > len(self.arr)/2:
+            res = set()
+            while len(res) < len(self.arr) - k:
+                res.add(self._sample_one())
+            return [x for x in self.arr if x not in res]
+        else:
+            res = set()
+            while len(res) < k:
+                res.add(self._sample_one())
+            return list(res)
+
+
+class NestedKFold(object):
+    def __init__(self, n_splits_outter=5, n_splits_inner=5):
+        self.n_splits_outter = n_splits_outter
+        self.n_splits_inner = n_splits_inner
+
+    def split(self, X):
+        outter_splitter = KFold(n_splits=self.n_splits_outter)
+        inner_splitter = KFold(n_splits=self.n_splits_inner)
+        outter_splits = outter_splitter.split(X)
+        for outter_train, outter_test in outter_splits:
+            inner_splits = inner_splitter.split(outter_train)
+            inner = [(outter_train[inner_train], outter_train[inner_test])
+                     for inner_train, inner_test in inner_splits]
+            yield inner, outter_test
+
+
 def evaluation_wrapper(args):
-    model_name, nu, max_features, rng, n_jobs = args
-    params = {'nu': nu, 'max_features': max_features}
+    model_name, nu, mf_a, mf_b, n_estimators, rng, n_jobs = args
+    params = {'nu': nu, 'mf_a': mf_a, 'mf_b': mf_b,
+              'n_estimators': n_estimators}
     if manager.in_table(model_name, json.dumps(params)):
         with lock:
             print(f'Results for {model_name}, {params} have already'
                   ' been computed')
         return
-    results = evaluate_anomaly_detection(model_name, nu, max_features, rng)
-    manager.add_row([model_name, json.dumps(params), json.dumps(results)])
+    results = evaluate_anomaly_detection(model_name, nu, mf_a, mf_b,
+                                         n_estimators, rng,
+                                         n_jobs)
+    if results:
+        manager.add_row([model_name, json.dumps(params), json.dumps(results)])
+        with lock:
+            print(f'Success for {nu}, {mf_a}, {mf_b}, {model_name}')
+    else:
+        with lock:
+            print(f'Problem with {nu}, {mf_a}, {mf_b}, {model_name}')
 
 
-def evaluate_anomaly_detection(model_name, nu, max_features, rng, n_jobs):
+def evaluate_anomaly_detection(model_name, nu, mf_a, mf_b,
+                               n_estimators, rng, n_jobs):
     ad = load_disambiguator(reverse_model_map[model_name])
     model_name = escape_filename(':'.join(sorted(ad.shortforms)))
-    params = {'nu': nu, 'max_features': max_features}
-
+    params = {'nu': nu, 'mf_a': mf_a, 'mf_b': mf_b,
+              'n_estimators': n_estimators}
     with lock:
         print(f'Working on {model_name} with params {params}')
     stop_words = set(english_stopwords) | set(ad.shortforms)
@@ -78,29 +138,48 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng, n_jobs):
     grounded_entities = [(entity, length) for entity, length in
                          grounded_entities if length >= 10]
     grounded_entities.sort(key=lambda x: -x[1])
-    grounded_entities = [g[0] for g in grounded_entities[0:6]]
-    results = defaultdict(dict)
-    for train_entities in nontrivial_subsets(grounded_entities):
+    grounded_entities = [g[0] for g in grounded_entities[0:5]]
+    sampled_subsets = []
+    for k in range(1, len(grounded_entities)):
+        sampler = SubsetSampler(grounded_entities, rng)
+        n_samples = len(grounded_entities)
+        sampled_subsets.extend([sampler.sample(k) for _ in range(n_samples)])
+    rng.shuffle(sampled_subsets)
+    results_dict = {}
+    for train_entities in sampled_subsets:
+        num_classes = len(train_entities)
         print(train_entities)
         baseline = [(text, label, pmid)
                     for text, label, pmid in corpus if label
                     in train_entities]
-        if not baseline:
+        if not baseline or len(baseline) < 25:
             continue
         texts, labels, pmids = zip(*baseline)
         texts, labels, pmids = list(texts), list(labels), list(pmids)
         baseline = None
+        max_features = mf_a + mf_b * (num_classes-1)
         pipeline = Pipeline([('tfidf',
                               AdeftTfidfVectorizer(max_features=max_features,
                                                    stop_words=stop_words)),
                              ('forest_oc_svm',
                               ForestOneClassSVM(nu=nu,
                                                 cache_size=1000,
-                                                n_estimators=1000, n_jobs=1,
+                                                n_estimators=n_estimators,
+                                                n_jobs=n_jobs,
                                                 random_state=rng))])
+        # pipeline = Pipeline([('tfidf',
+        #                       AdeftTfidfVectorizer(max_features=max_features,
+        #                                            stop_words=stop_words)),
+        #                      ('oc_svm',
+        #                       OneClassSVM(nu=nu, kernel='linear'))])
         anomalous = ((text, label, pmid) for text, label, pmid in corpus
                      if label not in train_entities)
-        anomalous_texts, anomalous_labels, anomalous_pmids = zip(*anomalous)
+
+        try:
+            anomalous_texts, anomalous_labels, anomalous_pmids = zip(*anomalous)
+        except ValueError:
+            print
+            continue
         anomalous_texts = list(anomalous_texts)
         anomalous_labels = list(anomalous_labels)
         anomalous_pmids = list(anomalous_pmids)
@@ -111,7 +190,8 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng, n_jobs):
         rng2 = np.random.RandomState(561)
         rng2.shuffle(pmids)
         rng2 = None
-        train_splits = StratifiedKFold(n_splits=5).split(texts, labels)
+        nested_splitter = NestedKFold(n_splits_outter=5, n_splits_inner=5)
+        nested_splits = nested_splitter.split(texts)
         Xin = np.array(texts)
         Xout = np.array(anomalous_texts)
         texts = None
@@ -124,116 +204,131 @@ def evaluate_anomaly_detection(model_name, nu, max_features, rng, n_jobs):
         anomalous_labels = None
         pmids = None
         anomalous_pmids = None
-        folds_dict = {}
-        sens_list = []
-        spec_list = []
-        j_list = []
-        acc_list = []
-        for i, (train, test) in enumerate(train_splits):
-            pipeline.fit(Xin[train[0]:train[-1]+1],
-                         true_labels_in[train[0]:train[-1]+1])
-            preds_in = pipeline.predict(Xin[test[0]:test[-1]+1])
-            preds_out = pipeline.predict(Xout)
+        inner_folds_dict = defaultdict(dict)
+        outter_folds_dict = {}
+        outter_spec_list = []
+        for i, (inner_splits, outter_test) in enumerate(nested_splits):
+            inner_spec_list = []
+            for j, (train, inner_test) in enumerate(inner_splits):
+                pipeline.fit(Xin[train], true_labels_in[train])
+                preds_in = pipeline.predict(Xin[inner_test])
+                pipeline.estimator_ = None
+                spec = \
+                    specificity_score(np.full(len(preds_in), 1.0),
+                                      preds_in,
+                                      pos_label=-1)
+                train_dict = {'pmids': pmids_in[train].tolist(),
+                              'true_label':
+                              true_labels_in[train].tolist()}
+                test_dict = {'pmids':
+                             pmids_in[inner_test].tolist(),
+                             'true_label':
+                             true_labels_in[inner_test].tolist(),
+                             'prediction':  preds_in.tolist(),
+                             'true': [1.0]*len(preds_in)}
+                inner_folds_dict[i][j] = {'training_data_info': train_dict,
+                                          'test_data_info': test_dict,
+                                          'spec': spec}
+                inner_spec_list.append(spec)
+            mean_spec = np.mean(inner_spec_list)
+            std_spec = np.std(inner_spec_list)
+            outter_train = np.concatenate([x for split in inner_splits
+                                           for x in split])
+            pipeline.fit(Xin[outter_train], true_labels_in[outter_train])
+            preds_in = pipeline.predict(Xin[outter_test])
             pipeline.estimator_ = None
-            sens = \
-                sensitivity_score(np.hstack((np.full(len(preds_in), 1.0),
-                                            np.full(len(preds_out), -1.0))),
-                                  np.hstack((preds_in, preds_out)),
-                                  pos_label=-1)
             spec = \
-                specificity_score(np.hstack((np.full(len(preds_in), 1.0),
-                                             np.full(len(preds_out), -1.0))),
-                                  np.hstack((preds_in, preds_out)),
+                specificity_score(np.full(len(preds_in), 1.0),
+                                  preds_in,
                                   pos_label=-1)
-            acc = \
-                accuracy_score(np.hstack((np.full(len(preds_in), 1.0),
-                                         np.full(len(preds_out), -1.0))),
-                               np.hstack((preds_in, preds_out)))
-            train_dict = {'pmids': pmids_in[train[0]:train[-1]+1].tolist(),
+            train_dict = {'pmids': pmids_in[outter_train].tolist(),
                           'true_label':
-                          true_labels_in[train[0]:train[-1]+1].tolist()}
-            test_dict = {'pmids': pmids_in[test[0]:test[-1]+1].tolist() +
-                         pmids_out.tolist(),
+                          true_labels_in[outter_train].tolist()}
+            test_dict = {'pmids':
+                         pmids_in[outter_test].tolist(),
                          'true_label':
-                         true_labels_in[test[0]:test[-1]+1].tolist() +
-                         true_labels_out.tolist(),
-                         'prediction':  preds_in.tolist() + preds_out.tolist(),
-                         'true': [1.0]*len(preds_in) + [-1.0]*len(preds_out)}
-            scores_dict = {'specificity': spec, 'sensitivity': sens,
-                           'youdens_j_score': spec + sens - 1,
-                           'accuracy': acc}
-            folds_dict[i] = {'training_data_info': train_dict,
-                             'test_data_info': test_dict,
-                             'scores': scores_dict}
-            sens_list.append(sens)
-            spec_list.append(spec)
-            j_list.append(spec + sens - 1)
-            acc_list.append(acc)
-        mean_sens = np.mean(sens_list)
-        mean_spec = np.mean(spec_list)
-        mean_j = np.mean(j_list)
-        mean_acc = np.mean(acc_list)
-        std_sens = np.std(sens_list)
-        std_spec = np.std(spec_list)
-        std_j = np.std(j_list)
-        std_acc = np.std(acc_list)
-        aggregate_scores = {'sensitivity': {'mean': mean_sens,
-                                            'std': std_sens},
-                            'specificity': {'mean': mean_spec,
-                                            'std': std_spec},
-                            'youdens_j_score': {'mean': mean_j,
-                                                'std': std_j},
-                            'accuracy': {'mean': mean_acc,
-                                         'std': std_acc}}
-        results[json.dumps(train_entities)] = {'folds': folds_dict,
-                                               'results': aggregate_scores,
-                                               'params': params}
-    return results
+                         true_labels_in[outter_test].tolist(),
+                         'prediction':  preds_in.tolist(),
+                         'true': [1.0]*len(preds_in)}
+            outter_folds_dict[i] = {'training_data_info': train_dict,
+                                    'test_data_info': test_dict,
+                                    'spec': spec,
+                                    'mean_inner_spec': mean_spec,
+                                    'std_inner_spec': std_spec}
+            outter_spec_list.append(spec)
+        mean_spec = np.mean(outter_spec_list)
+        std_spec = np.std(outter_spec_list)
+        pipeline.fit(Xin, true_labels_in)
+        preds_out = pipeline.predict(Xout)
+        pipeline.estimator_ = None
+        sens = sensitivity_score(np.full(len(preds_out), -1.0),
+                                 preds_out,
+                                 pos_label=-1)
+        train_dict = {'pmids': pmids_in.tolist(),
+                      'true_label':
+                      true_labels_in.tolist()}
+        test_dict = {'pmids':
+                     pmids_out.tolist(),
+                     'true_label':
+                     true_labels_out.tolist(),
+                     'prediction':  preds_out.tolist(),
+                     'true': [-1.0]*len(preds_out)}
+        outter_dict = {'training_data_info': train_dict,
+                       'test_data_info': test_dict,
+                       'sens': sens,
+                       'mean_outter_spec': mean_spec,
+                       'std_outter_spec': std_spec}
+        results_dict[json.dumps(train_entities)] = {'inner_folds_dict':
+                                                    inner_folds_dict,
+                                                    'outter_folds_dict':
+                                                    outter_folds_dict,
+                                                    'outter_dict':
+                                                    outter_dict}
+    return results_dict
 
 
 if __name__ == '__main__':
-
     model_data_counts = []
     for model_name in set(available_shortforms.values()):
         ad = load_disambiguator(reverse_model_map[model_name])
         stats = ad.classifier.stats
-        total_count = sum(stats['label_distribution'].values)
+        total_count = sum(stats['label_distribution'].values())
         model_data_counts.append((model_name, total_count))
     model_data_counts.sort(key=lambda x: -x[1])
 
-    batch1 = [x[0] for x in model_data_counts[50:]]
-    batch2 = [x[0] for x in model_data_counts[5:50]]
+    batch1 = [x[0] for x in model_data_counts[10:]]
+    batch2 = [x[0] for x in model_data_counts[5:10]]
     batch3 = [x[0] for x in model_data_counts[0:5]]
     main_rng = np.random.RandomState(1729)
 
-    nu_list = [0.1, 0.2, 0.4]
-    mf_list = [100, 1000, 10000]
+    rows = manager.get_results()
+    nu = 0.225
+    mf_a = 5
+    mf_b = 30
+    n_est = 1000
     cases = []
-
-    for model_name in batch1:
-        for nu in nu_list:
-            for mf in mf_list:
-                rng = np.random.RandomState(main_rng.randint(2**32))
-                cases.append((model_name, nu, mf, rng, 1))
-    main_rng.shuffle(cases)
-
-    with Pool(64) as pool:
-        pool.map(evaluation_wrapper, cases, chunksize=1)
-
     for model_name in batch2:
-        for nu in nu_list:
-            for mf in mf_list:
-                rng = np.random.RandomState(main_rng.randint(2**32))
-                cases.append((model_name, nu, mf, rng, 2))
+        rng = np.random.RandomState(main_rng.randint(2**32))
+        cases.append((model_name, nu, mf_a, mf_b, n_est, rng,
+                      48))
     main_rng.shuffle(cases)
-    with Pool(32) as pool:
-        pool.map(evaluation_wrapper, cases, chunksize=1)
 
-    for model_name in batch2:
-        for nu in nu_list:
-            for mf in mf_list:
-                rng = np.random.RandomState(main_rng.randint(2**32))
-                cases.append((model_name, nu, mf, rng, 4))
-    main_rng.shuffle(cases)
-    with Pool(16) as pool:
+    with Pool(1) as pool:
         pool.map(evaluation_wrapper, cases, chunksize=1)
+    # for model_name in batch2:
+    #     for nu in nu_list:
+    #         for mf in mf_list:
+    #             rng = np.random.RandomState(main_rng.randint(2**32))
+    #             cases.append((model_name, nu, mf, rng, 2))
+    # main_rng.shuffle(cases)
+    # with Pool(32) as pool:
+    #     pool.map(evaluation_wrapper, cases, chunksize=1)
+
+    # for model_name in batch2:
+    #     for nu in nu_list:
+    #         for mf in mf_list:
+    #             rng = np.random.RandomState(main_rng.randint(2**32))
+    #             cases.append((model_name, nu, mf, rng, 4))
+    # main_rng.shuffle(cases)
+    # with Pool(16) as pool:
+    #     pool.map(evaluation_wrapper, cases, chunksize=1)
