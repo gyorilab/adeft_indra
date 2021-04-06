@@ -27,7 +27,7 @@ from adeft_indra.anomaly_detection.models import ForestOneClassSVM
 
 
 lock = Lock()
-manager = ADResultsManager('ad_nested_crossval')
+manager = ADResultsManager('ad_nested_crossval_trial1')
 reverse_model_map = {value: key for
                      key, value in available_shortforms.items()}
 
@@ -51,26 +51,21 @@ class SubsetSampler(object):
 
     def _reset(self):
         self.rng.shuffle(self.arr)
-        self.current_index == 0
-
-    def _sample_one(self):
-        if self.current_index == len(self.arr):
-            self._reset()
-        result = self.arr[self.current_index]
-        self.current_index += 1
-        return result
+        self.current_index = 0
 
     def sample(self, k):
-        if k > len(self.arr)/2:
-            res = set()
-            while len(res) < len(self.arr) - k:
-                res.add(self._sample_one())
-            return [x for x in self.arr if x not in res]
-        else:
-            res = set()
-            while len(res) < k:
-                res.add(self._sample_one())
-            return list(res)
+        if self.current_index + k >= len(self.arr):
+            self._reset()
+        res = self.arr[self.current_index:self.current_index + k]
+        self.current_index += k
+        return res
+
+    def multiple_samples(self, n, k):
+        """Draw n samples each of length k without replacement."""
+        results = set()
+        while len(results) < n:
+            results.add(tuple(self.sample(k)))
+        return list(results)
 
 
 class NestedKFold(object):
@@ -113,7 +108,6 @@ def evaluation_wrapper(args):
 def evaluate_anomaly_detection(model_name, nu, mf_a, mf_b,
                                n_estimators, rng, n_jobs):
     ad = load_disambiguator(reverse_model_map[model_name])
-    model_name = escape_filename(':'.join(sorted(ad.shortforms)))
     params = {'nu': nu, 'mf_a': mf_a, 'mf_b': mf_b,
               'n_estimators': n_estimators}
     with lock:
@@ -143,11 +137,10 @@ def evaluate_anomaly_detection(model_name, nu, mf_a, mf_b,
     for k in range(1, len(grounded_entities)):
         sampler = SubsetSampler(grounded_entities, rng)
         n_samples = len(grounded_entities)
-        sampled_subsets.extend([sampler.sample(k) for _ in range(n_samples)])
+        sampled_subsets.extend(sampler.multiple_samples(n_samples, k))
     rng.shuffle(sampled_subsets)
     results_dict = {}
     for train_entities in sampled_subsets:
-        num_classes = len(train_entities)
         print(train_entities)
         baseline = [(text, label, pmid)
                     for text, label, pmid in corpus if label
@@ -157,7 +150,7 @@ def evaluate_anomaly_detection(model_name, nu, mf_a, mf_b,
         texts, labels, pmids = zip(*baseline)
         texts, labels, pmids = list(texts), list(labels), list(pmids)
         baseline = None
-        max_features = mf_a + mf_b * (num_classes-1)
+        max_features = 20
         pipeline = Pipeline([('tfidf',
                               AdeftTfidfVectorizer(max_features=max_features,
                                                    stop_words=stop_words)),
@@ -296,7 +289,7 @@ if __name__ == '__main__':
         model_data_counts.append((model_name, total_count))
     model_data_counts.sort(key=lambda x: -x[1])
 
-    batch1 = [x[0] for x in model_data_counts[10:]]
+    batch1 = [x[0] for x in model_data_counts[10:26]]
     batch2 = [x[0] for x in model_data_counts[5:10]]
     batch3 = [x[0] for x in model_data_counts[0:5]]
     main_rng = np.random.RandomState(1729)
@@ -307,13 +300,13 @@ if __name__ == '__main__':
     mf_b = 30
     n_est = 1000
     cases = []
-    for model_name in batch2:
+    for model_name in batch1:
         rng = np.random.RandomState(main_rng.randint(2**32))
         cases.append((model_name, nu, mf_a, mf_b, n_est, rng,
                       48))
     main_rng.shuffle(cases)
 
-    with Pool(1) as pool:
+    with Pool(8) as pool:
         pool.map(evaluation_wrapper, cases, chunksize=1)
     # for model_name in batch2:
     #     for nu in nu_list:
