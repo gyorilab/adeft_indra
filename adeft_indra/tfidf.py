@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
 from gensim.matutils import corpus2csc
@@ -26,28 +27,39 @@ class AdeftTfidfVectorizer(BaseEstimator, TransformerMixin):
     def fit(self, raw_documents, y=None):
         # Load background dictionary trained on large corpus
         dictionary = Dictionary.load(self.dict_path)
-        # Tokenize training texts and convert tokens to lower case
-        processed_texts = (self._preprocess(text) for text in raw_documents)
-        local_dictionary = Dictionary(processed_texts)
-        local_dictionary.filter_tokens(good_ids=(key for key, value
-                                                 in local_dictionary.items()
-                                                 if value
-                                                 in dictionary.token2id))
-        # Remove stopwords
-        if self.stop_words:
-            stop_ids = [id_ for token, id_ in local_dictionary.token2id.items()
-                        if token in self.stop_words]
-            local_dictionary.filter_tokens(bad_ids=stop_ids)
-        # Keep only most frequent features
-        if self.max_features is not None:
-            local_dictionary.filter_extremes(no_below=1, no_above=1.0,
-                                             keep_n=self.max_features)
+        if y is None:
+            texts = {'dummy': [self._preprocess(text)
+                               for text in raw_documents]}
+        else:
+            texts = defaultdict(list)
+            for text, label in zip(raw_documents, y):
+                texts[label].append(self._preprocess(text))
+        good_tokens = set()
+        for processed_texts in texts.values():
+            local_dictionary = Dictionary(processed_texts)
+            # Filter out tokens that aren't in the global dictionary
+            local_dictionary.filter_tokens(good_ids=(key for key, value
+                                                     in
+                                                     local_dictionary.items()
+                                                     if value
+                                                     in dictionary.token2id))
+            # Remove stopwords
+            if self.stop_words:
+                stop_ids = [id_ for token, id_
+                            in local_dictionary.token2id.items()
+                            if token in self.stop_words]
+                local_dictionary.filter_tokens(bad_ids=stop_ids)
+            # Keep only most frequent features
+            if self.max_features is not None:
+                local_dictionary.filter_extremes(no_below=1, no_above=1.0,
+                                                 keep_n=self.max_features)
+            good_tokens.update(local_dictionary.token2id.keys())
         # Filter background dictionary to top features found in
         # training dictionary
         dictionary.filter_tokens(good_ids=(key for key, value
                                            in dictionary.items()
                                            if value
-                                           in local_dictionary.token2id))
+                                           in good_tokens))
         model = TfidfModel(dictionary=dictionary)
         self.model = model
         self.dictionary = dictionary
