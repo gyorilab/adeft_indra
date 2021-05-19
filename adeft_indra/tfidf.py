@@ -1,4 +1,5 @@
 import os
+import logging
 from collections import defaultdict
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
@@ -8,6 +9,8 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from adeft_indra.locations import DOCUMENT_FREQUENCIES_PATH
+
+logging.getLogger('gensim').setLevel(logging.WARNING)
 
 
 class AdeftTfidfVectorizer(BaseEstimator, TransformerMixin):
