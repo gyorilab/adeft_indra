@@ -29,7 +29,7 @@ from adeft_indra.anomaly_detection.models import ForestOneClassSVM
 
 lock = Lock()
 rng = np.random.RandomState(1729)
-manager = ADResultsManager('ad_all_adeft')
+manager = ADResultsManager('ad_all_adeft_run2')
 
 
 def get_training_data_for_model(disambiguator):
@@ -86,7 +86,7 @@ def get_training_data_for_model(disambiguator):
     return corpus, unlabeled
 
 
-def anomaly_detect_adeft_model(disambiguator, mf_a, mf_b, nu,
+def anomaly_detect_adeft_model(disambiguator, max_features, nu,
                                n_estimators, rng):
     ad = disambiguator
     corpus, unlabeled = get_training_data_for_model(ad)
@@ -100,8 +100,9 @@ def anomaly_detect_adeft_model(disambiguator, mf_a, mf_b, nu,
                  if value >= 10}
     corpus = [(text, label, pmid) for text, label, pmid in corpus
               if label in label_map]
+    if not corpus:
+        return None
     texts, labels, pmids = zip(*corpus)
-    max_features = mf_a + mf_b * len(ad.labels)
     pipeline = Pipeline([('tfidf',
                           AdeftTfidfVectorizer(max_features=max_features,
                                                stop_words=stop_words)),
@@ -129,7 +130,9 @@ def evaluation_wrapper(shortform):
     with lock:
         print(f'Running anomaly detection for model for {shortform}.')
     ad = load_disambiguator(shortform)
-    results = anomaly_detect_adeft_model(ad, 5, 30, 0.225, 1000, rng)
+    results = anomaly_detect_adeft_model(ad, 50, 0.2375, 1000, rng)
+    if results is None:
+        return
     manager.add_row([shortform, "0", json.dumps(results)])
     with lock:
         print(f'Added results for model for {shortform}')
@@ -139,7 +142,7 @@ if __name__ == '__main__':
     reduced_shortforms = list({value:
                                key for key, value
                                in available_shortforms.items()}.values())
-    n_jobs = 32
+    n_jobs = 40
     with Pool(n_jobs) as pool:
         pool.map(evaluation_wrapper, reduced_shortforms,
                  chunksize=1)

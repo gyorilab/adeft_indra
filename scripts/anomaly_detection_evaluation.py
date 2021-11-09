@@ -9,8 +9,8 @@ from multiprocessing import Pool
 from collections import defaultdict
 from sklearn.svm import OneClassSVM
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.metrics import accuracy_score, balanced_accuracy_score
 
 from adeft import available_shortforms
@@ -30,7 +30,7 @@ from opaque.ood.forest_svm import AnyMethodPipeline
 from opaque.ood.forest_svm import ForestOneClassSVM
 
 lock = Lock()
-manager = ADResultsManager("ad_nested_crossval_trial7")
+manager = ADResultsManager("nested_crossvalidation6")
 reverse_model_map = {value: key for key, value in available_shortforms.items()}
 
 
@@ -44,7 +44,6 @@ def nontrivial_subsets(iterable):
 class SubsetSampler(object):
     def __init__(self, iterable, random_state):
         self.arr = list(iterable)
-        self.sample_size = 0
         self.current_index = 0
         if isinstance(random_state, int):
             self.rng = np.random.RandomState(random_state)
@@ -66,7 +65,7 @@ class SubsetSampler(object):
     def multiple_samples(self, n, k):
         """Draw n samples each of length k without replacement."""
         results = set()
-        while len(results) < n:
+        for _ in range(n):
             results.add(tuple(self.sample(k)))
         return list(results)
 
@@ -76,12 +75,13 @@ class NestedKFold(object):
         self.n_splits_outter = n_splits_outter
         self.n_splits_inner = n_splits_inner
 
-    def split(self, X):
-        outter_splitter = KFold(n_splits=self.n_splits_outter)
-        inner_splitter = KFold(n_splits=self.n_splits_inner)
-        outter_splits = outter_splitter.split(X)
+    def split(self, X, y):
+        outter_splitter = StratifiedKFold(n_splits=self.n_splits_outter)
+        inner_splitter = StratifiedKFold(n_splits=self.n_splits_inner)
+        outter_splits = outter_splitter.split(X, y)
         for outter_train, outter_test in outter_splits:
-            inner_splits = inner_splitter.split(outter_train)
+            inner_splits = inner_splitter.split(X[outter_train],
+                                                y[outter_train])
             inner = [
                 (outter_train[inner_train], outter_train[inner_test])
                 for inner_train, inner_test in inner_splits
@@ -150,15 +150,16 @@ def evaluate_anomaly_detection(
         if length >= 10
     ]
     grounded_entities.sort(key=lambda x: -x[1])
-    grounded_entities = [g[0] for g in grounded_entities[0:7]]
+    grounded_entities = [g[0] for g in grounded_entities[0:9]]
     sampled_subsets = []
-    for k in range(2, min(len(grounded_entities), 7)):
+    for k in range(6, min(len(grounded_entities), 8)):
         sampler = SubsetSampler(grounded_entities, rng)
         n_samples = len(grounded_entities)
         sampled_subsets.extend(sampler.multiple_samples(n_samples, k))
     rng.shuffle(sampled_subsets)
     results_dict = {}
     for train_entities in sampled_subsets:
+        print(5, train_entities)
         baseline = [
             (text, label, pmid)
             for text, label, pmid in corpus
@@ -217,8 +218,6 @@ def evaluate_anomaly_detection(
         rng2 = np.random.RandomState(561)
         rng2.shuffle(pmids)
         rng2 = None
-        nested_splitter = NestedKFold(n_splits_outter=5, n_splits_inner=5)
-        nested_splits = nested_splitter.split(texts)
         Xin = np.array(texts)
         Xout = np.array(anom_texts)
         texts = None
@@ -231,6 +230,8 @@ def evaluate_anomaly_detection(
         anom_labels = None
         pmids = None
         anom_pmids = None
+        nested_splitter = NestedKFold(n_splits_outter=5, n_splits_inner=5)
+        nested_splits = nested_splitter.split(Xin, true_labels_in)
         inner_folds_dict = defaultdict(dict)
         outter_folds_dict = {}
         outter_spec_list = []
@@ -259,7 +260,7 @@ def evaluate_anomaly_detection(
                     "pmids": pmids_in[train].tolist(),
                     "true_label": true_labels_in[train].tolist(),
                     "classes": pipeline.named_steps['forest_oc_svm'].
-                    forest.classes_
+                    forest.classes_.tolist()
                 }
                 test_dict = {
                     "pmids": pmids_in[inner_test].tolist(),
@@ -282,27 +283,42 @@ def evaluate_anomaly_detection(
                 [x for split in inner_splits for x in split]
             )
             pipeline.fit(Xin[outter_train], true_labels_in[outter_train])
-            preds_in = pipeline.apply_method(
+            ood_preds_in = pipeline.apply_method(
                 'ood_predict', Xin[outter_test]
+            )
+            forest_preds_in = pipeline.apply_method(
+                'forest_predict', Xin[outter_test]
+            )
+            forest_probs_in = pipeline.apply_method(
+                'forest_predict_proba', Xin[outter_test]
             )
             pipeline.estimator_ = None
             spec = specificity_score(
-                np.full(len(preds_in), 1.0), preds_in, pos_label=-1
+                np.full(len(ood_preds_in), 1.0), ood_preds_in, pos_label=-1
+            )
+            bacc = balanced_accuracy_score(
+                true_labels_in[outter_test],
+                forest_preds_in
             )
             train_dict = {
                 "pmids": pmids_in[outter_train].tolist(),
                 "true_label": true_labels_in[outter_train].tolist(),
+                "classes": pipeline.named_steps['forest_oc_svm'].
+                forest.classes_.tolist()
             }
             test_dict = {
                 "pmids": pmids_in[outter_test].tolist(),
                 "true_label": true_labels_in[outter_test].tolist(),
-                "prediction": preds_in.tolist(),
-                "true": [1.0] * len(preds_in),
+                "prediction": ood_preds_in.tolist(),
+                "forest_prediction": forest_preds_in.tolist(),
+                "forest_probs": forest_probs_in.tolist(),
+                "true": [1.0] * len(ood_preds_in),
             }
             outter_folds_dict[i] = {
                 "training_data_info": train_dict,
                 "test_data_info": test_dict,
                 "spec": spec,
+                "bacc": bacc,
                 "mean_inner_spec": mean_spec,
                 "std_inner_spec": std_spec,
             }
@@ -313,18 +329,24 @@ def evaluate_anomaly_detection(
         preds_out = pipeline.apply_method(
             'ood_predict', Xout
         )
+        forest_probs_out = pipeline.apply_method(
+            'forest_predict_proba', Xout
+        )
         pipeline.estimator_ = None
         sens = sensitivity_score(
             np.full(len(preds_out), -1.0), preds_out, pos_label=-1
         )
         train_dict = {
             "pmids": pmids_in.tolist(),
-            "true_label": true_labels_in.tolist()
+            "true_label": true_labels_in.tolist(),
+            "classes": pipeline.named_steps['forest_oc_svm'].
+            forest.classes_.tolist()
         }
         test_dict = {
             "pmids": pmids_out.tolist(),
             "true_label": true_labels_out.tolist(),
             "prediction": preds_out.tolist(),
+            "forest_probs": forest_probs_out.tolist(),
             "true": [-1.0] * len(preds_out),
         }
         outter_dict = {
@@ -351,6 +373,7 @@ if __name__ == "__main__":
         model_data_counts.append((model_name, total_count))
     model_data_counts.sort(key=lambda x: -x[1])
 
+    batch0 = [x[0] for x in model_data_counts[50:]]
     batch1 = [x[0] for x in model_data_counts[10:]]
     batch2 = [x[0] for x in model_data_counts[5:10]]
     batch3 = [x[0] for x in model_data_counts[0:5]]
@@ -368,5 +391,6 @@ if __name__ == "__main__":
                 cases.append((model_name, nu, mf, n_est, rng, 1))
     main_rng.shuffle(cases)
 
-    with Pool(64) as pool:
-        pool.map(evaluation_wrapper, cases, chunksize=1)
+
+with Pool(32) as pool:
+    pool.map(evaluation_wrapper, cases, chunksize=1)

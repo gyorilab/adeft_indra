@@ -24,7 +24,7 @@ CONTENT_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'content.db')
 UPDATE_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'update_text_content.db')
 RESULTS_DB_PATH = os.path.join(ADEFT_INDRA_HOME, 'results.db')
 DOCUMENT_FREQUENCIES_PATH = os.path.join(ADEFT_INDRA_HOME,
-                                         'document_frequencies.pkl')
+                                         'pubmed_dictionary.pkl')
 GROUNDING_THESAURUS_PATH = os.path.join(ADEFT_INDRA_HOME,
                                         'grounding_thesaurus.json')
 GROUNDER_PATH = os.path.join(ADEFT_INDRA_HOME, 'adeft_grounder.pkl')

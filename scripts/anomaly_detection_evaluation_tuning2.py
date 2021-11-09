@@ -197,8 +197,6 @@ def evaluate_anomaly_detection(
         acc_list = []
         for i, (train, test) in enumerate(train_splits):
             ad_model = GroundingAnomalyDetector(
-
-
                 /*BaselineTfidfVectorizer(
                     DOCUMENT_FREQUENCIES_PATH,
                     max_features_per_class=max_features,

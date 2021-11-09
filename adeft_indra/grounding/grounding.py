@@ -4,11 +4,12 @@ import pickle
 from copy import deepcopy
 from collections import defaultdict
 
-from gilda.resources import GROUNDING_TERMS_PATH
 from adeft.util import SearchTrie, get_candidate
+from gilda.resources import GROUNDING_TERMS_PATH
+
 
 from adeft_indra.locations import GROUNDER_PATH
-from adeft_indra.ground.util import expand_dashes, greek_aware_stem, \
+from adeft_indra.grounding.util import expand_dashes, greek_aware_stem, \
     normalize, text_similarity
 
 

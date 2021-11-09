@@ -14,6 +14,8 @@ from indra_db_lite import get_pmids_for_mesh_term
 from indra_db_lite import get_text_ref_ids_for_agent_text
 from indra_db_lite import get_text_ref_ids_for_pmids
 
+__all__ = ["get_adeft_test_cases"]
+
 
 logger = logging.getLogger(__file__)
 
@@ -44,7 +46,9 @@ def get_test_cases_for_model(model_name):
     for shortform in shortforms:
         trids.update(get_text_ref_ids_for_agent_text(shortform))
     trids = list(trids)
-    content = get_plaintexts_for_text_ref_ids(trids, contains=shortforms)
+    content = get_plaintexts_for_text_ref_ids(
+        trids, contains=shortforms, text_types=['abstract', 'fulltext']
+    )
     unlabeled = [
         (trid, text) for trid, text in content.trid_content_pairs()
         if len(text) > 5
@@ -53,8 +57,12 @@ def get_test_cases_for_model(model_name):
     test_corpus = labeler.build_from_texts(
         (text, trid) for trid, text in unlabeled
     )
+    test_texts, test_labels, test_trids = zip(*test_corpus)
+    test_corpus = None
     for curie in get_groundings_for_disambiguator(disamb):
         if ':' not in curie:
+            continue
+        if len([label for label in test_labels if label == curie]) < 5:
             continue
         namespace, identifier = curie.split(':', maxsplit=1)
         mesh_id = None
@@ -91,12 +99,6 @@ def get_test_cases_for_model(model_name):
                 mesh_pmids = get_pmids_for_mesh_term(
                     mesh_id, major_topic=True
                 )
-        test_data = [
-            (text, label, trid) for text, label, trid in test_corpus
-            if label != curie
-        ]
-        test_texts, test_labels, test_trids = zip(*test_data)
-        test_data = None
         if entrez_pmids:
             entrez_trids = list(
                 get_text_ref_ids_for_pmids(entrez_pmids).values()

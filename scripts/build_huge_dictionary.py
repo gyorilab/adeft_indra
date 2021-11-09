@@ -4,8 +4,8 @@ from itertools import zip_longest
 from gensim.corpora import Dictionary
 from gensim.models import TfidfModel
 from sklearn.feature_extraction.text import TfidfVectorizer
-from indra.literature.adeft_tools import universal_extract_text
-from indra_db.util.content_scripts import get_text_content_from_pmids
+
+from adeft_indra.content import get_plaintexts_for_pmids
 
 
 tokenize = TfidfVectorizer().build_tokenizer()
@@ -23,6 +23,7 @@ def preprocess(text):
 with open('../data/combined_pmids.json') as f:
     all_pmids = json.load(f)
 
+
 class ContentIterator(object):
     def __init__(self, pmid_list, chunksize=10000):
         self.pmids = pmid_list
@@ -31,9 +32,7 @@ class ContentIterator(object):
     def __iter__(self):
         groups = grouper(self.pmids, self.chunksize)
         for pmids in groups:
-            _, content = get_text_content_from_pmids(pmids)
-            texts = [universal_extract_text(text)
-                     for text in content.values() if text]
+            texts = get_plaintexts_for_pmids(pmids).values()
             for text in texts:
                 yield preprocess(text)
 
@@ -42,15 +41,3 @@ all_pubmed_content = ContentIterator(all_pmids)
 dictionary = Dictionary((text for text in all_pubmed_content), prune_at=None)
 location = '../results/pubmed_dictionary.pkl'
 dictionary.save(location)
-
-dictionary = Dictionary.load(location)
-
-
-token_dfs = {key: dictionary.dfs[value]
-             for key, value in dictionary.token2id.items()}
-
-dictionary.filter_extremes(no_below=3, no_above=0.25, keep_n=None)
-location_filtered = '../results/pubmed_dictionary_filtered.pkl'
-dictionary.save(location_filtered)
-
-model = TfidfModel(dictionary=dictionary)
