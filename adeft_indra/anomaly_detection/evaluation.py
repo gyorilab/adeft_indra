@@ -31,8 +31,9 @@ def process_test_case(args: Tuple) -> None:
         model_name,
         agent_texts,
         curie,
-        type_,
-        mesh_id,
+        mesh_terms,
+        num_entrez_texts,
+        num_mesh_texts,
         train_trids,
         test_data,
         nu_list,
@@ -67,8 +68,8 @@ def process_test_case(args: Tuple) -> None:
     test_labels = np.array(test_labels)
     tn = (preds == 1.0) & (test_labels == curie)
     tp = (preds == -1.0) & (test_labels != curie)
-    sens = sum(tp) / len(preds)
-    spec = sum(tn) / len(preds)
+    sens = sum(tp) / sum(test_labels != curie)
+    spec = sum(tn) / sum(test_labels == curie)
     J = sens + spec - 1
     result['test_stats'] = {
         'sensitivity': sens, 'specifity': spec, 'J': J
@@ -76,6 +77,10 @@ def process_test_case(args: Tuple) -> None:
     result['test_info'] = {
         'labels': test_labels,
         'preds': preds,
+    }
+    result['train_info'] = {
+        'num_entrez_texts': num_entrez_texts,
+        'num_mesh_texts': num_mesh_texts,
     }
     key = get_key(model_name, curie, nu_list, max_features_list)
     ResultsManager.insert(run_name, key, result)
@@ -124,5 +129,5 @@ if __name__ == '__main__':
     ]
     with Pool(n_jobs) as pool:
         pool.map(
-            process_test_case, test_cases[100:108], chunksize=1
+            process_test_case, test_cases, chunksize=1
         )
