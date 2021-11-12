@@ -77,46 +77,59 @@ def get_test_cases_for_model(model_name):
         if len([label for label in test_data.values() if label == curie]) < 5:
             continue
         namespace, identifier = curie.split(':', maxsplit=1)
-        mesh_id = None
-        entrez_pmids = []
-        mesh_pmids = []
+        entrez_pmids = set()
+        mesh_pmids = set()
+        mesh_terms = None
         if namespace == 'HGNC':
-            entrez_pmids = get_entrez_pmids_for_hgnc(identifier)
+            entrez_pmids.update(get_entrez_pmids_for_hgnc(identifier))
             uniprot_id = get_uniprot_id(identifier)
             mesh_terms = get_mesh_terms_for_grounding(namespace, identifier)
             if not mesh_terms:
                 mesh_terms = get_mesh_terms_for_grounding('UP', uniprot_id)
             if mesh_terms:
-                mesh_id = mesh_terms[0]
-                mesh_pmids = get_pmids_for_mesh_term(
-                    mesh_id, major_topic=True
-                )
+                for mesh_id in mesh_terms:
+                    mesh_pmids.update(
+                        get_pmids_for_mesh_term(
+                            mesh_id, major_topic=True
+                        )
+                    )
         elif namespace == 'UP':
-            entrez_pmids = get_entrez_pmids_for_uniprot(identifier)
+            entrez_pmids.update(get_entrez_pmids_for_uniprot(identifier))
             mesh_terms = get_mesh_terms_for_grounding(namespace, identifier)
             if mesh_terms:
-                mesh_id = mesh_terms[0]
-                mesh_pmids = get_pmids_for_mesh_term(
-                    mesh_id, major_topic=True
-                )
+                for mesh_id in mesh_terms:
+                    mesh_pmids.update(
+                        get_pmids_for_mesh_term(
+                            mesh_id, major_topic=True
+                        )
+                    )
         elif namespace == 'MESH':
             mesh_id = identifier
-            mesh_pmids = get_pmids_for_mesh_term(
-                mesh_id, major_topic=True
+            mesh_pmids.update(
+                get_pmids_for_mesh_term(
+                    mesh_id, major_topic=True
+                )
             )
         else:
             mesh_terms = get_mesh_terms_for_grounding(namespace, identifier)
             if mesh_terms:
-                mesh_id = mesh_terms[0]
-                mesh_pmids = get_pmids_for_mesh_term(
-                    mesh_id, major_topic=True
-                )
-        if entrez_pmids:
-            entrez_trids = list(
+                for mesh_id in mesh_terms:
+                    mesh_pmids.update(
+                        get_pmids_for_mesh_term(
+                            mesh_id, major_topic=True
+                        )
+                    )
+        pmids = list(entrez_pmids | mesh_pmids)
+        if pmids:
+            entrez_trids = set(
                 get_text_ref_ids_for_pmids(entrez_pmids).values()
             )
+            mesh_trids = set(
+                get_text_ref_ids_for_pmids(mesh_pmids).values()
+            )
+            trids = list(entrez_trids | mesh_trids)
             train_data = get_plaintexts_for_text_ref_ids(
-                entrez_trids, text_types=['fulltext', 'abstract']
+                trids, text_types=['fulltext', 'abstract']
             )
             train_data = [
                 (trid, text) for trid, text in train_data.trid_content_pairs()
@@ -128,39 +141,21 @@ def get_test_cases_for_model(model_name):
                 continue
             train_trids, train_texts = zip(*train_data)
             train_data = None
+            train_trids_set = set(train_trids)
+            entrez_trids = [
+                trid for trid in entrez_trids if trid in train_trids_set
+            ]
+            mesh_trids = [
+                trid for trid in mesh_trids if trid in train_trids_set
+            ]
             result.append(
                 (
                     model_name,
                     tuple(shortforms),
                     curie,
-                    'entrez',
-                    None,
-                    train_trids,
-                    test_data,
-                )
-            )
-        if mesh_pmids:
-            mesh_trids = list(get_text_ref_ids_for_pmids(mesh_pmids).values())
-            train_data = get_plaintexts_for_text_ref_ids(
-                mesh_trids, text_types=['fulltext', 'abstract']
-            )
-            train_data = [
-                (trid, text) for trid, text in train_data.trid_content_pairs()
-                if len(text) > 5 and
-                not {'xml', 'elsevier', 'doi', 'article'} <=
-                set(preprocess(text))
-            ]
-            if len(train_data) < 5:
-                continue
-            train_trids, train_texts = zip(*train_data)
-            train_data = None
-            result.append(
-                (
-                    model_name,
-                    sorted(shortforms),
-                    curie,
-                    'mesh',
-                    mesh_id,
+                    mesh_terms,
+                    len(entrez_trids),
+                    len(mesh_trids),
                     train_trids,
                     test_data,
                 )
