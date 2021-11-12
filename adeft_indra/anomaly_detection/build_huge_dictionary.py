@@ -31,8 +31,31 @@ def get_famplex_mesh_pmids():
     return result
 
 
+def get_uniprot_mesh_pmids():
+    query = """--
+    SELECT
+        mpmid.pmid_num
+    FROM
+        mesh_xrefs mxref
+    INNER JOIN
+        mesh_pmids mpmid
+    ON
+        mxref.mesh_num = mpmid.mesh_num AND
+        mxref.is_concept = mpmid.is_concept AND
+        (mxref.curie LIKE 'UP:%' OR mxref.curie LIKE 'HGNC:%')
+    """
+    with closing(sqlite3.connect(INDRA_DB_LITE_LOCATION)) as conn:
+        with closing(conn.cursor()) as cur:
+            result = set(row[0] for row in cur.execute(query))
+    return result
+
+
 def get_trids_for_training_set():
-    pmids = get_famplex_mesh_pmids() | get_all_entrez_pmids()
+    pmids = (
+        get_famplex_mesh_pmids() |
+        get_all_entrez_pmids() |
+        get_uniprot_mesh_pmids()
+    )
     pmid2trid = get_text_ref_ids_for_pmids(pmids)
     return list(pmid2trid.values())
 
