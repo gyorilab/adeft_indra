@@ -2,7 +2,7 @@ from contextlib import closing
 import logging
 import pickle
 import sqlite3
-from Typing import Any, Iterator, List, Tuple
+from typing import Any, Iterator, List, Tuple
 
 
 from adeft_indra.locations import RESULTS_DB_PATH
