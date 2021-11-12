@@ -2,6 +2,7 @@ import argparse
 from multiprocessing import Pool, Lock
 import numpy as np
 import pickle
+import random
 from typing import List, Optional, Tuple
 
 
@@ -127,6 +128,8 @@ if __name__ == '__main__':
                 is None
         )
     ]
+    gen = random.Random(1729)
+    gen.shuffle(test_cases)
     with Pool(n_jobs) as pool:
         pool.map(
             process_test_case, test_cases, chunksize=1
