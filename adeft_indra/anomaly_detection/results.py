@@ -1,5 +1,6 @@
 from contextlib import closing
 import logging
+import pandas as pd
 import pickle
 import sqlite3
 from typing import Any, Iterator, List, Tuple
@@ -142,9 +143,77 @@ class ResultsManager:
                     yield key, pickle.loads(value)
 
     @classmethod
+    def get_dataset(cls, table: str) -> pd.DataFrame:
+        new_rows = []
+        for row in cls.iterrows(table):
+            new_rows.append(process_row(row))
+        return pd.DataFrame(
+            new_rows,
+            columns=[
+                'shortform',
+                'grounding',
+                'num_entrez',
+                'num_mesh',
+                'sens_neg_set',
+                'mean_spec',
+                'std_spec',
+                'J',
+                'N_inlier',
+                'K_inlier',
+                'N_outlier',
+                'K_outlier',
+            ]
+        )
+
+    @classmethod
     def drop_table(cls, table: str) -> None:
         """Drop a table."""
         query = f"DROP TABLE {table}"
         with closing(sqlite3.connect(RESULTS_DB_PATH)) as conn:
             with closing(conn.cursor()) as cur:
                 cur.execute(query)
+
+
+def process_row(results_row) -> list:
+    key, results_json = results_row
+    shortform, remainder = key.split(':', maxsplit=1)
+    grounding, _ = remainder.split('[', maxsplit=1)
+    num_entrez = results_json['train_info']['num_entrez_texts']
+    num_mesh = results_json['train_info']['num_mesh_texts']
+    best_params = results_json['best_params']
+    best_params = (best_params['nu'], best_params['max_features'])
+    train_stats = results_json['train_stats'][best_params]
+    sens_neg_set = train_stats[0]
+    mean_spec = train_stats[2]
+    std_spec = train_stats[3]
+    J = train_stats[4]
+    labels = results_json['test_info']['labels']
+    preds = results_json['test_info']['preds']
+    N_inlier = len([label for label in labels if label == grounding])
+    K_inlier = len(
+        [
+            label for label, pred in zip(labels, preds)
+            if label == grounding and pred == 1
+        ]
+    )
+    N_outlier = len([label for label in labels if label != grounding])
+    K_outlier = len(
+        [
+            label for label, pred in zip(labels, preds)
+            if label != grounding and pred == -1
+        ]
+    )
+    return [
+        shortform,
+        grounding,
+        num_entrez,
+        num_mesh,
+        sens_neg_set,
+        mean_spec,
+        std_spec,
+        J,
+        N_inlier,
+        K_inlier,
+        N_outlier,
+        K_outlier,
+    ]
