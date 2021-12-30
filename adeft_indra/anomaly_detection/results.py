@@ -152,6 +152,8 @@ class ResultsManager:
             columns=[
                 'shortform',
                 'grounding',
+                'nu',
+                'max_features',
                 'num_entrez',
                 'num_mesh',
                 'sens_neg_set',
@@ -206,6 +208,8 @@ def process_row(results_row) -> list:
     return [
         shortform,
         grounding,
+        best_params[0],
+        best_params[1],
         num_entrez,
         num_mesh,
         sens_neg_set,
