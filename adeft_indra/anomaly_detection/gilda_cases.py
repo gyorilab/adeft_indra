@@ -18,17 +18,17 @@ logger = logging.getLogger(__file__)
 
 
 def get_test_cases_for_model(model):
-    result = []
     assert len(model.shortforms) == 1
     agent_text = model.shortforms[0]
     test_trids = get_text_ref_ids_for_agent_text(agent_text)
     test_texts = get_plaintexts_for_text_ref_ids(test_trids)
     if not test_texts:
-        return None
+        return []
     preds = model.predict(test_texts)
     text_dict = defaultdict(list)
     for text, pred in zip(test_texts, preds):
         text_dict[pred].append(text)
+    result = []
     for curie in model.estimator.classes_:
         namespace, identifier = curie.split(":", maxsplit=1)
         train_info = get_training_cases_for_grounding(namespace, identifier)
