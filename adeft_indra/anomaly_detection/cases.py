@@ -54,7 +54,7 @@ def get_training_cases_for_grounding(namespace, identifier):
             (trid, text) for trid, text in train_data.trid_content_pairs()
             if len(text) > 5 and
             not {'xml', 'elsevier', 'doi', 'article'} <=
-            set(BaselineTfidfVectorizer._preprocess(text))
+            set(BaselineTfidfVectorizer()._preprocess(text))
         ]
         if len(train_data) < 5:
             return None
