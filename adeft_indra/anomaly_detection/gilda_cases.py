@@ -37,6 +37,7 @@ def get_test_cases_for_model(model):
         result.append(
             (
                 agent_text,
+                [agent_text],
                 curie,
                 train_info["mesh_terms"],
                 train_info["num_entrez"],
