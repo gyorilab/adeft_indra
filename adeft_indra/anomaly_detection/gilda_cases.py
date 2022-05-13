@@ -23,10 +23,12 @@ def get_test_cases_for_model(model):
     agent_text = model.shortforms[0]
     test_trids = get_text_ref_ids_for_agent_text(agent_text)
     test_texts = get_plaintexts_for_text_ref_ids(test_trids)
+    if not test_texts:
+        return None
     preds = model.predict(test_texts)
-    test_texts = defaultdict(list)
+    text_dict = defaultdict(list)
     for text, pred in zip(test_texts, preds):
-        test_texts[pred].append(text)
+        text_dict[pred].append(text)
     for curie in model.estimator.classes_:
         namespace, identifier = curie.split(":", maxsplit=1)
         train_info = get_training_cases_for_grounding(namespace, identifier)
@@ -40,7 +42,7 @@ def get_test_cases_for_model(model):
                 train_info["num_entrez"],
                 train_info["num_mesh"],
                 train_info["train_trids"],
-                test_texts[curie],
+                text_dict[curie],
             )
         )
     return result
