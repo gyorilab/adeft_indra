@@ -39,34 +39,36 @@ def get_training_cases_for_grounding(namespace, identifier):
                 get_pmids_for_mesh_term(mesh_id, major_topic=True)
             )
     pmids = list(entrez_pmids | mesh_pmids)
-    if pmids:
-        entrez_trids = set(
-            get_text_ref_ids_for_pmids(entrez_pmids).values()
-        )
-        mesh_trids = set(
-            get_text_ref_ids_for_pmids(mesh_pmids).values()
-        )
-        trids = list(entrez_trids | mesh_trids)
-        train_data = get_plaintexts_for_text_ref_ids(
-            trids, text_types=['fulltext', 'abstract']
-        )
-        train_data = [
-            (trid, text) for trid, text in train_data.trid_content_pairs()
-            if len(text) > 5 and
-            not {'xml', 'elsevier', 'doi', 'article'} <=
-            set(BaselineTfidfVectorizer()._preprocess(text))
-        ]
-        if len(train_data) < 5:
-            return None
-        train_trids, train_texts = zip(*train_data)
-        train_data = None
-        train_trids_set = set(train_trids)
-        entrez_trids = [
-            trid for trid in entrez_trids if trid in train_trids_set
-        ]
-        mesh_trids = [
-            trid for trid in mesh_trids if trid in train_trids_set
-        ]
+    if not pmids:
+        return None
+
+    entrez_trids = set(
+        get_text_ref_ids_for_pmids(entrez_pmids).values()
+    )
+    mesh_trids = set(
+        get_text_ref_ids_for_pmids(mesh_pmids).values()
+    )
+    trids = list(entrez_trids | mesh_trids)
+    train_data = get_plaintexts_for_text_ref_ids(
+        trids, text_types=['fulltext', 'abstract']
+    )
+    train_data = [
+        (trid, text) for trid, text in train_data.trid_content_pairs()
+        if len(text) > 5 and
+        not {'xml', 'elsevier', 'doi', 'article'} <=
+        set(BaselineTfidfVectorizer()._preprocess(text))
+    ]
+    if len(train_data) < 5:
+        return None
+    train_trids, train_texts = zip(*train_data)
+    train_data = None
+    train_trids_set = set(train_trids)
+    entrez_trids = [
+        trid for trid in entrez_trids if trid in train_trids_set
+    ]
+    mesh_trids = [
+        trid for trid in mesh_trids if trid in train_trids_set
+    ]
     return {
         "mesh_terms": mesh_terms,
         "num_entrez": len(entrez_trids),
