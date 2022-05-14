@@ -56,7 +56,7 @@ def process_test_case(args: Tuple) -> None:
         (text, test_data[trid], trid)
         for trid, text in test_texts.trid_content_pairs()
     ]
-    test_tests, test_labels, test_trids = zip(*test_data)
+    test_texts, test_labels, test_trids = zip(*test_data)
     result = train_anomaly_detector(
         agent_texts,
         train_texts,
