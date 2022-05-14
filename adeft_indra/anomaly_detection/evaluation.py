@@ -52,11 +52,7 @@ def process_test_case(args: Tuple) -> None:
         test_data,
         text_types=['abstract', 'fulltext'],
     )
-    test_data = [
-        (text, test_data[trid], trid)
-        for trid, text in test_texts.trid_content_pairs()
-    ]
-    test_texts, test_labels, test_trids = zip(*test_data)
+
     result = train_anomaly_detector(
         agent_texts,
         train_texts,
@@ -65,13 +61,22 @@ def process_test_case(args: Tuple) -> None:
         random_state=1729
     )
     ad_model = GroundingAnomalyDetector.load_model_info(result["model"])
-    preds = ad_model.predict(test_texts).flatten()
-    test_labels = np.array(test_labels)
-    tn = (preds == 1.0) & (test_labels == curie)
-    tp = (preds == -1.0) & (test_labels != curie)
-    sens = sum(tp) / sum(test_labels != curie)
-    spec = sum(tn) / sum(test_labels == curie)
-    J = sens + spec - 1
+
+    test_data = [
+        (text, test_data[trid], trid)
+        for trid, text in test_texts.trid_content_pairs()
+    ]
+    if test_data:
+        test_texts, test_labels, test_trids = zip(*test_data)
+        preds = ad_model.predict(test_texts).flatten()
+        test_labels = np.array(test_labels)
+        tn = (preds == 1.0) & (test_labels == curie)
+        tp = (preds == -1.0) & (test_labels != curie)
+        sens = sum(tp) / sum(test_labels != curie)
+        spec = sum(tn) / sum(test_labels == curie)
+        J = sens + spec - 1
+    else:
+        preds, test_labels, sens, spec, J = (None, ) * 5
     result['test_stats'] = {
         'sensitivity': sens, 'specifity': spec, 'J': J
     }
