@@ -25,9 +25,9 @@ def get_test_cases_for_model(model):
     if not test_texts:
         return []
     preds = model.predict(test_texts)
-    text_dict = defaultdict(list)
-    for text, pred in zip(test_texts, preds):
-        text_dict[pred].append(text)
+    test_data_dict = defaultdict(dict)
+    for trid, pred in zip(test_trids, preds):
+        test_data_dict[pred].update({trid: None})
     result = []
     for curie in model.estimator.classes_:
         namespace, identifier = curie.split(":", maxsplit=1)
@@ -43,7 +43,7 @@ def get_test_cases_for_model(model):
                 train_info["num_entrez"],
                 train_info["num_mesh"],
                 train_info["train_trids"],
-                text_dict[curie],
+                test_data_dict[curie],
             )
         )
     return result
