@@ -40,6 +40,7 @@ def process_test_case(args: Tuple) -> None:
         nu_list,
         max_features_list,
         run_name,
+        predict_shape_params,
     ) = args
     with lock:
         print(
@@ -58,7 +59,8 @@ def process_test_case(args: Tuple) -> None:
         train_texts,
         nu_list,
         max_features_list,
-        random_state=1729
+        random_state=1729,
+        predict_shape_params=predict_shape_params,
     )
     ad_model = GroundingAnomalyDetector.load_model_info(result["model"])
 
@@ -108,6 +110,7 @@ if __name__ == '__main__':
     parser.add_argument('--nu_list', nargs='+', type=float)
     parser.add_argument('--mf_list', nargs='+', type=int)
     parser.add_argument('--n_jobs', type=int, default=1)
+    parser.add_argument('--predict_shape_params', action='store_true')
     lock = Lock()
     args = parser.parse_args()
     test_cases_path = args.test_cases_path
@@ -117,6 +120,7 @@ if __name__ == '__main__':
     nu_list = args.nu_list
     mf_list = args.mf_list
     n_jobs = args.n_jobs
+    predict_shape_params = args.predict_shape_params
     if run_name not in ResultsManager.show_tables():
         ResultsManager.add_table(run_name)
     test_cases = [
@@ -124,6 +128,7 @@ if __name__ == '__main__':
             nu_list,
             mf_list,
             run_name,
+            predict_shape_params,
         )
         for case in test_cases
         if (
