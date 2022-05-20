@@ -60,6 +60,8 @@ def process_test_case(args: Tuple) -> None:
         nu_list,
         max_features_list,
         random_state=1729,
+        num_mesh_texts=num_mesh_texts,
+        num_entrez_texts=num_entrez_texts,
         predict_shape_params=predict_shape_params,
     )
     ad_model = GroundingAnomalyDetector.load_model_info(result["model"])
