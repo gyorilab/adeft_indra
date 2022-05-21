@@ -40,6 +40,7 @@ def process_test_case(args: Tuple) -> None:
         nu_list,
         max_features_list,
         run_name,
+        predict_shape_params,
     ) = args
     with lock:
         print(
@@ -52,26 +53,34 @@ def process_test_case(args: Tuple) -> None:
         test_data,
         text_types=['abstract', 'fulltext'],
     )
-    test_data = [
-        (text, test_data[trid], trid)
-        for trid, text in test_texts.trid_content_pairs()
-    ]
-    test_tests, test_labels, test_trids = zip(*test_data)
+
     result = train_anomaly_detector(
         agent_texts,
         train_texts,
         nu_list,
         max_features_list,
-        random_state=1729
+        random_state=1729,
+        num_mesh_texts=num_mesh_texts,
+        num_entrez_texts=num_entrez_texts,
+        predict_shape_params=predict_shape_params,
     )
     ad_model = GroundingAnomalyDetector.load_model_info(result["model"])
-    preds = ad_model.predict(test_texts).flatten()
-    test_labels = np.array(test_labels)
-    tn = (preds == 1.0) & (test_labels == curie)
-    tp = (preds == -1.0) & (test_labels != curie)
-    sens = sum(tp) / sum(test_labels != curie)
-    spec = sum(tn) / sum(test_labels == curie)
-    J = sens + spec - 1
+
+    test_data = [
+        (text, test_data[trid], trid)
+        for trid, text in test_texts.trid_content_pairs()
+    ]
+    if test_data:
+        test_texts, test_labels, test_trids = zip(*test_data)
+        preds = ad_model.predict(test_texts).flatten()
+        test_labels = np.array(test_labels)
+        tn = (preds == 1.0) & (test_labels == curie)
+        tp = (preds == -1.0) & (test_labels != curie)
+        sens = sum(tp) / sum(test_labels != curie)
+        spec = sum(tn) / sum(test_labels == curie)
+        J = sens + spec - 1
+    else:
+        preds, test_labels, sens, spec, J = (None, ) * 5
     result['test_stats'] = {
         'sensitivity': sens, 'specifity': spec, 'J': J
     }
@@ -103,6 +112,7 @@ if __name__ == '__main__':
     parser.add_argument('--nu_list', nargs='+', type=float)
     parser.add_argument('--mf_list', nargs='+', type=int)
     parser.add_argument('--n_jobs', type=int, default=1)
+    parser.add_argument('--predict_shape_params', action='store_true')
     lock = Lock()
     args = parser.parse_args()
     test_cases_path = args.test_cases_path
@@ -112,6 +122,7 @@ if __name__ == '__main__':
     nu_list = args.nu_list
     mf_list = args.mf_list
     n_jobs = args.n_jobs
+    predict_shape_params = args.predict_shape_params
     if run_name not in ResultsManager.show_tables():
         ResultsManager.add_table(run_name)
     test_cases = [
@@ -119,6 +130,7 @@ if __name__ == '__main__':
             nu_list,
             mf_list,
             run_name,
+            predict_shape_params,
         )
         for case in test_cases
         if (

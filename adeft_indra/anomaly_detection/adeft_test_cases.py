@@ -9,17 +9,12 @@ from adeft import available_shortforms
 from adeft.disambiguate import load_disambiguator
 from adeft.modeling.label import AdeftLabeler
 
-from indra.databases.hgnc_client import get_uniprot_id
-
-from indra_db_lite import get_entrez_pmids_for_hgnc
-from indra_db_lite import get_entrez_pmids_for_uniprot
-from indra_db_lite import get_mesh_terms_for_grounding
 from indra_db_lite import get_plaintexts_for_text_ref_ids
-from indra_db_lite import get_pmids_for_mesh_term
 from indra_db_lite import get_text_ref_ids_for_agent_text
-from indra_db_lite import get_text_ref_ids_for_pmids
 
 from opaque.nlp.featurize import BaselineTfidfVectorizer
+
+from .cases import get_training_cases_for_grounding
 
 
 logger = logging.getLogger(__file__)
@@ -77,86 +72,18 @@ def get_test_cases_for_model(model_name):
         if len([label for label in test_data.values() if label == curie]) < 5:
             continue
         namespace, identifier = curie.split(':', maxsplit=1)
-        entrez_pmids = set()
-        mesh_pmids = set()
-        mesh_terms = None
-        if namespace == 'HGNC':
-            entrez_pmids.update(get_entrez_pmids_for_hgnc(identifier))
-            uniprot_id = get_uniprot_id(identifier)
-            mesh_terms = get_mesh_terms_for_grounding(namespace, identifier)
-            if not mesh_terms:
-                mesh_terms = get_mesh_terms_for_grounding('UP', uniprot_id)
-            if mesh_terms:
-                for mesh_id in mesh_terms:
-                    mesh_pmids.update(
-                        get_pmids_for_mesh_term(
-                            mesh_id, major_topic=True
-                        )
-                    )
-        elif namespace == 'UP':
-            entrez_pmids.update(get_entrez_pmids_for_uniprot(identifier))
-            mesh_terms = get_mesh_terms_for_grounding(namespace, identifier)
-            if mesh_terms:
-                for mesh_id in mesh_terms:
-                    mesh_pmids.update(
-                        get_pmids_for_mesh_term(
-                            mesh_id, major_topic=True
-                        )
-                    )
-        elif namespace == 'MESH':
-            mesh_id = identifier
-            mesh_pmids.update(
-                get_pmids_for_mesh_term(
-                    mesh_id, major_topic=True
-                )
-            )
-        else:
-            mesh_terms = get_mesh_terms_for_grounding(namespace, identifier)
-            if mesh_terms:
-                for mesh_id in mesh_terms:
-                    mesh_pmids.update(
-                        get_pmids_for_mesh_term(
-                            mesh_id, major_topic=True
-                        )
-                    )
-        pmids = list(entrez_pmids | mesh_pmids)
-        if pmids:
-            entrez_trids = set(
-                get_text_ref_ids_for_pmids(entrez_pmids).values()
-            )
-            mesh_trids = set(
-                get_text_ref_ids_for_pmids(mesh_pmids).values()
-            )
-            trids = list(entrez_trids | mesh_trids)
-            train_data = get_plaintexts_for_text_ref_ids(
-                trids, text_types=['fulltext', 'abstract']
-            )
-            train_data = [
-                (trid, text) for trid, text in train_data.trid_content_pairs()
-                if len(text) > 5 and
-                not {'xml', 'elsevier', 'doi', 'article'} <=
-                set(preprocess(text))
-            ]
-            if len(train_data) < 5:
-                continue
-            train_trids, train_texts = zip(*train_data)
-            train_data = None
-            train_trids_set = set(train_trids)
-            entrez_trids = [
-                trid for trid in entrez_trids if trid in train_trids_set
-            ]
-            mesh_trids = [
-                trid for trid in mesh_trids if trid in train_trids_set
-            ]
-            result.append(
+        train_info = get_training_cases_for_grounding(namespace, identifier)
+        if train_info is None:
+            continue
+        result.append(
                 (
                     model_name,
                     tuple(shortforms),
                     curie,
-                    mesh_terms,
-                    len(entrez_trids),
-                    len(mesh_trids),
-                    train_trids,
+                    train_info["mesh_terms"],
+                    train_info["num_entrez"],
+                    train_info["num_mesh"],
+                    train_info["train_trids"],
                     test_data,
                 )
             )
